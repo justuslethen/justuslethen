@@ -1,0 +1,78 @@
+.chatMessages {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.messageContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  gap: 4px;
+  margin-bottom: 4px;
+  max-width: 100%;
+}
+
+.sender {
+  padding: 4px 6px;
+  width: max-content;
+  font-size: 16px;
+  border-radius: 6px 6px 2px 2px;
+}
+
+.sender>p {
+  margin: 0px;
+}
+
+.messages {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 0px;
+}
+
+.message {
+  padding: 8px 10px;
+  width: max-content;
+  word-wrap: break-word;
+  white-space: pre-wrap;
+  
+  max-width: 100%;
+  box-sizing: border-box;
+  border-radius: 2px 6px 6px 6px;
+  margin: 0px;
+
+  background-color: var(--Grey-2);
+  color: var(--Text-2);
+  border: 1px solid var(--Grey-1);
+}
+
+.red {
+  background-color: var(--User-Red-Light);
+  color: var(--User-Red);
+}
+
+.blue {
+  background-color: var(--User-Blue-Light);
+  color: var(--User-Blue);
+}
+
+.orange {
+  background-color: var(--User-Orange-Light);
+  color: var(--User-Orange);
+}
+
+.pink {
+  background-color: var(--User-Pink-Light);
+  color: var(--User-Pink);
+}
+
+.green {
+  background-color: var(--User-Green-Light);
+  color: var(--User-Green);
+}
+
+.purple {
+  background-color: var(--User-Purple-Light);
+  color: var(--User-Purple);
+}

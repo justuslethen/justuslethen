@@ -1,0 +1,332 @@
+:root {
+  --Blue: #007FFF;
+  --Light-Blue: #E7F4FF;
+  --Blue-Text: #4F8AF0;
+  --Text-1: #111111;
+  --Text-2: #323232;
+  --Text-3: #4A4A4A;
+  --Grey-1: #EBF0F4;
+  --Grey-2: #F4F4F4;
+  --White: #FFFFFF;
+  --Green: #24CC40;
+
+  --User-Blue: #2398FF;
+  --User-Blue-Light: rgba(35, 152, 255, 0.15);
+  --User-Orange: #FF9B37;
+  --User-Orange-Light: rgba(255, 155, 55, 0.15);
+  --User-Red: #FF0000;
+  --User-Red-Light: rgba(255, 0, 0, 0.15);
+  --User-Pink: #FF00DD;
+  --User-Pink-Light: rgba(255, 0, 221, 0.15);
+  --User-Green: #00D312;
+  --User-Green-Light: rgba(0, 211, 18, 0.15);
+  --User-Purple: #632FFF;
+  --User-Purple-Light: rgba(99, 47, 255, 0.15);
+}
+
+html {
+  height: 100svh;
+}
+
+body {
+  margin: 0px;
+  max-height: 100%;
+  display: flex;
+  flex-direction: column;
+  font-family: Arial, Helvetica, sans-serif;
+  overflow-x: hidden;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  width: 100%;
+  height: 65px;
+  padding: 20px;
+  box-sizing: border-box;
+  background-color: var(--Light-Blue);
+}
+
+.headerSideConatiner {
+  display: flex;
+  justify-content: end;
+  width: 70px;
+}
+
+.headerLeft {
+  justify-content: start;
+}
+
+header .onlineUsers {
+  width: 100%;
+  font-size: 16px;
+  margin: 0px;
+  color: var(--Green);
+}
+
+header .roomName {
+  font-size: 22px;
+  color: var(--Blue-Text);
+  cursor: pointer;
+}
+
+footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  width: 100%;
+  height: max-content;
+  padding: 20px;
+  gap: 10px;
+  box-sizing: border-box;
+  background-color: var(--Light-Blue);
+}
+
+h1 {
+  font-size: 24px;
+  color: var(--Text-2);
+  text-align: center;
+}
+
+textarea {
+  all: unset;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 14px 14px;
+  resize: none;
+  border-radius: 14px;
+  font-size: 16px;
+  word-wrap: break-word;
+  white-space: pre-wrap;
+
+  color: var(--Text-1);
+  background-color: var(--White);
+}
+
+textarea::-webkit-scrollbar {
+  display: none;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+
+  height: calc(100svh - 82px);
+
+  overflow-y: auto;
+  padding: 20px;
+  gap: 20px;
+}
+
+.content::-webkit-scrollbar,
+.content::-webkit-scrollbar-thumb {
+  display: none;
+}
+
+.content-mid-size {
+  height: calc(100svh - 82px - 65px);
+}
+
+.content-small {
+  height: calc(100svh - 157px - 65px);
+}
+
+.roomContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: 20px;
+  padding: 10px;
+  background-color: var(--Grey-1);
+}
+
+.roomContainer .header {
+  display: flex;
+  justify-content: center;
+  height: 18px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.roomName {
+  font-size: 16px;
+
+  text-align: center;
+  margin: 0px;
+  padding: 0px;
+  color: var(--Text-3);
+}
+
+button {
+  all: unset;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  height: 42px;
+
+  border-radius: 14px;
+  font-size: 20px;
+  color: var(--White);
+  background-color: var(--Blue);
+  cursor: pointer;
+}
+
+.buttonWhite {
+  background-color: var(--White);
+  color: var(--Text-1);
+}
+
+.iconButton {
+  all: unset;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  width: 40px;
+  border-radius: 8px;
+  background-color: var(--White);
+  cursor: pointer;
+}
+
+.smallButton {
+  height: 40px;
+  width: 40px;
+  padding: 0px;
+  border-radius: 8px;
+  background-color: var(--User-Blue-Light);
+  color: var(--Blue);
+  cursor: pointer;
+}
+
+input {
+  all: unset;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  width: 100%;
+  height: 48px;
+  padding: 10px;
+  border-radius: 20px;
+  box-sizing: border-box;
+  text-align: center;
+
+  font-size: 22px;
+  color: var(--Text-1);
+  background-color: var(--Grey-1);
+}
+
+.selection {
+  display: flex;
+  flex-direction: column;
+
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: 20px;
+  padding: 10px;
+  gap: 10px;
+  background-color: var(--Grey-1);
+}
+
+.selection>p {
+  font-size: 16px;
+  margin: 0px;
+  text-align: center;
+  color: var(--Text-3);
+}
+
+.selectionRow,
+.selectionCol {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.selectionRow {
+  display: flex;
+  flex-direction: row;
+}
+
+.selection .option {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 48px;
+  padding: 10px;
+  border-radius: 14px;
+  box-sizing: border-box;
+  text-align: center;
+
+  font-size: 22px;
+  color: var(--Text-2);
+  background-color: var(--Grey-1);
+  cursor: pointer;
+}
+
+.selection .option[chosen="true"] {
+  background-color: var(--White);
+}
+
+.colorSelection .option[chosen="true"] {
+  background-color: var(--User-Blue-Light);
+  color: var(--User-Blue);
+}
+
+.colorSelection .option:nth-child(2)[chosen="true"] {
+  background-color: var(--User-Purple-Light);
+  color: var(--User-Purple);
+}
+
+.colorSelection .option:nth-child(3)[chosen="true"] {
+  background-color: var(--User-Pink-Light);
+  color: var(--User-Pink);
+}
+
+.colorSelection .option:nth-child(4)[chosen="true"] {
+  background-color: var(--User-Red-Light);
+  color: var(--User-Red);
+}
+
+.colorSelection .option:nth-child(5)[chosen="true"] {
+  background-color: var(--User-Green-Light);
+  color: var(--User-Green);
+}
+
+.colorSelection .option:nth-child(6)[chosen="true"] {
+  background-color: var(--User-Orange-Light);
+  color: var(--User-Orange);
+}
+
+img {
+  width: 100%;
+  max-width: 400px;
+  margin-left: 50%;
+  transform: translateX(-50%);
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: 20px;
+  padding: 10px;
+  gap: 10px;
+
+  background-color: var(--Grey-1);
+}
