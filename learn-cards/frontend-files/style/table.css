@@ -1,0 +1,19 @@
+body {
+    height: max-content;
+    width: max-content;
+}
+
+table {
+    font-family: sans-serif;
+    border-collapse: collapse;
+    width: max-content;
+    height: max-content;
+}
+
+th, td {
+    color: var(--text);
+    border: 1px solid var(--gray-2);
+    padding: 0px 14px 0px 14px;
+    width: max-content;
+    text-align: right;
+}

@@ -1,0 +1,23 @@
+#content {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 600px;
+    gap: 20px;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+}
+
+.header h2 {
+    width: 100%;
+    height: min-content;
+}
+
+.nav_container {
+    display: flex;
+    justify-content: end;
+    gap: 16px;
+}
