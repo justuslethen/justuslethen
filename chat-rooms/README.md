@@ -23,4 +23,4 @@ As soon as you finaly join with your configed username and color the chat will b
 ### Send Messages
 You can now send Messages with the textarea and button at the bottom. When you send a message, the others and you will see your username in a box filled with your selected color, abow your written message.
 
-Enjoy
+Enjoy trying it yourself!
