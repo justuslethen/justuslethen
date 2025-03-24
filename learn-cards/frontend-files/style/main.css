@@ -1,0 +1,241 @@
+:root {
+    --red: #FF5F62;
+    --green: #62FF00;
+    --background: #EFEFEF;
+    --gray: #DCDCDC;
+    --gray-2: #BBBBBB;
+    --gray-3: #EFEFEF;
+    --blue: #003878;
+    --text: #000129;
+    --text-2: #535474;
+    --white: #FFFFFF;
+    --orange: #FFA901;
+    --orange-2: #FFF6E4;
+}
+
+body {
+    display: flex;
+    width: calc(100vw - 40px);
+    height: calc(100vh - 40px);
+    margin: 0px;
+    padding: 20px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    font-family: sans-serif;
+
+    background-color: var(--background);
+}
+
+.button {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 10px 20px;
+    justify-content: center;
+    align-items: center;
+
+    height: 42px;
+    box-sizing: border-box;
+    border-radius: 10px;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.button_round {
+    height: 50px;
+    width: 60px;
+    padding: 2px 6px;
+    border-radius: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+h1 {
+    margin: 0px;
+    color: var(--text);
+    font-size: 48px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: normal;
+}
+
+h2 {
+    margin: 0px;
+    color: var(--text);
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 200;
+    line-height: normal;
+}
+
+p {
+    margin: 0px;
+    color: var(--text);
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 200;
+    line-height: normal;
+}
+
+.card p {
+    font-size: 22px;
+}
+
+.button_red {
+    color: var(--white);
+    background-color: var(--red);
+}
+
+.button_grey {
+    color: var(--text-2);
+    background-color: var(--gray-3);
+}
+
+.nav_button {
+    background-color: var(--blue);
+}
+
+.button_blue {
+    color: #ffffff;
+    background-color: var(--blue);
+}
+
+.button_green {
+    color: #ffffff;
+    background-color: #04BD00;
+}
+
+input,
+textarea {
+    display: flex;
+    width: calc(100% - 40px - 4px);
+    padding: 10px 20px;
+    align-items: start;
+    gap: 10px;
+    font-size: 16px;
+    font-style: normal;
+    line-height: normal;
+    font-family: sans-serif;
+
+    outline: none;
+    background-color: rgba(0, 0, 0, 0);
+    font-weight: 400;
+    color: var(--text);
+    border-radius: 10px;
+    border: 1px solid var(--gray);
+}
+
+input:focus,
+textarea:focus {
+    border: 1px solid var(--gray-2);
+}
+
+input::-webkit-input-placeholder,
+textarea::-webkit-input-placeholder {
+    color: var(--gray-2);
+}
+
+.menu_button {
+    display: flex;
+    padding: 10px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+
+    border-radius: 10px;
+    background: var(--gray);
+}
+
+.menu_button>div {
+    width: 40px;
+    height: 6px;
+
+    border-radius: 10px;
+    background: var(--text);
+}
+
+.input_tip {
+    display: flex;
+    padding: 10px;
+    width: calc(100% - 20px);
+    height: max-content;
+
+    border-radius: 12px;
+    background-color: var(--orange-2);
+}
+
+.input_tip>p {
+    color:  var(--orange);
+
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+
+.message {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    border-radius: 6px;
+    background-color: #2d2d2d;
+    width: calc(100% - 80px);
+    padding: 20px;
+}
+
+.message>p {
+    font-size: 16px;
+    color: white;
+}
+
+
+@keyframes shake {
+    0% {
+        transform: translate(0px, 0px) scale(1);
+    }
+
+    10% {
+        transform: translate(-4px, 4px) scale(1.1);
+    }
+
+    20% {
+        transform: translate(-4px, -4px) scale(1.1);
+    }
+
+    30% {
+        transform: translate(4px, -4px) scale(1.1);
+    }
+
+    40% {
+        transform: translate(4px, 4px) scale(1.1);
+    }
+
+    50% {
+        transform: translate(-4px, 4px) scale(1.1);
+    }
+
+    60% {
+        transform: translate(-4px, -4px) scale(1.1);
+    }
+
+    70% {
+        transform: translate(4px, -4px) scale(1.1);
+    }
+
+    80% {
+        transform: translate(4px, 4px) scale(1.1);
+    }
+
+    90% {
+        transform: translate(-4px, 4px) scale(1.1);
+    }
+
+    100% {
+        transform: translate(0px, 0px) scale(1);
+    }
+}

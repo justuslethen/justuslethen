@@ -1,0 +1,11 @@
+.item .name {
+    width: calc(100% - 140px) !important;
+}
+
+.item .id {
+    min-width: 40px;
+}
+
+.item .button {
+    width: 100px;
+}

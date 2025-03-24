@@ -1,0 +1,22 @@
+body {
+    width: calc(100vw - 40px);
+    height: max-content;
+}
+
+.button {
+    max-width: 100%;
+}
+
+#content {
+    display: flex;
+    flex-direction: column;
+    width: calc(100% - 40px);
+    max-width: 700px;
+    padding: 20px;
+    margin-top: 20px;
+    gap: 10px;
+
+    border-radius: 16px;
+    background-color: var(--white);
+    border: 1px solid var(--gray);
+}

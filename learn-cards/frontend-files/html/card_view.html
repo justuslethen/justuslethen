@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kartenansicht - LearnCards</title>
+    <link rel="stylesheet" href="/file/main.css">
+    <link rel="stylesheet" href="/file/card_view.css">
+</head>
+
+<body>
+    <div id="content">
+        <div id="top" class="section">
+            <div class="header">
+                <h2><!--dynamic render card name--></h2>
+                <div class="nav_container">
+                    <a class="button nav_button button_round" id="left_nav_button" href="dynamic_render_left_button">
+                        <svg width="12" height="20" viewBox="0 0 12 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M2 10L10 2" stroke="white" stroke-width="3" stroke-linecap="round" />
+                            <path d="M2 10L10 18" stroke="white" stroke-width="3" stroke-linecap="round" />
+                        </svg>
+
+                    </a>
+                    <a class="button nav_button button_round" id="home_button" href="/">
+                        <svg width="22" height="25" viewBox="0 0 22 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M0 10.6739C0 9.8266 0.358306 9.0188 0.986396 8.45008L9.33038 0.894867C10.5061 -0.169747 12.3075 -0.135158 13.4415 0.97381L21.0975 8.46067C21.6747 9.02508 22 9.79828 22 10.6056V22C22 23.6569 20.6569 25 19 25H16.3846C15.28 25 14.3846 24.1046 14.3846 23V17.2387C14.3846 16.6864 13.9369 16.2387 13.3846 16.2387H9.46154C8.90925 16.2387 8.46154 16.6864 8.46154 17.2387V23C8.46154 24.1046 7.56611 25 6.46154 25H3C1.34315 25 0 23.6569 0 22V10.6739Z"
+                                fill="white" />
+                        </svg>
+
+                    </a>
+                    <a class="button nav_button button_round" id="right_nav_button" href="dynamic_render_right_button">
+                        <svg width="12" height="20" viewBox="0 0 12 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M10 10L2 18" stroke="white" stroke-width="3" stroke-linecap="round" />
+                            <path d="M10 10L2 2" stroke="white" stroke-width="3" stroke-linecap="round" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+            <div class="card">
+                <p><!--dynamic render front--></p>
+            </div>
+            <div class="button button_red" onclick="show_back()">Antwort anzeigen</div>
+        </div>
+        <div id="bottom" class="section">
+            <div class="header">
+                <h2><!--dynamic render card name--></h2>
+                <div class="nav_container">
+                    <a class="button nav_button button_round" id="left_nav_button" href="dynamic_render_left_button">
+                        <svg width="12" height="20" viewBox="0 0 12 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M2 10L10 2" stroke="white" stroke-width="3" stroke-linecap="round" />
+                            <path d="M2 10L10 18" stroke="white" stroke-width="3" stroke-linecap="round" />
+                        </svg>
+
+                    </a>
+                    <a class="button nav_button button_round" id="home_button" href="/">
+                        <svg width="22" height="25" viewBox="0 0 22 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M0 10.6739C0 9.8266 0.358306 9.0188 0.986396 8.45008L9.33038 0.894867C10.5061 -0.169747 12.3075 -0.135158 13.4415 0.97381L21.0975 8.46067C21.6747 9.02508 22 9.79828 22 10.6056V22C22 23.6569 20.6569 25 19 25H16.3846C15.28 25 14.3846 24.1046 14.3846 23V17.2387C14.3846 16.6864 13.9369 16.2387 13.3846 16.2387H9.46154C8.90925 16.2387 8.46154 16.6864 8.46154 17.2387V23C8.46154 24.1046 7.56611 25 6.46154 25H3C1.34315 25 0 23.6569 0 22V10.6739Z"
+                                fill="white" />
+                        </svg>
+
+                    </a>
+                    <a class="button nav_button button_round" id="right_nav_button" href="dynamic_render_right_button">
+                        <svg width="12" height="20" viewBox="0 0 12 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M10 10L2 18" stroke="white" stroke-width="3" stroke-linecap="round" />
+                            <path d="M10 10L2 2" stroke="white" stroke-width="3" stroke-linecap="round" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+            <div class="card">
+                <p><!--dynamic render back--></p>
+            </div>
+            <div class="button button_red" onclick="show_front()">Frage anzeigen</div>
+        </div>
+    </div>
+    <script src="/file/main.js"></script>
+    <script src="/file/card_view.js"></script>
+</body>
+
+</html>

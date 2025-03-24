@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Konto erstellen - LearnCards</title>
+    <link rel="stylesheet" href="file/main.css">
+    <link rel="stylesheet" href="file/authentication.css">
+</head>
+
+<body>
+    <div class="conatiner">
+        <h2>Konto erstellen</h2>
+        <input type="text" id="username" placeholder="Nutzername">
+        <input type="text" id="password" placeholder="Passwort" >
+        <div class="input_tip" id="password_input_tip">
+            <p>Das Passwort muss mindestend 6 Stellen haben</p>
+        </div>
+        <div id="secure_bar_container">
+            <p>0</p>
+            <div class="bar">
+                <div id="bar_inner"></div>
+            </div>
+            <p>6</p>
+        </div>
+        <div class="button button_red" onclick="create_new_account()">Erstellen</div>
+        <a class="button button_grey" href="/login">Ich habe schon ein Konto</a>
+    </div>
+
+
+    <script src="file/main.js"></script>
+    <script src="file/registration.js"></script>
+</body>
+
+</html>
