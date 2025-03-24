@@ -1,0 +1,40 @@
+# Bytecode-Dateien
+__pycache__/
+*.py[cod]
+
+# Virtual Environment
+venv/
+env/
+*.venv
+*.env
+
+# Flask spezifische Dateien
+instance/
+*.log
+*.sqlite3
+*.db
+
+# SocketIO spezifische Dateien
+*.sock
+
+# VSCode Einstellungen
+.vscode/
+
+# Node.js Abhängigkeiten (falls du npm für das Frontend nutzt)
+node_modules/
+*.cache
+
+# Deployment und Systemdateien
+.DS_Store
+*.swp
+*.swo
+*.swn
+
+# Poetry und Python Package Management
+poetry.lock
+pip-log.txt
+
+# IDE und Editor Dateien
+.idea/
+*.iml
+*.sublime-workspace
