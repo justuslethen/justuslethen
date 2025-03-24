@@ -3,6 +3,7 @@ import sqlite3
 DB_PATH = "database.db"
 
 
+# connect to the database and return the cursor and the connection
 def connect_db():
     conn = sqlite3.connect(DB_PATH)
     cur = conn.cursor()
@@ -11,13 +12,16 @@ def connect_db():
 
 def create_tables():
     cur, conn = connect_db()
+    
     create_users_table(cur)
     create_rooms_tabel(cur)
     create_messages_table(cur)
+    
     conn.commit()
     conn.close()
 
 
+# create the users table with sid, username, room_code, color, joined_date
 def create_users_table(cur):
     cur.execute(
         """
@@ -33,6 +37,7 @@ def create_users_table(cur):
     )
 
 
+# create the rooms table with roomname, code, created_at, duration, expiring_at, max_members, private
 def create_rooms_tabel(cur):
     cur.execute(
         """
@@ -52,6 +57,7 @@ def create_rooms_tabel(cur):
     )
 
 
+# create the messages table with username, color, message, room_id, sender_id
 def create_messages_table(cur):
     cur.execute(
         """
@@ -70,4 +76,5 @@ def create_messages_table(cur):
     )
 
 
+# create the tables if they dont exist at the start of the server
 create_tables()
