@@ -34,10 +34,13 @@ const openRoom = (code, setPage, setRoomData, socket, setWindowMessages) => {
 }
 
 const joinRoom = (setPage, roomData, setRoomData, userData, socket, contentRef, setWindowMessages) => {
+  // save the user config for the lobby in localstorage
+  
   socket.emit("join-room", { code: roomData.code, userdata: userData }, (response) => {
     if (evalate_response(response, setWindowMessages)) return; // Stop execution if there's an error
+    saveUserConfigForLobby(userData);
 
-
+    // set the roomdata to the room that was joined
     setRoomData(prev => ({
       ...prev,
       messages: response,
@@ -83,9 +86,59 @@ const evalate_response = (response, setWindowMessages) => {
   return error;
 };
 
+
+// save all the lobby config in localstorage to reconnect later
+const saveUserConfigForLobby = (userData) => {
+  let userConfigData = JSON.parse(localStorage.getItem("userConfigData")) || {};
+  const code = extractCodeFromUrl();
+  userConfigData[code] = {
+    username: userData.username || "Name",
+    colorChoise: userData.color.selected || 0,
+  };
+  localStorage.setItem("userConfigData", JSON.stringify(userConfigData));
+}
+
+
+// extract the code from the last snipet from the url
+const extractCodeFromUrl = () => {
+  const url = window.location.href;
+  const code = url.split("/")[url.split("/").length - 1];
+  return code;
+}
+
+
+// try to join the room when its known
+const tryToJoin = (setPage, contentRef, setRoomData, setUserData, userData, setWindowMessages, socket) => {
+  const code = extractCodeFromUrl(); // get the code
+  const userConfigData = JSON.parse(localStorage.getItem("userConfigData")) || {}; // load config from localstorage
+
+  // is a config for this room known?
+  if (userConfigData[code]) {
+    // set the userData to the config stored in localstorage
+    setUserData(prev => ({
+      ...prev,
+      username: userConfigData[code].username,
+      color: {
+        ...prev.color,
+        selected: userConfigData[code].colorChoise,
+      }
+    }));
+
+    // change userDaata to the fiting format
+    const dataOfUser = { color: { selected: userConfigData[code].colorChoise }, username: userConfigData[code].username }
+
+    console.log(dataOfUser);
+
+    // {code: code} represents the needet part of roomData
+    joinRoom(setPage, { code: code }, setRoomData, dataOfUser, socket, contentRef, setWindowMessages);
+  }
+}
+
+
 export {
   createRoom,
   openRoom,
   joinRoom,
-  sendMessage
+  sendMessage,
+  tryToJoin
 }

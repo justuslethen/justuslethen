@@ -343,7 +343,7 @@ img {
   width: calc(100% - 40px);
   padding: 20px;
   box-sizing: border-box;
-  border-radius: 14px;
+  border-radius: 20px;
   border: 1px solid var(--Red-Light-2);
   background-color: var(--Red-Light-1);
   animation: windowMessage 3s ease-in-out;
