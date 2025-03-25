@@ -1,8 +1,12 @@
 import re
 
 def load_swear_words():
-    with open("swear_words.txt", "r", encoding="utf-8") as file:
-        return set(re.split(r"[,\n]+", file.read().strip()))  # split at comma or newline
+    try:
+        with open("swear_words.txt", "r", encoding="utf-8") as file:
+            words = set(re.split(r"[,\n]+", file.read().strip()))  # split at comma or newline
+            return words if words else "" # return empty string if no words are found
+    except FileNotFoundError:
+        return "" # return empty string if file is missing
 
 def censor(text, swear_words):
     # return original text if no swear words are given
