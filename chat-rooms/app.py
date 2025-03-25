@@ -53,6 +53,10 @@ def handle_app_start():
 # emited by the client on the page create-room
 @socketio.on("create-room")
 def create_room(config):
+    # catch if the roomname is empty
+    if config["roomname"].strip() == "":
+        return "roomname is empty"
+    
     # config contains the roomname and the choises of the config options
     code, room_name = rooms.create_new_room(config)
     

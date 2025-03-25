@@ -1,6 +1,8 @@
 // send all the data configed to create a room
-const createRoom = (socket, configData, setRoomData, setPage) => {
+const createRoom = (socket, configData, setRoomData, setPage, setWindowMessages) => {
   socket.emit("create-room", configData, (response) => {
+    if (evalate_response(response, setWindowMessages)) return; // stop execution if there's an error
+
     // set the roomdata to the new room
     setRoomData(prev => ({
       ...prev,
@@ -74,6 +76,8 @@ const evalate_response = (response, setWindowMessages) => {
     message = "Raum ist beendet";
   } else if (response == "username is empty") {
     message = "Nutzername fehlt";
+  } else if (response == "roomname is empty") {
+    message = "Raumname fehlt";
   } else {
     error = false;
   }
