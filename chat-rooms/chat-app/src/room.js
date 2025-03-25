@@ -15,9 +15,9 @@ const createRoom = (socket, configData, setRoomData, setPage) => {
   });
 };
 
-const openRoom = (code, setPage, setRoomData, socket) => {
+const openRoom = (code, setPage, setRoomData, socket, setWindowMessages) => {
   socket.emit("open-room", code, (response) => {
-    if (evalate_response(response)) return; // stop execution if there's an error
+    if (evalate_response(response, setWindowMessages)) return; // stop execution if there's an error
 
     // set the roomdata to the room that was opened
     setRoomData(prev => ({
@@ -33,9 +33,9 @@ const openRoom = (code, setPage, setRoomData, socket) => {
   });
 }
 
-const joinRoom = (setPage, roomData, setRoomData, userData, socket, contentRef) => {
+const joinRoom = (setPage, roomData, setRoomData, userData, socket, contentRef, setWindowMessages) => {
   socket.emit("join-room", { code: roomData.code, userdata: userData }, (response) => {
-    if (evalate_response(response)) return; // Stop execution if there's an error
+    if (evalate_response(response, setWindowMessages)) return; // Stop execution if there's an error
 
 
     setRoomData(prev => ({
@@ -43,7 +43,7 @@ const joinRoom = (setPage, roomData, setRoomData, userData, socket, contentRef) 
       messages: response,
     }));
     setPage("chat");
-    
+
     // set a timeout to avoid errors in case of a slow rendering
     setTimeout(() => {
       if (contentRef.current) {
@@ -60,19 +60,26 @@ const sendMessage = (socket, message) => {
 
 // check the response for any of the error string
 // return true if there is an error
-const evalate_response = (response) => {
+const evalate_response = (response, setWindowMessages) => {
   let error = true;
+  let message = "";
   if (response == "room not found") {
-    alert("Raum existiert nicht");
+    message = "Raum existiert nicht";
   } else if (response == "room is full") {
-    alert("Raum ist voll");
+    message = "Raum ist voll";
   } else if (response == "room has ended") {
-    alert("Raum ist beendet");
+    message = "Raum ist beendet";
   } else if (response == "username is empty") {
-    alert("Nutzername fehlt");
+    message = "Nutzername fehlt";
   } else {
     error = false;
   }
+
+  setWindowMessages(prev => ([
+    ...prev,
+    message,
+  ]));
+
   return error;
 };
 
