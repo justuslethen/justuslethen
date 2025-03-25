@@ -15,7 +15,8 @@ def censor(text, swear_words):
 
     # replace the swear word with *
     def censor_match(match):
-        return "*" * len(match.group())
+        word = match.group()
+        return "*" * len(word) if word.strip() else word  # Leerzeichen nicht ersetzen
 
     # first check for exact word matches
     pattern = re.compile(r"\b(" + "|".join(map(re.escape, swear_words)) + r")\b", re.IGNORECASE)
