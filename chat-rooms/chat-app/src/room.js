@@ -14,6 +14,7 @@ const createRoom = (socket, configData, setRoomData, setPage, setWindowMessages)
     // switch the page to create user
     setPage("createUser")
     window.history.pushState({}, "", `/room/${response.code}`); // show in history
+    document.title = `${response.roomname} - Chat Rooms`; // set the title of the page
   });
 };
 
@@ -32,6 +33,7 @@ const openRoom = (code, setPage, setRoomData, socket, setWindowMessages) => {
     // switch the page to create user
     setPage("createUser");
     window.history.pushState({}, "", `/room/${response.code}`); // show in history
+    document.title = `${response.roomname} - Chat Rooms`; // set the title of the page
   });
 }
 
@@ -81,7 +83,7 @@ const evalate_response = (response, setWindowMessages) => {
   } else {
     error = false;
   }
-
+  
   setWindowMessages(prev => ([
     ...prev,
     message,
