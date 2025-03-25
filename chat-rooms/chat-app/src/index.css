@@ -1,30 +1,63 @@
-:root {
-  --Blue: #007FFF;
-  --Light-Blue: #E7F4FF;
-  --Blue-Text: #4F8AF0;
-  --Text-1: #111111;
-  --Text-2: #323232;
-  --Text-3: #4A4A4A;
-  --Grey-1: #EBF0F4;
-  --Grey-2: #F4F4F4;
-  --White: #FFFFFF;
-  --Green: #24CC40;
-  --Text-Red: #CC0F0F;
-  --Red-Light-1: #FFD5D5;
-  --Red-Light-2: #FFA7A7;
+@media (prefers-color-scheme: light) {
+  :root {
+    --Blue: #007FFF;
+    --Light-Blue: #E7F4FF;
+    --Blue-Text: #4F8AF0;
+    --Text-1: #111111;
+    --Text-2: #323232;
+    --Text-3: #4A4A4A;
+    --Grey-1: #EBF0F4;
+    --Grey-2: #F4F4F4;
+    --Background: #FFFFFF;
+    --Green: #24CC40;
+    --Text-Red: #CC0F0F;
+    --Red-Light-1: #FFD5D5;
+    --Red-Light-2: #FFA7A7;
 
-  --User-Blue: #2398FF;
-  --User-Blue-Light: rgba(35, 152, 255, 0.15);
-  --User-Orange: #FF9B37;
-  --User-Orange-Light: rgba(255, 155, 55, 0.15);
-  --User-Red: #FF0000;
-  --User-Red-Light: rgba(255, 0, 0, 0.15);
-  --User-Pink: #FF00DD;
-  --User-Pink-Light: rgba(255, 0, 221, 0.15);
-  --User-Green: #00D312;
-  --User-Green-Light: rgba(0, 211, 18, 0.15);
-  --User-Purple: #632FFF;
-  --User-Purple-Light: rgba(99, 47, 255, 0.15);
+    --User-Blue: #2398FF;
+    --User-Blue-Light: rgba(35, 152, 255, 0.15);
+    --User-Orange: #FF9B37;
+    --User-Orange-Light: rgba(255, 155, 55, 0.15);
+    --User-Red: #FF0000;
+    --User-Red-Light: rgba(255, 0, 0, 0.15);
+    --User-Pink: #FF00DD;
+    --User-Pink-Light: rgba(255, 0, 221, 0.15);
+    --User-Green: #00D312;
+    --User-Green-Light: rgba(0, 211, 18, 0.15);
+    --User-Purple: #632FFF;
+    --User-Purple-Light: rgba(99, 47, 255, 0.15);
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --Blue: #308be7;
+    --Light-Blue: #121b2b;
+    --Blue-Text: #4F8AF0;
+    --Text-1: #dfdfdf;
+    --Text-2: #cdcdcd;
+    --Text-3: #d6d6d6;
+    --Grey-1: #24292e;
+    --Grey-2: #1b1b1b;
+    --Background: #000000;
+    --Green: #24CC40;
+    --Text-Red: #d13a3a;
+    --Red-Light-1: #341414;
+    --Red-Light-2: #811515;
+
+    --User-Blue: #2398FF;
+    --User-Blue-Light: rgba(35, 152, 255, 0.25);
+    --User-Orange: #FF9B37;
+    --User-Orange-Light: rgba(255, 155, 55, 0.25);
+    --User-Red: #FF0000;
+    --User-Red-Light: rgba(255, 0, 0, 0.25);
+    --User-Pink: #FF00DD;
+    --User-Pink-Light: rgba(255, 0, 221, 0.25);
+    --User-Green: #00D312;
+    --User-Green-Light: rgba(0, 211, 18, 0.25);
+    --User-Purple: #632FFF;
+    --User-Purple-Light: rgba(99, 47, 255, 0.25);
+  }
 }
 
 html {
@@ -38,6 +71,7 @@ body {
   flex-direction: column;
   font-family: Arial, Helvetica, sans-serif;
   overflow-x: hidden;
+  background-color: var(--Background);
 }
 
 header {
@@ -56,6 +90,16 @@ header {
   display: flex;
   justify-content: end;
   width: 70px;
+}
+
+.headerCenterContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.headerCenterContainer .roomName {
+  margin: 0px;
 }
 
 .headerLeft {
@@ -106,7 +150,7 @@ textarea {
   white-space: pre-wrap;
 
   color: var(--Text-1);
-  background-color: var(--White);
+  background-color: var(--Background);
 }
 
 textarea::-webkit-scrollbar {
@@ -159,13 +203,21 @@ textarea::-webkit-scrollbar {
   box-sizing: border-box;
 }
 
-.roomName {
+.roomCode {
   font-size: 16px;
 
   text-align: center;
   margin: 0px;
   padding: 0px;
-  color: var(--Text-3);
+  color: var(--Text-2);
+}
+
+.roomName {
+  font-size: 22px;
+
+  text-align: center;
+  padding: 0px;
+  color: var(--Text-1);
 }
 
 button {
@@ -179,13 +231,13 @@ button {
 
   border-radius: 14px;
   font-size: 20px;
-  color: var(--White);
+  color: var(--Background);
   background-color: var(--Blue);
   cursor: pointer;
 }
 
 .buttonWhite {
-  background-color: var(--White);
+  background-color: var(--Background);
   color: var(--Text-1);
 }
 
@@ -197,7 +249,7 @@ button {
   height: 40px;
   width: 40px;
   border-radius: 8px;
-  background-color: var(--White);
+  background-color: var(--Background);
   cursor: pointer;
 }
 
@@ -206,8 +258,9 @@ button {
   width: 40px;
   padding: 0px;
   border-radius: 8px;
-  background-color: var(--User-Blue-Light);
+  background-color: var(--Background);
   color: var(--Blue);
+  font-family: sans-serif;
   cursor: pointer;
 }
 
@@ -281,7 +334,7 @@ input {
 }
 
 .selection .option[chosen="true"] {
-  background-color: var(--White);
+  background-color: var(--Background);
 }
 
 .colorSelection .option[chosen="true"] {
@@ -359,18 +412,23 @@ img {
   0% {
     top: -100%;
   }
+
   5% {
     top: 40px;
   }
+
   10% {
     top: 15px;
   }
+
   12% {
     top: 20px;
   }
+
   90% {
     top: 20px;
   }
+
   100% {
     top: -100%;
   }
