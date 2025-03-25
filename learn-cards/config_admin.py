@@ -33,5 +33,5 @@ def print_all_admins(cur):
         print(f"user_id: {admin[0]}, username: {admin[1]}")
 
 
-# add_admin_by_id(6)
-add_admin_by_name("Justus")
+# add_admin_by_id(number)
+# add_admin_by_name("Name")
