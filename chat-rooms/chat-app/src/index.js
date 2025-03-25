@@ -7,7 +7,7 @@ import RoomContainer from './components/RoomContainer';
 import Selection from './components/Selection';
 import Header from './components/Header';
 import ChatMessages from './components/ChatMessages';
-import { createRoom, joinRoom, openRoom, sendMessage } from './room';
+import { createRoom, joinRoom, openRoom, sendMessage, tryToJoin } from './room';
 
 const socket = io('http://192.168.178.116:4000');
 
@@ -58,6 +58,9 @@ const App = () => {
     // get all public rooms at the start of the app
     socket.on("connect", () => {
       socket.emit("request-public-rooms");
+      console.log("Connected to server");
+      console.log("Trying to rejoin room");
+      tryToJoin(setPage, contentRef, setRoomData, setUserData, userData, setWindowMessages, socket);
     });
 
     // the public rest rooms will be emited by the server so catch them
@@ -107,25 +110,6 @@ const App = () => {
       const code = pathSegments[2];
       openRoom(code, setPage, setRoomData, socket, setWindowMessages);
     }
-  }, []);
-
-  useEffect(() => {
-    // emit the app-start to the server
-    // difference between start-app and connect is that only is executed once
-    socket.emit("start-app", (response) => {
-      document.cookie = `last_sid=${response.sid}; path=/; SameSite=None; expires=Fri, 31 Dec 9999 23:59:59 GMT;`;
-      console.log(response);
-      if (typeof response.roomdata !== "undefined") {
-        setRoomData({
-          roomname: response.roomdata.roomname,
-          code: response.roomdata.code,
-          online: response.roomdata.online,
-          messages: response.roomdata.messages
-        });
-        setPage("chat");
-      }
-    });
-
   }, []);
 
   return (
@@ -243,7 +227,13 @@ const App = () => {
       )}
       {page === "createUser" && (
         <>
-          <Header online={roomData.online} name={roomData.roomname} setPage={setPage} share="true" />
+          <Header
+            online={roomData.online}
+            name={roomData.roomname}
+            setPage={setPage}
+            recentPage="home"
+            share="false"
+            socket={socket} />
           <div className='content content-mid-size'>
             <input
               placeholder='Username'
@@ -284,6 +274,8 @@ const App = () => {
             online={roomData.online}
             name={roomData.roomname}
             setPage={setPage}
+            recentPage="chat"
+            share="false"
             socket={socket} />
           <div className='content'>
             <h1>{roomData.code}</h1>
@@ -304,6 +296,7 @@ const App = () => {
             online={roomData.online}
             name={roomData.roomname}
             setPage={setPage}
+            recentPage="home"
             share="true"
             socket={socket} />
           <div className='content content-small' ref={contentRef}>

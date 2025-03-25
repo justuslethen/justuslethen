@@ -1,11 +1,11 @@
 import React from "react";
 
-const Header = ({ online, name, setPage, share, socket }) => {
+const Header = ({ online, name, setPage, recentPage, share, socket }) => {
     return (
         <header>
             <div className="headerSideConatiner headerLeft">
                 <button className="smallButton" onClick={() => {
-                    setPage("home");
+                    setPage(recentPage);
                     socket.emit("request-public-rooms");
                     window.history.pushState({}, "", "/");
                 }}>&lt;</button>
