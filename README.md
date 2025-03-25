@@ -2,7 +2,7 @@
 
 I’m 16 years old and live in Hamm, Germany, near Münster. I love writing small programs just for fun or creating tools that my friends and I actually need — especially when I believe I can build a simpler, free version of them.
 
-I started by writing small websites in HTML and CSS. Then, I learned JavaScript to run small programs on the frontend. Later, I learned the basics of Python and started building Flask web apps.
+I started by writing small websites in **HTML** and **CSS**. Then, I learned **JavaScript** to run small programs on the frontend. Later, I learned the basics of **Python** and started building **Flask** and **SocketIO** web apps.
 
 Some projects I started were never finished—but some were.
 
