@@ -221,7 +221,7 @@ const App = () => {
             />
           </div>
           <footer>
-            <button onClick={() => createRoom(socket, configRoomData, setRoomData, setPage)}>Raum Starten</button>
+            <button onClick={() => createRoom(socket, configRoomData, setRoomData, setPage, setWindowMessages)}>Raum Starten</button>
           </footer>
         </>
       )}
