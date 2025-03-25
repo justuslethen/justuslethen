@@ -72,15 +72,26 @@ const evalate_response = (response, setWindowMessages) => {
   let message = "";
   if (response == "room not found") {
     message = "Raum existiert nicht";
-  } else if (response == "room is full") {
+  } 
+  else if (response == "room is full") {
     message = "Raum ist voll";
-  } else if (response == "room has ended") {
+  } 
+  else if (response == "room has ended") {
     message = "Raum ist beendet";
-  } else if (response == "username is empty") {
+  } 
+  else if (response == "username is empty") {
     message = "Nutzername fehlt";
-  } else if (response == "roomname is empty") {
+  } 
+  else if (response == "username is taken") {
+    message = "Nutzername ist schon vergeben";
+  } 
+  else if (response == "username contains swear words") {
+    message = "Bitte anderen Nutzernamen wählen";
+  } 
+  else if (response == "roomname is empty") {
     message = "Raumname fehlt";
-  } else {
+  } 
+  else {
     error = false;
   }
   

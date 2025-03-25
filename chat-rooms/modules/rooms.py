@@ -1,7 +1,8 @@
 from datetime import datetime
-from modules import database
+from modules import database, check_for_swear_words
 import random
 
+swear_words = check_for_swear_words.load_swear_words()
 
 # return the name and code for every room that is public and not expired yet
 def get_all_public_rooms():
@@ -164,6 +165,9 @@ def prepare_user_data(user_data):
 
 
 def send_message(sid, message):
+    # censor the message if it contains swear words
+    message = check_for_swear_words.censor(message, swear_words)[0]
+    
     cur, conn = database.connect_db()
 
     # first get the user-id, color, room-id and code of the user by the sid
@@ -297,3 +301,32 @@ def is_room_full(code):
     conn.close()
     
     return members >= max_members # return true if the room is full
+
+
+def validate_join_room(data):
+    # username check
+    if data["userdata"]["username"].strip() == "":
+        return "username is empty"
+    
+    # username swear word check
+    if check_for_swear_words.censor(data["userdata"]["username"], swear_words)[1] > 0:
+        return "username contains swear words"
+    
+    # room duration check
+    if has_room_ended(data["code"]):
+        return "room has ended"
+    
+    # room members check
+    if is_room_full(data["code"]):
+        return "room is full"
+
+
+def is_username_taken(code, username):
+    cur, conn = database.connect_db()
+    
+    # check if the username is already taken in the room
+    cur.execute("SELECT * FROM users WHERE room_code = ? AND username = ?", (code, username))
+    res = cur.fetchone()
+    
+    conn.close()
+    return res is not None

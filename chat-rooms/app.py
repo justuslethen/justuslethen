@@ -84,12 +84,9 @@ def open_room(code):
 @socketio.on("join-room")
 def join_room(data):
     # check if the room is stil available and the user has entered a username
-    if data["userdata"]["username"].strip() == "": # username check
-        return "username is empty"
-    if rooms.has_room_ended(data["code"]): # room duration check
-        return "room has ended"
-    if rooms.is_room_full(data["code"]): # room members check
-        return "room is full"
+    res = rooms.validate_join_room(data)
+    if res is not None:
+        return res
     
     code, user_data = data["code"], data["userdata"] # copy the code and userdata from the data
     rooms.join_room(request.sid, code, user_data)
