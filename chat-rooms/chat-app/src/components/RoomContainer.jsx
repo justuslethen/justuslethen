@@ -4,9 +4,9 @@ const RoomContainer = ({ code, name, openRoom, setPage, setRoomData, socket, set
     return (
         <div className="roomContainer">
             <div className="header">
-                <p className="roomName">{name}</p>
+                <p className="roomCode">{code}</p>
             </div>
-            <p className="code">{code}</p>
+            <p className="roomName">{name}</p>
             <button className='buttonWhite' onClick={() => openRoom(code, setPage, setRoomData, socket, setWindowMessages)}>Beitreten</button>
         </div>
     );
