@@ -15,6 +15,8 @@ const App = () => {
   const contentRef = useRef(null);
   const [page, setPage] = useState("home");
   const [publicRooms, setPublicRooms] = useState([])
+
+  // all the options you can select to config a room
   const [configRoomData, setConfigRoomData] = useState({
     roomname: "",
     maxmembers: {
@@ -30,6 +32,8 @@ const App = () => {
       selected: 0
     },
   });
+
+  // your user data
   const [userData, setUserData] = useState({
     username: "",
     color: {
@@ -37,6 +41,8 @@ const App = () => {
       selected: 0
     }
   })
+
+  // the data of the room you're finaly in
   const [roomData, setRoomData] = useState({
     roomname: "",
     code: "",
@@ -45,20 +51,25 @@ const App = () => {
   });
 
   useEffect(() => {
+    // get all public rooms at the start of the app
     socket.on("connect", () => {
       socket.emit("request-public-rooms");
     });
 
+    // the public rest rooms will be emited by the server so catch them
     socket.on("data-public-rooms", (rooms) => {
       setPublicRooms(rooms);
     });
 
+    // catches every new message that is send in the room
     socket.on("new-message", (data) => {
       setRoomData((prev) => ({
         ...prev,
         messages: [...prev.messages, data],
       }));
 
+      // set a timeout to scroll to the bottom of the chat
+      // to avoid errors in case of a slow rendering
       setTimeout(() => {
         if (contentRef.current) {
           contentRef.current.scrollTop = contentRef.current.scrollHeight;
@@ -66,10 +77,9 @@ const App = () => {
       }, 10);
     });
 
-    socket.on("disconnect", () => {
-      console.log("Verbindung zum Server getrennt.");
-    });
 
+    // is emited everytime a new user joins or leaves the room
+    // containes the current online user count
     socket.on("online-users", (online) => {
       setRoomData((prev) => ({
         ...prev,
@@ -77,17 +87,12 @@ const App = () => {
       }));
     });
 
-    socket.on("message", (message) => {
-      setRoomData((prev) => ({
-        ...prev,
-        messages: [...prev.messages, message],
-      }));
-    });
-
     return () => {
       socket.off("connect");
       socket.off("data-public-rooms");
+      socket.off("new-message");
       socket.off("disconnect");
+      socket.off("online-users");
       socket.off("message");
     };
   }, []);
@@ -101,6 +106,8 @@ const App = () => {
   }, []);
 
   useEffect(() => {
+    // emit the app-start to the server
+    // difference between start-app and connect is that only is executed once
     socket.emit("start-app", (response) => {
       document.cookie = `last_sid=${response.sid}; path=/; SameSite=None; expires=Fri, 31 Dec 9999 23:59:59 GMT;`;
       console.log(response);
