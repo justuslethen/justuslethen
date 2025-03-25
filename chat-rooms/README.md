@@ -31,4 +31,11 @@ As soon as you finaly join with your configed username and color the chat will b
 ### Send Messages
 You can now send Messages with the textarea and button at the bottom. When you send a message, the others and you will see your username in a box filled with your selected color, abow your written message.
 
-Enjoy trying it yourself!
+---
+
+# Swear Words
+You can add a file named `swear_words.txt` in the main folder `/` and separate the words with commas or new lines.  
+The app will automatically search for these swear words in messages and usernames, censor them, or even prevent users from using them.
+
+
+Enjoy trying Chat Rooms yourself!
