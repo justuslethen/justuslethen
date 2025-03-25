@@ -9,6 +9,9 @@
   --Grey-2: #F4F4F4;
   --White: #FFFFFF;
   --Green: #24CC40;
+  --Text-Red: #CC0F0F;
+  --Red-Light-1: #FFD5D5;
+  --Red-Light-2: #FFA7A7;
 
   --User-Blue: #2398FF;
   --User-Blue-Light: rgba(35, 152, 255, 0.15);
@@ -329,4 +332,46 @@ img {
   gap: 10px;
 
   background-color: var(--Grey-1);
+}
+
+.windowMessage {
+  top: -100%;
+  left: 20px;
+  position: fixed;
+  display: flex;
+  word-wrap: break-word;
+  width: calc(100% - 40px);
+  padding: 20px;
+  box-sizing: border-box;
+  border-radius: 14px;
+  border: 1px solid var(--Red-Light-2);
+  background-color: var(--Red-Light-1);
+  animation: windowMessage 3s ease-in-out;
+}
+
+.windowMessage p {
+  margin: 0px;
+  font-size: 18px;
+  color: var(--Text-Red);
+}
+
+@keyframes windowMessage {
+  0% {
+    top: -100%;
+  }
+  5% {
+    top: 40px;
+  }
+  10% {
+    top: 15px;
+  }
+  12% {
+    top: 20px;
+  }
+  90% {
+    top: 20px;
+  }
+  100% {
+    top: -100%;
+  }
 }

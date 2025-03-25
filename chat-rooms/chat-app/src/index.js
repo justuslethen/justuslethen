@@ -9,7 +9,7 @@ import Header from './components/Header';
 import ChatMessages from './components/ChatMessages';
 import { createRoom, joinRoom, openRoom, sendMessage } from './room';
 
-const socket = io('chatrooms.justuslethen.de');
+const socket = io('http://192.168.178.116:4000');
 
 const App = () => {
   const contentRef = useRef(null);
@@ -49,6 +49,10 @@ const App = () => {
     online: 0,
     messages: []
   });
+
+
+  // window messages for exampe when to username is already taken
+  const [windowMessages, setWindowMessages] = useState([]);
 
   useEffect(() => {
     // get all public rooms at the start of the app
@@ -101,7 +105,7 @@ const App = () => {
     const pathSegments = window.location.pathname.split("/");
     if (pathSegments.length === 3 && pathSegments[1] === "room") {
       const code = pathSegments[2];
-      openRoom(code, setPage, setRoomData, socket);
+      openRoom(code, setPage, setRoomData, socket, setWindowMessages);
     }
   }, []);
 
@@ -126,6 +130,14 @@ const App = () => {
 
   return (
     <>
+      {windowMessages.map((message, index) => (
+        message !== "" && (
+          <div key={index} className="windowMessage">
+            <p>{message}</p>
+          </div>
+        )
+      ))}
+
       {page === "home" && (
         <>
           <div className='content'>
@@ -136,7 +148,7 @@ const App = () => {
                 onClick={() => {
                   const code = document.querySelector('.codeInput')?.value;
                   if (code) {
-                    openRoom(code, setPage, setRoomData, socket);
+                    openRoom(code, setPage, setRoomData, socket, setWindowMessages);
                   } else {
                     console.log("Kein Code eingegeben");
                   }
@@ -152,6 +164,7 @@ const App = () => {
                 setPage={setPage}
                 setRoomData={setRoomData}
                 socket={socket}
+                setWindowMessages={setWindowMessages}
               />
             ))}
           </div>
@@ -260,7 +273,7 @@ const App = () => {
             />
           </div>
           <footer>
-            <button onClick={() => joinRoom(setPage, roomData, setRoomData, userData, socket, contentRef)}>Beitreten</button>
+            <button onClick={() => joinRoom(setPage, roomData, setRoomData, userData, socket, contentRef, setWindowMessages)}>Beitreten</button>
           </footer>
         </>
       )}
