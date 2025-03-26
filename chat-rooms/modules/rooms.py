@@ -1,5 +1,5 @@
 from datetime import datetime
-from modules import database, check_for_swear_words
+from modules import database, check_for_swear_words, users
 import random
 
 swear_words = check_for_swear_words.load_swear_words()
@@ -139,6 +139,7 @@ def get_chat_history(code):
 
 
 def join_room(sid, code, user_data):
+    users.delete_user(sid)
     # get the username and the chosen color from the user-data
     username, color = prepare_user_data(user_data)
 
