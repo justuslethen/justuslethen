@@ -117,6 +117,7 @@ const App = () => {
       {windowMessages.map((message, index) => (
         message !== "" && (
           <div key={index} className="windowMessage">
+            <img src="/windowMessage.svg"/>
             <p>{message}</p>
           </div>
         )
@@ -303,7 +304,7 @@ const App = () => {
             <ChatMessages messages={roomData.messages} />
           </div>
           <footer>
-            <textarea placeholder='Nachicht' className='messageInput'></textarea>
+            <textarea placeholder='Nachricht' className='messageInput'></textarea>
             <button onClick={(e) => {
               const messageInput = e.target.previousElementSibling;
               if (messageInput && messageInput.classList.contains('messageInput')) {
