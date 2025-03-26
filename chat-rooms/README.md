@@ -25,6 +25,7 @@ Once the room is created you have multiple ways to join. To share you room you c
 ### Join a room
 When you open the shared room or any public room by clicking the join-button you can give yourself a nickname and you can choose between multiple colors: blue, pink, purple, red, green and orange.
 As soon as you finaly join with your configed username and color the chat will be fetched and you can start reading the past messages.
+The app will save your user-data for any room and automaticaly connect with your last username and color, when you join a known room or refresh the page.
 
 ---
 
@@ -33,7 +34,7 @@ You can now send Messages with the textarea and button at the bottom. When you s
 
 ---
 
-# Swear Words
+### Swear Words
 You can add a file named `swear_words.txt` in the main folder `/` and separate the words with commas or new lines.  
 The app will automatically search for these swear words in messages and usernames, censor them, or even prevent users from using them.
 
