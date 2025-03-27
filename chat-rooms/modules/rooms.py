@@ -4,15 +4,27 @@ import random
 
 swear_words = check_for_swear_words.load_swear_words()
 
+
 # return the name and code for every room that is public and not expired yet
 def get_all_public_rooms():
     cur, conn = database.connect_db()
-    res = cur.execute(
-        "SELECT roomname, code FROM rooms WHERE private = 0 AND expiring_at >= DATE('NOW')"
-    )
-    publ_rooms = [{"roomname": row[0], "code": row[1]} for row in res]
+    res = cur.execute("SELECT roomname, code, expiring_at FROM rooms WHERE private = 0")
+    
+    publ_rooms = []
+    for row in res:
+        if not is_expiring_date_reached(row[2]):
+            publ_rooms.append({"roomname": row[0], "code": row[1]})
+    
     conn.close()
     return publ_rooms
+
+
+def is_expiring_date_reached(expiring_date):
+    # convert string in usable format
+    expiring_at = datetime.strptime(expiring_date, "%Y-%m-%d")
+
+    # compare it with the current date
+    return expiring_at.date() <= datetime.now().date() # comparing only the date part
 
 
 def prepare_room_data(config):
@@ -168,7 +180,7 @@ def prepare_user_data(user_data):
 def send_message(sid, message):
     # censor the message if it contains swear words
     message = check_for_swear_words.censor(message, swear_words)[0]
-    
+
     cur, conn = database.connect_db()
 
     # first get the user-id, color, room-id and code of the user by the sid
@@ -178,16 +190,19 @@ def send_message(sid, message):
         JOIN rooms ON users.room_code = rooms.code 
         WHERE users.sid = ?
     """
-    cur.execute(query,(sid,),)
+    cur.execute(
+        query,
+        (sid,),
+    )
     res = cur.fetchone()
-    
+
     # avoid errors if the user is not in the database, so maybe has not joined any room yet
     if res is None:
         return
-    
+
     # create readable values for all the values fetched
     user_id, color, room_id, code, sender_name = res[0], res[1], res[2], res[3], res[4]
-    
+
     # insert the new message with data like username, color, and text into the database
     # also insert the username in case of the user has left and his row is deleted
     cur.execute(
@@ -196,7 +211,7 @@ def send_message(sid, message):
     )
     conn.commit()
     conn.close()
-    
+
     # return the data for the new message to emit it to the other users
     return {"sender": sender_name, "color": color, "message": message, "code": code}
 
@@ -221,7 +236,7 @@ def get_all_sids_in_room(code):
 # just get_room_data only inludes the code, roomname and online users
 def get_full_room_data(code):
     room_data = get_room_data(code)
-    
+
     # just add the messages to the other room data
     return {
         "messages": get_chat_history(code),
@@ -229,7 +244,6 @@ def get_full_room_data(code):
         "roomname": room_data[1],
         "online": room_data[3],
     }
-
 
 
 def try_join_user_in_room(sid, url, last_sid):
@@ -256,17 +270,19 @@ def get_code_from_url(url):
 # look for the room code from the user that has the given sid
 def get_room_code_by_sid(sid):
     cur, conn = database.connect_db()
-    
+
     cur.execute("SELECT room_code FROM users WHERE sid = ?", (sid,))
     res = cur.fetchone()
     conn.close()
-    
+
     return res[0] if res is not None else None
 
 
 # emit the new online-number to all users in the room
 def emit_online_users(socket, code):
-    user_sids = get_all_sids_in_room(code) # count the sids in the room to find the online-number
+    user_sids = get_all_sids_in_room(
+        code
+    )  # count the sids in the room to find the online-number
     for sid in user_sids:
         socket.emit("online-users", len(user_sids), to=sid)
 
@@ -274,7 +290,7 @@ def emit_online_users(socket, code):
 # check if the room has ended by the expiring date
 def has_room_ended(code):
     cur, conn = database.connect_db()
-    
+
     # get the expiring date as datime object of the room by the code
     cur.execute("SELECT expiring_at FROM rooms WHERE code = ?", (code,))
     res = cur.fetchone()
@@ -283,40 +299,42 @@ def has_room_ended(code):
     if res is None:
         return False
 
-    expiring_at = datetime.strptime(res[0], "%Y-%m-%d") # convert the date string to a datetime object
-    return expiring_at < datetime.now() # compare the date with the current date
+    expiring_at = datetime.strptime(
+        res[0], "%Y-%m-%d"
+    )  # convert the date string to a datetime object
+    return expiring_at < datetime.now()  # compare the date with the current date
 
 
 # check if all max members are in the room
 def is_room_full(code):
     cur, conn = database.connect_db()
-    
+
     # get the max members of the room by the code
     cur.execute("SELECT max_members FROM rooms WHERE code = ?", (code,))
     max_members = cur.fetchone()[0]
-    
+
     # count the members in the room by the code
     cur.execute("SELECT * FROM users WHERE room_code = ?", (code,))
     members = len(cur.fetchall())
-    
+
     conn.close()
-    
-    return members >= max_members # return true if the room is full
+
+    return members >= max_members  # return true if the room is full
 
 
 def validate_join_room(data):
     # username check
     if data["userdata"]["username"].strip() == "":
         return "username is empty"
-    
+
     # username swear word check
     if check_for_swear_words.censor(data["userdata"]["username"], swear_words)[1] > 0:
         return "username contains swear words"
-    
+
     # room duration check
     if has_room_ended(data["code"]):
         return "room has ended"
-    
+
     # room members check
     if is_room_full(data["code"]):
         return "room is full"
@@ -324,10 +342,12 @@ def validate_join_room(data):
 
 def is_username_taken(code, username):
     cur, conn = database.connect_db()
-    
+
     # check if the username is already taken in the room
-    cur.execute("SELECT * FROM users WHERE room_code = ? AND username = ?", (code, username))
+    cur.execute(
+        "SELECT * FROM users WHERE room_code = ? AND username = ?", (code, username)
+    )
     res = cur.fetchone()
-    
+
     conn.close()
     return res is not None
