@@ -78,7 +78,7 @@ h2 {
     padding-bottom: 20px;
 
     width: 100%;
-    gap: 10px;
+    gap: 16px;
     height: max-content;
     background-color: var(--background-color);
 }
