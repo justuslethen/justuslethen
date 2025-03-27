@@ -1,0 +1,34 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.env
+*.env
+venv/
+instance/
+*.sqlite3
+
+# Node.js (React)
+node_modules/
+build/
+dist/
+*.log
+
+# Flask & SocketIO
+*.db
+*.sqlite
+migrations/
+
+# MacOS
+.DS_Store
+
+# VSCode
+.vscode/
+
+# AWS & Deployment
+*.pem
+*.crt
+*.key
+
+database.db
