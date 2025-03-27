@@ -65,6 +65,7 @@ const App = () => {
 
     // the public rest rooms will be emited by the server so catch them
     socket.on("data-public-rooms", (rooms) => {
+      console.log(rooms);
       setPublicRooms(rooms);
     });
 
@@ -117,7 +118,7 @@ const App = () => {
       {windowMessages.map((message, index) => (
         message !== "" && (
           <div key={index} className="windowMessage">
-            <img src="/windowMessage.svg"/>
+            <img src="/windowMessage.svg" />
             <p>{message}</p>
           </div>
         )
@@ -139,6 +140,21 @@ const App = () => {
                   }
                 }}>Beitreten</button>
             </div>
+            {(JSON.parse(localStorage.getItem("recentRooms")) && (
+              <h1>Zuletzt beigetreten</h1>
+            ))}
+            {(JSON.parse(localStorage.getItem("recentRooms")) || []).map((room, index) => (
+              <RoomContainer
+                key={index}
+                code={room.code}
+                name={room.roomname}
+                openRoom={openRoom}
+                setPage={setPage}
+                setRoomData={setRoomData}
+                socket={socket}
+                setWindowMessages={setWindowMessages}
+              />
+            ))}
             <h1>Öffentliche Chat Räume</h1>
             {publicRooms.map((room, index) => (
               <RoomContainer
