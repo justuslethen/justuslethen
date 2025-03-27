@@ -39,10 +39,11 @@ const openRoom = (code, setPage, setRoomData, socket, setWindowMessages) => {
 
 const joinRoom = (setPage, roomData, setRoomData, userData, socket, contentRef, setWindowMessages) => {
   // save the user config for the lobby in localstorage
-  
+
   socket.emit("join-room", { code: roomData.code, userdata: userData }, (response) => {
     if (evalate_response(response, setWindowMessages)) return; // Stop execution if there's an error
     saveUserConfigForLobby(userData);
+    updateRecentRooms(roomData);
 
     // set the roomdata to the room that was joined
     setRoomData(prev => ({
@@ -72,29 +73,29 @@ const evalate_response = (response, setWindowMessages) => {
   let message = "";
   if (response == "room not found") {
     message = "Raum existiert nicht";
-  } 
+  }
   else if (response == "room is full") {
     message = "Raum ist voll";
-  } 
+  }
   else if (response == "room has ended") {
     message = "Raum ist beendet";
-  } 
+  }
   else if (response == "username is empty") {
     message = "Nutzername fehlt";
-  } 
+  }
   else if (response == "username is taken") {
     message = "Nutzername ist schon vergeben";
-  } 
+  }
   else if (response == "username contains swear words") {
     message = "Bitte anderen Nutzernamen wählen";
-  } 
+  }
   else if (response == "roomname is empty") {
     message = "Raumname fehlt";
-  } 
+  }
   else {
     error = false;
   }
-  
+
   setWindowMessages(prev => ([
     ...prev,
     message,
@@ -150,6 +151,27 @@ const tryToJoin = (setPage, contentRef, setRoomData, setUserData, userData, setW
     joinRoom(setPage, { code: code }, setRoomData, dataOfUser, socket, contentRef, setWindowMessages);
   }
 }
+
+
+const updateRecentRooms = (currentRoomData) => {
+  let recentRooms = JSON.parse(localStorage.getItem("recentRooms")) || [];
+
+  // check if rooms is in recent rooms to avoid saving the same room twice
+  const exists = recentRooms.some(room => room.code === currentRoomData.code);
+
+  if (!exists) {
+    // add new room at first place
+    recentRooms.unshift({code: currentRoomData.code, roomname: currentRoomData.roomname});
+
+    // limit array to max 3 objects
+    if (recentRooms.length > 3) {
+      recentRooms = recentRooms.slice(0, 3);
+    }
+  }
+
+  // save the recent rooms
+  localStorage.setItem("recentRooms", JSON.stringify(recentRooms));
+};
 
 
 export {
