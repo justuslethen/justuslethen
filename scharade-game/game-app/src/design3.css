@@ -556,14 +556,14 @@ input::-webkit-input-placeholder {
     animation: windowMessage 3s ease-in-out;
 }
 
-.windowMessage p {
+.windowMessage>p {
     margin: 0px;
+    margin-left: 8px;
     font-size: 18px;
     color: var(--Text-Red);
 }
 
 .windowMessage>img {
-    margin-left: 14px;
     width: 24px;
     height: 24px;
 }

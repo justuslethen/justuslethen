@@ -157,9 +157,19 @@ input::-webkit-input-placeholder {
     background-color: var(--light-color);
 }
 
+.row {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    height: max-content;
+    align-items: center;
+}
+
 .teamsView {
     display: flex;
     flex-direction: column;
+    align-items: center;
+    width: 100%;
     gap: 20px;
 }
 
@@ -309,14 +319,14 @@ input::-webkit-input-placeholder {
     animation: windowMessage 3s ease-in-out;
 }
 
-.windowMessage p {
+.windowMessage>p {
     margin: 0px;
+    margin-left: 8px;
     font-size: 18px;
     color: var(--Text-Red);
 }
 
 .windowMessage>img {
-    margin-left: 14px;
     width: 24px;
     height: 24px;
 }
@@ -353,4 +363,15 @@ input::-webkit-input-placeholder {
     100% {
         top: -100%;
     }
+}
+
+.deleteButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgb(255, 255, 255);
+    height: 35px;
+    border-radius: 8px;
+    font-size: 14px;
+    width: 80px;
 }
