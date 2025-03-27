@@ -32,3 +32,4 @@ migrations/
 *.key
 
 database.db
+swear_words.txt
