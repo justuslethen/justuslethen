@@ -41,3 +41,5 @@ pip-log.txt
 
 # own files
 swear_words.txt
+
+__pycache__
