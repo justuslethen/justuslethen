@@ -2,12 +2,15 @@ from flask import Flask, render_template, send_from_directory, request
 from flask_socketio import SocketIO, send
 
 from modules.database import database
-from modules.lobby import lobby, game
+from modules.lobby import lobby, game, check_for_swear_words
 from modules.user import connect, userdata
 
 app = Flask(__name__, static_folder="game-app/build", static_url_path="")
 app.config["SECRET_KEY"] = "your_secret_key"
 socketio = SocketIO(app)
+
+
+swear_words = check_for_swear_words.load_swear_words()
 
 
 # Serve the index.html file
@@ -50,15 +53,12 @@ def on_connect():
 
 @socketio.on("join_lobby")
 def on_join_lobby(data):
-    print("join_lobby")
-    print(data)
-
     sid = request.sid
     pin = data["pin"]
     lobby_data = lobby.join_user_in_lobby(sid, pin)
 
     if lobby_data is None:
-        return False
+        return "game not found"
 
     # Remove the user from the game data, to prevent double user when creating a name
     lobby_data = userdata.remove_own_user_from_lobby_data(lobby_data, sid)
@@ -75,9 +75,16 @@ def on_join_lobby(data):
 @socketio.on("create_lobby")
 def on_create_lobby(config_data):
     sid = request.sid
-
+    
+    if check_for_swear_words.censor(config_data["lobby_name"], swear_words)[1]:
+        return "name contains swear words"
+    
     # Create new lobby and join the user in it
     lobby_data, host_code = lobby.create_new_lobby(sid, config_data)
+    
+    if host_code == None:
+        return "any field empty"
+
     lobby.join_user_in_lobby(sid, lobby_data["lobby_code"])
     lobby_data["is_host"] = True
 
@@ -88,11 +95,18 @@ def on_create_lobby(config_data):
 def on_set_username(data):
     sid = request.sid
     username = data["username"]
+    pin = userdata.get_users_lobby_code(sid)
+    
+    if check_for_swear_words.censor(username, swear_words)[1]:
+        return "name contains swear words"
+    if username.strip() == "":
+        return "username empty"
+    if userdata.is_username_taken(pin, username):
+        return "username is taken"
 
     userdata.set_username(sid, username)  # Set the username in the database
 
     # Emit the user to the other users in the lobby
-    pin = userdata.get_users_lobby_code(sid)
     connect.emit_new_user_to_others(socketio, sid, pin)
     return {"username": username}
 
@@ -101,6 +115,11 @@ def on_set_username(data):
 def on_set_team_name(data):
     sid = request.sid
     new_team_name = data["team_name"]
+    
+    if check_for_swear_words.censor(new_team_name, swear_words)[1]:
+        return "name contains swear words"
+    if new_team_name.strip() == "":
+        return "teamname empty"
 
     cur, conn = database.load_database()
     old_team_name = userdata.get_users_team_name(cur, sid)
@@ -126,6 +145,12 @@ def on_start_word_round():
 def on_add_word(data):
     sid = request.sid
     word = data["word"]
+    
+    if check_for_swear_words.censor(word, swear_words)[1]:
+        return "word contains swear words"
+    if word.trim() == "":
+        return "word empty"
+    
     pin = userdata.get_users_lobby_code(sid)
     lobby.add_word_to_list(word, pin, sid)
 

@@ -120,3 +120,9 @@ def update_sid_for_user(new_sid, old_sid):
     
     conn.commit()
     conn.close()
+    
+
+def is_username_taken(pin, username):
+    cur, conn = database.load_database()
+    cur.execute("SELECT * FROM users WHERE username = ? AND lobby_code = ?", (username, pin,))
+    return cur.fetchone()
