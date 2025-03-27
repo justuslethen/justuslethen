@@ -7,7 +7,7 @@ import SecondaryButton from './components/secondaryButton';
 import Timer from './components/timer';
 import PlayerCircle from './components/playerCirle';
 import Input from './components/input';
-import '../src/design1.css';
+import '../src/design2.css';
 import {
     socket,
     joinLobby,
@@ -156,6 +156,38 @@ const App = () => {
         socket.emit('remove_user', { username: username });
     }
 
+
+    // adjust the middleContainer to avoid the body to be scrollable
+    const adjustMiddleContainerHeight = () => {
+        const middleContainer = document.querySelector('.middleContainer');
+        let bottomHeight = 0;
+
+        // set every height manually for every page
+        if (page === "start" || page === "gamePin" || page === "createName" || page === "words" || page === "players") {
+            bottomHeight = 156;
+        } else if (page === "createLobby") {
+            bottomHeight = 384;
+        } else if (page === "game" && gameData.isOwnTurn) {
+            bottomHeight = 80;
+        } else if (page === "ownRound") {
+            bottomHeight = 80;
+        }
+
+        // different sizes für host because host has extra buttons that need more space
+        if (lobbyData.isHost) {
+            if (page === "words" || page === "players") {
+                bottomHeight = 232;
+            } else if (page === "roundScore") {
+                bottomHeight = 80;
+            }
+        }
+        console.log(bottomHeight);
+        if (middleContainer) {
+            const availableHeight = window.innerHeight - 70 - bottomHeight - 40;
+            middleContainer.style.height = `${availableHeight}px`;
+        }
+    };
+
     useEffect(() => {
         socket.on('end_game', (data) => {
             setTeamScore(prevTeamScore => {
@@ -257,9 +289,21 @@ const App = () => {
         });
     }, []);
 
+    useEffect(() => {
+
+        adjustMiddleContainerHeight(); // Initial setzen
+        window.addEventListener('resize', adjustMiddleContainerHeight); // Bei Resize anpassen
+
+        return () => {
+            window.removeEventListener('resize', adjustMiddleContainerHeight); // Cleanup
+        };
+    }, []);
+
     return (
         <>
-            <Header title={title} />
+            <div className='topContainer'>
+                <Header title={title} />
+            </div>
             <div className="backgroundAmbiente">
                 <div id="div1" />
                 <div id="div2">
@@ -270,39 +314,9 @@ const App = () => {
                 <div id="div4" />
                 <div id="div5" />
             </div>
-            {page === "start" && (
-                <section className="bottomContainer">
-                    <SecondaryButton name="Lobby Erstellen" onClick={() => setPage("createLobby")} />
-                    <PrimaryButton name="Lobby Beitreten" onClick={() => setPage("gamePin")} />
-                </section>
-            )}
 
-            {page === "gamePin" && (
-                <section className="bottomContainer">
-                    <Input placeholder="Spiel Pin" className="numberInput" id="gamePin" />
-                    <PrimaryButton name="Spiel Starten" onClick={() => handleJoinLobby()} />
-                </section>
-            )}
-
-            {page === "createLobby" && (
-                <section className="bottomContainer">
-                    <Input placeholder="Lobbyname" className="textInput" id="lobbyName" />
-                    <Input placeholder="Runden" className="textInput" id="numberOfRounds" />
-                    <Input placeholder="Teams" className="textInput" id="numberOfTeams" />
-                    <Input placeholder="Zeit" className="textInput" id="amountOfTime" />
-                    <PrimaryButton name="Lobby Erstellen" onClick={() => handleCreateLobby()} />
-                </section>
-            )}
-
-            {page === "createName" && (
-                <section className="bottomContainer">
-                    <Input placeholder="Spielername" className="textInput" id="username" />
-                    <PrimaryButton name="Bestätigen" onClick={() => handleSetUserName()} />
-                </section>
-            )}
-
-            {page === "players" && (
-                <div>
+            <div className='middleContainer'>
+                {page === "players" && (
                     <section className="teamsView">
                         {lobbyData.teams && lobbyData.teams.map((team, i) => (
                             <div key={i} className="mainContainer">
@@ -318,7 +332,117 @@ const App = () => {
                             </div>
                         ))}
                     </section>
-                    <section className="bottomContainer">
+                )}
+                {page === "words" && (
+                    <>
+                        <h2>Deine Wörter</h2>
+                        <div className="mainContainer" id="wordsContainer">
+                            {lobbyData.words && lobbyData.words.map((word, i) => (
+                                <p key={i}>{word}</p>
+                            ))}
+                        </div>
+                    </>
+                )}
+                {page === "game" && (
+                    <div>
+                        {!gameData.isOwnTurn ? (
+                            <div className="topContainer">
+                                <Timer timeLeft={countdown.timeLeft} />
+                            </div>
+                        ) : (
+                            <div className="topContainer" />
+                        )}
+                        <PlayerCircle currentTurnUser={gameData.currentTurnUser} isOwnTurn={gameData.isOwnTurn} />
+                        <h2>Teammitglieder</h2>
+                        <div className="mainContainer" id="teamMembers">
+                            {lobbyData.teams && lobbyData.teams.map((team, i) => (
+                                team.team_name === gameData.currentTurnTeam && team.members.map((member, j) => (
+                                    member !== gameData.currentTurnUser && <p key={j}>{member}</p>
+                                ))
+                            ))}
+                        </div>
+                    </div>
+                )}
+                {page === "ownRound" && (
+                    <div>
+                        <div className="topContainer">
+                            <Timer timeLeft={countdown.timeLeft} />
+                        </div>
+                        <h2 className="wordHeader">Dein Wort</h2>
+                        <div className="mainContainer" id="wordContainer">
+                            <h1>{gameData.currentWord}</h1>
+                        </div>
+                        <h2>Teammitglieder</h2>
+                        <div className="mainContainer" id="teamMembers">
+                            {lobbyData.teams && lobbyData.teams.map((team, i) => (
+                                team.team_name === gameData.currentTurnTeam && team.members.map((member, j) => (
+                                    member !== gameData.currentTurnUser && <p key={j}>{member}</p>
+                                ))
+                            ))}
+                        </div>
+
+                    </div>
+                )}
+
+                {page === "roundScore" && (
+                    <div>
+                        <h2 className="wordHeader">Punktestand</h2>
+                        {gameData.teamsScore && gameData.teamsScore.map((team, i) => (
+                            <div key={i} className="mainContainer" id="scoreContainer">
+                                <h2>{team.team_name} Punkte: {team.score}</h2>
+                                {team.members && team.members.map((member, j) => (
+                                    <p key={j}>{member}</p>
+                                ))}
+                            </div>
+                        ))}
+                    </div>
+                )}
+
+                {page === "endData" && (
+                    <div>
+                        <h2 className="wordHeader">Spiel Vorbei</h2>
+                        {gameData.teamsScore && gameData.teamsScore.map((team, i) => (
+                            <div key={i} className="mainContainer" id="scoreContainer">
+                                <h2>{team.team_name}</h2>
+                                <p>Punkte: {team.score}</p>
+                            </div>
+                        ))}
+                    </div>
+                )}
+            </div>
+
+
+            {/* Bottom */}
+            <section className="bottomContainer">
+                {page === "start" && (
+                    <>
+                        <SecondaryButton name="Lobby Erstellen" onClick={() => setPage("createLobby")} />
+                        <PrimaryButton name="Lobby Beitreten" onClick={() => setPage("gamePin")} />
+                    </>
+                )}
+                {page === "gamePin" && (
+                    <>
+                        <Input placeholder="Spiel Pin" className="numberInput" id="gamePin" />
+                        <PrimaryButton name="Spiel Starten" onClick={() => handleJoinLobby()} />
+                    </>
+                )}
+                {page === "createLobby" && (
+                    <>
+                        <Input placeholder="Lobbyname" className="textInput" id="lobbyName" />
+                        <Input placeholder="Runden" className="textInput" id="numberOfRounds" />
+                        <Input placeholder="Teams" className="textInput" id="numberOfTeams" />
+                        <Input placeholder="Zeit" className="textInput" id="amountOfTime" />
+                        <PrimaryButton name="Lobby Erstellen" onClick={() => handleCreateLobby()} />
+                    </>
+                )}
+                {page === "createName" && (
+                    <>
+                        <Input placeholder="Spielername" className="textInput" id="username" />
+                        <PrimaryButton name="Bestätigen" onClick={() => handleSetUserName()} />
+                    </>
+                )}
+                {page === "players" && (
+                    <>
                         <Input placeholder="Teamname" className="textInput" id="teamName" />
                         {lobbyData.isHost ? (
                             <>
@@ -328,19 +452,10 @@ const App = () => {
                         ) : (
                             <PrimaryButton name="Team benennen" onClick={() => handleSetTeamName()} />
                         )}
-                    </section>
-                </div>
-            )}
-
-            {page === "words" && (
-                <div>
-                    <h2>Deine Wörter</h2>
-                    <div className="mainContainer" id="wordsContainer">
-                        {lobbyData.words && lobbyData.words.map((word, i) => (
-                            <p key={i}>{word}</p>
-                        ))}
-                    </div>
-                    <section className="bottomContainer">
+                    </>
+                )}
+                {page === "words" && (
+                    <>
                         <Input placeholder="Neues Wort" className="textInput" id="wordInput" />
                         {lobbyData.isHost ? (
                             <>
@@ -350,104 +465,32 @@ const App = () => {
                         ) : (
                             <SecondaryButton name="Wort hinzufügen" onClick={() => addWord()} />
                         )}
-                    </section>
-                </div>
-            )}
-
-            {page === "game" && (
-                <div>
-                    {!gameData.isOwnTurn ? (
-                        <div className="topContainer">
-                            <Timer timeLeft={countdown.timeLeft} />
-                        </div>
-                    ) : (
-                        <div className="topContainer" />
-                    )}
-                    <PlayerCircle currentTurnUser={gameData.currentTurnUser} isOwnTurn={gameData.isOwnTurn} />
-                    <h2>Teammitglieder</h2>
-                    <div className="mainContainer" id="teamMembers">
-                        {lobbyData.teams && lobbyData.teams.map((team, i) => (
-                            team.team_name === gameData.currentTurnTeam && team.members.map((member, j) => (
-                                member !== gameData.currentTurnUser && <p key={j}>{member}</p>
-                            ))
-                        ))}
-                    </div>
-                    {gameData.isOwnTurn && (
-                        <section className="bottomContainer">
-                            <PrimaryButton name="Bereit" onClick={() => startRound()} />
-                        </section>
-                    )}
-                </div>
-            )}
-
-            {page === "ownRound" && (
-                <div>
-                    <div className="topContainer">
-                        <Timer timeLeft={countdown.timeLeft} />
-                    </div>
-                    <h2 className="wordHeader">Dein Wort</h2>
-                    <div className="mainContainer" id="wordContainer">
-                        <h1>{gameData.currentWord}</h1>
-                    </div>
-                    <h2>Teammitglieder</h2>
-                    <div className="mainContainer" id="teamMembers">
-                        {lobbyData.teams && lobbyData.teams.map((team, i) => (
-                            team.team_name === gameData.currentTurnTeam && team.members.map((member, j) => (
-                                member !== gameData.currentTurnUser && <p key={j}>{member}</p>
-                            ))
-                        ))}
-                    </div>
-                    {!gameData.isLastWord ? (
+                    </>
+                )}
+                {page === "ownRound" && (
+                    !gameData.isLastWord ? (
                         countdown.timeLeft > 0 ? (
-                            <section className="bottomContainer">
-                                <PrimaryButton name="Wort richtig" onClick={() => guessedWordCorrect()} />
-                            </section>
+                            <PrimaryButton name="Wort richtig" onClick={() => guessedWordCorrect()} />
                         ) : (
-                            <section className="bottomContainer">
-                                <SecondaryButton name="Nächster Spieler" onClick={() => nextPlayer()} />
-                            </section>
+                            <SecondaryButton name="Nächster Spieler" onClick={() => nextPlayer()} />
                         )
                     ) : (
-                        <section className="bottomContainer">
-                            <SecondaryButton name="Runde Beenden" onClick={() => endRound()} />
-                        </section>
-                    )}
-                </div>
-            )}
+                        <SecondaryButton name="Runde Beenden" onClick={() => endRound()} />
+                    )
+                )}
+                {page === "game" && gameData.isOwnTurn && (
+                    <PrimaryButton name="Bereit" onClick={() => startRound()} />
+                )}
+                {page === "roundScore" && lobbyData.isHost && (
+                    <PrimaryButton name="Nächste Runde starten" onClick={() => nextRound()} />
+                )}
+                {page === "endData" && (
+                    <PrimaryButton name="Zurück zum Start" onClick={() => backToStart()} />
+                )}
+            </section>
 
-            {page === "roundScore" && (
-                <div>
-                    <h2 className="wordHeader">Punktestand</h2>
-                    {gameData.teamsScore && gameData.teamsScore.map((team, i) => (
-                        <div key={i} className="mainContainer" id="scoreContainer">
-                            <h2>{team.team_name} Punkte: {team.score}</h2>
-                            {team.members && team.members.map((member, j) => (
-                                <p key={j}>{member}</p>
-                            ))}
-                        </div>
-                    ))}
-                    {lobbyData.isHost && (
-                        <section className="bottomContainer">
-                            <PrimaryButton name="Nächste Runde starten" onClick={() => nextRound()} />
-                        </section>
-                    )}
-                </div>
-            )}
 
-            {page === "endData" && (
-                <div>
-                    <h2 className="wordHeader">Spiel Vorbei</h2>
-                    {gameData.teamsScore && gameData.teamsScore.map((team, i) => (
-                        <div key={i} className="mainContainer" id="scoreContainer">
-                            <h2>{team.team_name}</h2>
-                            <p>Punkte: {team.score}</p>
-                        </div>
-                    ))}
-                    <section className="bottomContainer">
-                        <PrimaryButton name="Zurück zum Start" onClick={() => backToStart()} />
-                    </section>
-                </div>
-            )}
+            {adjustMiddleContainerHeight()}
         </>
     );
 };
