@@ -21,7 +21,8 @@ import {
     convertGameData,
     startTimer,
     clearTimer,
-    handleRemovedUser
+    handleRemovedUser,
+    evalateResponse,
 } from './socketHandlers';
 
 const App = () => {
@@ -46,6 +47,7 @@ const App = () => {
     const [teamScore, setTeamScore] = useState([]);
 
     const timerRef = useRef(null);
+    const [windowMessages, setWindowMessages] = useState([]);
 
     useEffect(() => {
         const hostCode = localStorage.getItem('hostCode');
@@ -62,25 +64,25 @@ const App = () => {
 
     const handleJoinLobby = () => {
         const pin = parseInt(document.querySelector('input').value, 10);
-        joinLobby(pin, setLobbyData, setPage, setTitle);
+        joinLobby(pin, setLobbyData, setPage, setTitle, setWindowMessages);
     };
 
     const handleCreateLobby = () => {
         const config_data = getcreateLobbyData();
-        createLobby(config_data, setLobbyData, setPage, setTitle);
+        createLobby(config_data, setLobbyData, setPage, setTitle, setWindowMessages);
         console.log("game data:", lobbyData);
     };
 
     const handleSetUserName = () => {
         const username = document.querySelector('#username').value;
-        setUserName(username, setPage);
+        setUserName(username, setPage, setWindowMessages);
         console.log(lobbyData);
     };
 
     const handleSetTeamName = () => {
         const teamName = document.querySelector('#teamName').value;
         if (teamName.trim() !== "") {
-            setTeamName(teamName);
+            setTeamName(teamName, setWindowMessages);
             document.querySelector('#teamName').value = '';
         }
     };
@@ -101,11 +103,13 @@ const App = () => {
     const addWord = () => {
         const word = document.querySelector('#wordInput').value;
         document.querySelector('#wordInput').value = '';
-        socket.emit('add_word', { word: word });
-        setLobbyData(prevlobbyData => ({
-            ...prevlobbyData,
-            words: [...prevlobbyData.words, word]
-        }));
+        socket.emit('add_word', { word: word }, (res) => {
+            if (evalateResponse(res, setWindowMessages)) return;
+            setLobbyData(prevlobbyData => ({
+                ...prevlobbyData,
+                words: [...prevlobbyData.words, word]
+            }));
+        });
     };
 
     const startGame = () => {
@@ -301,6 +305,15 @@ const App = () => {
 
     return (
         <>
+            {windowMessages.map((message, index) => (
+                message !== "" && (
+                    <div key={index} className="windowMessage">
+                        <img src="/windowMessage.svg" />
+                        <p>{message}</p>
+                    </div>
+                )
+            ))}
+
             <div className='topContainer'>
                 <Header title={title} />
             </div>

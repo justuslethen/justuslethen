@@ -8,6 +8,11 @@
     --red-dark: #be0000;
 }
 
+:root {
+    --Text-Red: #CC0F0F;
+    --Red-Light-1: #FFD5D5;
+    --Red-Light-2: #FFA7A7;
+}
 /* @media (prefers-color-scheme: light) {
     :root {
         --background-color: #ffffff;
@@ -18,12 +23,13 @@
 } */
 
 /* @media (prefers-color-scheme: dark) { */
-    :root {
-        --background-color: #000000;
-        --container-color: #323232;
-        --font-color: #ffffff;
-        --gray-font-color: #858585;
-    }
+:root {
+    --background-color: #000000;
+    --container-color: #323232;
+    --font-color: #ffffff;
+    --gray-font-color: #858585;
+}
+
 /* } */
 
 
@@ -223,18 +229,18 @@ input::-webkit-input-placeholder {
 #playersCircle[data-is-own-turn="true"] {
     padding: 10px !important;
     animation: circleBorder 4s infinite linear;
-    box-shadow: 0px 0px 80px 0px var(--blue);   
+    box-shadow: 0px 0px 80px 0px var(--blue);
 }
 
 @keyframes circleBorder {
     0% {
         border: 6px solid var(--blue);
     }
-    
+
     50% {
         border: 20px solid var(--blue);
     }
-    
+
     100% {
         border: 6px solid var(--blue);
     }
@@ -308,4 +314,70 @@ input::-webkit-input-placeholder {
     font-size: 18px;
     margin: 0px;
     color: var(--font-color);
+}
+
+.windowMessage {
+    top: -100%;
+    left: 20px;
+    position: fixed;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    word-wrap: break-word;
+
+    width: calc(100% - 40px);
+    padding: 20px;
+    box-sizing: border-box;
+    border-radius: 20px;
+    z-index: 30;
+
+    border: 1px solid var(--Red-Light-2);
+    background-color: var(--Red-Light-1);
+    animation: windowMessage 3s ease-in-out;
+}
+
+.windowMessage p {
+    margin: 0px;
+    font-size: 18px;
+    color: var(--Text-Red);
+}
+
+.windowMessage>img {
+    margin-left: 14px;
+    width: 24px;
+    height: 24px;
+}
+
+.windowMessage>svg:first-child {
+    stroke: var(--Red-Light-1);
+}
+
+.windowMessage>svg:last-child {
+    stroke: var(--Red-Light-2);
+}
+
+@keyframes windowMessage {
+    0% {
+        top: -100%;
+    }
+
+    5% {
+        top: 40px;
+    }
+
+    10% {
+        top: 15px;
+    }
+
+    12% {
+        top: 20px;
+    }
+
+    90% {
+        top: 20px;
+    }
+
+    100% {
+        top: -100%;
+    }
 }

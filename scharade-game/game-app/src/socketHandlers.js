@@ -1,10 +1,11 @@
 import socketio from 'socket.io-client';
 import { useRef } from 'react';
 
-const socket = socketio('http://192.168.178.116:4500');
+const socket = socketio('http://127.0.0.1:4500');
 
-const joinLobby = (pin, setLobbyData, setPage, setTitle) => {
+const joinLobby = (pin, setLobbyData, setPage, setTitle, setWindowMessages) => {
     socket.emit('join_lobby', { pin: pin }, (data) => {
+        if (evalateResponse(data, setWindowMessages)) return;
         if (data && data.lobby_data) {
             const newLobbyData = convertLobbyData(data.lobby_data);
             localStorage.setItem('playerSid', data.lobby_data.player_sid);
@@ -16,8 +17,9 @@ const joinLobby = (pin, setLobbyData, setPage, setTitle) => {
     });
 };
 
-const createLobby = (config_data, setLobbyData, setPage, setTitle) => {
+const createLobby = (config_data, setLobbyData, setPage, setTitle, setWindowMessages) => {
     socket.emit('create_lobby', config_data, (data) => {
+        if (evalateResponse(data, setWindowMessages)) return;
         if (data && data.lobby_data) {
             localStorage.setItem('hostCode', data.host_code);
             localStorage.removeItem('playerSid'); // delete playerSid to avoid conflicts
@@ -30,16 +32,18 @@ const createLobby = (config_data, setLobbyData, setPage, setTitle) => {
     });
 };
 
-const setUserName = (username, setPage) => {
+const setUserName = (username, setPage, setWindowMessages) => {
     socket.emit('set_username', { username: username }, (data) => {
+        if (evalateResponse(data, setWindowMessages)) return;
         if (data.username) {
             setPage("players");
         }
     });
 };
 
-const setTeamName = (teamName) => {
+const setTeamName = (teamName, setWindowMessages) => {
     socket.emit('set_team_name', { team_name: teamName }, (data) => {
+        if (evalateResponse(data, setWindowMessages)) return;
         if (data.team_name) {
             console.log("Team name set to:", data.team);
         }
@@ -209,6 +213,51 @@ const handleRemovedUser = (data, setLobbyData, username) => {
     });
 }
 
+// check the response for any of the error string
+// return true if there is an error
+const evalateResponse = (response, setWindowMessages) => {
+    let error = true;
+    let message = "";
+    if (response == "game not found") {
+      message = "Spiel existiert nicht";
+    }
+    else if (response == "username empty") {
+      message = "Bitte Nutzernamen angeben";
+    }
+    else if (response == "teamname empty") {
+      message = "Bitte Teamnamen eingeben";
+    }
+    else if (response == "word empty") {
+      message = "Bitte Wort eingeben";
+    }
+    else if (response == "any field empty") {
+      message = "Bitte alle Felder ausfüllen";
+    }
+    else if (response == "username is taken") {
+      message = "Nutzername ist schon vergeben";
+    }
+    else if (response == "word contains swear words") {
+      message = "Bitte anderes Wort wählen";
+    }
+    else if (response == "name contains swear words") {
+      message = "Bitte anderen Namen wählen";
+    }
+    else if (response == "roomname is empty") {
+      message = "Bitte Raumnamen angeben";
+    }
+    else {
+      error = false;
+    }
+  
+    setWindowMessages(prev => ([
+      ...prev,
+      message,
+    ]));
+  
+    return error;
+  };
+
+
 export {
     socket,
     joinLobby,
@@ -223,4 +272,5 @@ export {
     startTimer,
     clearTimer,
     handleRemovedUser,
+    evalateResponse,
 };
