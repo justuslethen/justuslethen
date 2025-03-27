@@ -7,7 +7,9 @@ const Header = ({ online, name, setPage, recentPage, share, socket }) => {
                 <button className="iconButton" onClick={() => {
                     setPage(recentPage);
                     socket.emit("request-public-rooms");
-                    window.history.pushState({}, "", "/");
+                    if (recentPage == "home") {
+                        window.history.pushState({}, "", "/");
+                    }
                     document.title = "Chat Rooms"; // set the title of the page
                 }}>
                     <img src="/arrowLeft.svg" />
