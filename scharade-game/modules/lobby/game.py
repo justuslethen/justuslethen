@@ -94,28 +94,26 @@ def get_game_data(pin, sid):
     round_time = get_round_time(cur, pin)
     game_data = format_game_data(result, round_time)
     print(f"round: {game_data['round']}")
-    game_data["teams_score"] = get_teams_total_score(cur, pin)
-    game_data["is_last_word"] = check_if_is_last_word(cur, pin)
+    game_data["teamsscore"] = get_teams_total_score(cur, pin)
+    game_data["islastword"] = check_if_is_last_word(cur, pin)
     conn.close()
     
     # defining is_own_turn bfor the client
-    game_data["is_own_turn"] = game_data["current_turn_user"] == userdata.get_username(sid)
+    game_data["isownturn"] = game_data["currentturnuser"] == userdata.get_username(sid)
     
     return game_data
 
 
 def format_game_data(result, round_time):
     time_left_at_start, round, current_turn_sid, current_turn_team, round_started = result
-    print(f"current_turn_sid: {current_turn_sid}")
     current_turn_user = userdata.get_username(current_turn_sid)
-    print(f"current_turn_user: {current_turn_user}")
     return {
-        "current_turn_user": current_turn_user,
-        "is_own_turn": False,  # This should be set based on the current user's SID, which is not provided here
-        "current_turn_team": current_turn_team,
+        "currentturnuser": current_turn_user,
+        "isownturn": False,  # This should be set based on the current user's SID, which is not provided here
+        "currentturnteam": current_turn_team,
         "round": round,
-        "round_started": round_started,
-        "time_left_at_start": time_left_at_start if True else round_time
+        "roundstarted": round_started,
+        "timeleftatstart": time_left_at_start if True else round_time
     }
 
 
@@ -312,4 +310,4 @@ def is_game_over(pin):
     round_number = cur.fetchone()[0]
     
     conn.close()
-    return round_number >= max_rounds
+    return round_number or 0 >= max_rounds

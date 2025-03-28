@@ -22,10 +22,10 @@ def create_new_lobby(sid, config_data):
     """
     cur.execute(query,(
             pin,
-            escape(config_data["lobby_name"]),
-            config_data["number_of_rounds"],
-            config_data["number_of_teams"],
-            config_data["round_time"],
+            escape(config_data["lobbyname"]),
+            config_data["numberofrounds"],
+            config_data["numberofteams"],
+            config_data["roundtime"],
             sid,
             host_code,
         ),)
@@ -49,7 +49,7 @@ def get_lobby_data(cur, pin, sid):
     # compile the response to a json to send it to the client
     data = compile_lobby_data_to_json(result)
     data["teams"] = get_team_users(cur, pin)
-    data["player_sid"] = sid
+    data["playersid"] = sid
     data["words"] = get_players_added_words(cur, sid)
     print(f"words: {data['words']}")
     
@@ -67,12 +67,12 @@ def compile_lobby_data_to_json(response):
     if not response:
         return None
     return {
-        "lobby_code": response[0],
-        "lobby_name": response[1],
-        "number_of_rounds": response[2],
-        "number_of_teams": response[3],
-        "round_time": response[4],
-        "host_sid": response[5],
+        "lobbycode": response[0],
+        "lobbyname": response[1],
+        "numberofrounds": response[2],
+        "numberofteams": response[3],
+        "roundtime": response[4],
+        "hostsid": response[5],
         "page": response[6]
     }
 
@@ -108,17 +108,17 @@ def get_users_from_lobby(cur, pin):
 
 
 def check_config_data(config_data):
-    if not config_data["lobby_name"] or config_data["lobby_name"] == "":
-        raise ValueError("lobby_name not set")
+    if not config_data["lobbyname"] or config_data["lobbyname"] == "":
+        raise ValueError("lobbyname not set")
     
-    if not config_data["number_of_rounds"] or config_data["number_of_rounds"] == 0:
-        raise ValueError("number_of_rounds not set")
+    if not config_data["numberofrounds"] or config_data["numberofrounds"] == 0:
+        raise ValueError("numberofrounds not set")
     
-    if not config_data["number_of_teams"] or config_data["number_of_teams"] <= 1:
-        raise ValueError("number_of_teams too low")
+    if not config_data["numberofteams"] or config_data["numberofteams"] <= 1:
+        raise ValueError("numberofteams too low")
     
-    if not config_data["round_time"] or config_data["round_time"] == 0:
-        raise ValueError("round_time not set")
+    if not config_data["roundtime"] or config_data["roundtime"] == 0:
+        raise ValueError("roundtime not set")
 
 
 def join_user_in_lobby(sid, pin):
