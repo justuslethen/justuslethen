@@ -69,14 +69,14 @@ def on_join_lobby(data):
     lobby_data["username"] = username
 
     print("lobby_data: ", lobby_data)
-    return {"lobby_data": lobby_data}
+    return {"lobbydata": lobby_data}
 
 
 @socketio.on("create_lobby")
 def on_create_lobby(config_data):
     sid = request.sid
     
-    if check_for_swear_words.censor(config_data["lobby_name"], swear_words)[1]:
+    if check_for_swear_words.censor(config_data["lobbyname"], swear_words)[1]:
         return "name contains swear words"
     
     # Create new lobby and join the user in it
@@ -85,10 +85,10 @@ def on_create_lobby(config_data):
     if host_code == None:
         return "any field empty"
 
-    lobby.join_user_in_lobby(sid, lobby_data["lobby_code"])
-    lobby_data["is_host"] = True
+    lobby.join_user_in_lobby(sid, lobby_data["lobbycode"])
+    lobby_data["ishost"] = True
 
-    return {"lobby_data": lobby_data, "host_code": host_code}
+    return {"lobbydata": lobby_data, "hostcode": host_code}
 
 
 @socketio.on("set_username")
@@ -166,13 +166,13 @@ def on_host_back_to_lobby(data):
     cur, conn = database.load_database()
     lobby_data = lobby.get_lobby_data(cur, pin, sid)
     conn.close()
-    lobby_data["is_host"] = True
+    lobby_data["ishost"] = True
     game_data = game.get_game_data(pin, sid)
 
     return {
-        "lobby_data": lobby_data,
+        "lobbydata": lobby_data,
         "page": lobby_data["page"],
-        "game_data": game_data,
+        "gamedata": game_data,
     }
 
 
@@ -193,7 +193,7 @@ def on_forward_as_player(data):
     return {
         "lobby_data": lobby_data,
         "page": lobby_data["page"],
-        "game_data": game_data,
+        "gamedata": game_data,
     }
 
 @socketio.on("remove_user")
