@@ -296,7 +296,7 @@ const App = () => {
             socket={socket} />
           <div className='content'>
             <h1>{roomData.code}</h1>
-            <img
+            <img className='qrCode'
               src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${window.location.href}`}
               alt="QR-Code für Raum"
             />

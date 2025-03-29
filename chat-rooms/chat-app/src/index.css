@@ -377,11 +377,9 @@ input {
   color: var(--User-Orange);
 }
 
-img {
+.qrCode {
   width: 100%;
   max-width: 400px;
-  margin-left: 50%;
-  transform: translateX(-50%);
 }
 
 .container {
