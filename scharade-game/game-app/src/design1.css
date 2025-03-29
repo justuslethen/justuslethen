@@ -37,7 +37,6 @@
 body {
     margin: 0px;
     padding: 20px;
-    padding-bottom: 200px;
 
     font-family: Noto Sans, sans-serif;
     background-color: var(--background-color);
