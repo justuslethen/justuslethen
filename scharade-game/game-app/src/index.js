@@ -18,7 +18,6 @@ import {
     changeTeamName,
     handleHostContinuation,
     handlePlayerContinuation,
-    convertGameData,
     startTimer,
     clearTimer,
     handleRemovedUser,
@@ -29,12 +28,12 @@ const App = () => {
     const [page, setPage] = useState("start");
     const [title, setTitle] = useState("Scharade");
     const [gameData, setGameData] = useState({
-        currentTurnUser: "",
-        isOwnTurn: false,
-        currentTurnTeam: "",
-        timeLeft: 0,
-        currentWord: "",
-        teamsScore: [],
+        currentturnuser: "",
+        isownturn: false,
+        currentturnteam: "",
+        timeleft: 0,
+        currentword: "",
+        teamsscore: [],
         round: 0,
     });
     const [lobbyData, setLobbyData] = useState({
@@ -42,7 +41,9 @@ const App = () => {
         words: [],
     });
     const [countdown, setCountdown] = useState({
-        timeLeft: 30,
+        timeleft: 0,
+        timeatstart: 0,
+        startdate: 0
     });
     const [teamScore, setTeamScore] = useState([]);
 
@@ -54,11 +55,9 @@ const App = () => {
         const playerSid = localStorage.getItem('playerSid');
 
         if (hostCode) {
-            handleHostContinuation(hostCode, setLobbyData, setGameData, setTitle, setPage);
-            console.log("lobby data:", lobbyData);
+            handleHostContinuation(hostCode, setLobbyData, setGameData, setTitle, setPage, setCountdown, timerRef);
         } else if (playerSid && !hostCode) {
-            handlePlayerContinuation(playerSid, setLobbyData, setGameData, setTitle, setPage);
-            console.log("lobby data:", lobbyData);
+            handlePlayerContinuation(playerSid, setLobbyData, setGameData, setTitle, setPage, setCountdown, timerRef);
         }
     }, []);
 
@@ -68,7 +67,7 @@ const App = () => {
     };
 
     const handleCreateLobby = () => {
-        const config_data = getcreateLobbyData();
+        const config_data = createLobbyData();
         createLobby(config_data, setLobbyData, setPage, setTitle, setWindowMessages);
         console.log("game data:", lobbyData);
     };
@@ -87,12 +86,12 @@ const App = () => {
         }
     };
 
-    const getcreateLobbyData = () => {
+    const createLobbyData = () => {
         return {
-            number_of_rounds: parseInt(document.querySelector('#numberOfRounds').value, 10),
-            number_of_teams: parseInt(document.querySelector('#numberOfTeams').value, 10),
-            round_time: parseInt(document.querySelector('#amountOfTime').value, 10),
-            lobby_name: document.querySelector('#lobbyName').value
+            numberofrounds: parseInt(document.querySelector('#numberOfRounds').value, 10),
+            numberofteams: parseInt(document.querySelector('#numberOfTeams').value, 10),
+            roundtime: parseInt(document.querySelector('#amountOfTime').value, 10),
+            lobbyname: document.querySelector('#lobbyName').value
         };
     };
 
@@ -122,10 +121,10 @@ const App = () => {
 
     const guessedWordCorrect = () => {
         setGameData(prevGameData => {
-            if (prevGameData.isOwnTurn) {
-                socket.emit('guessed_word_correct', { word: prevGameData.currentWord }, (data) => {
+            if (prevGameData.isownturn) {
+                socket.emit('guessed_word_correct', { word: prevGameData.currentword }, (data) => {
                     console.log("data:", data);
-                    setGameData({ ...prevGameData, currentWord: data.word, isLastWord: data.is_last_word });
+                    setGameData({ ...prevGameData, currentword: data.word, isLastWord: data.is_last_word });
                     console.log("data after update:", data);
                 });
             }
@@ -146,7 +145,7 @@ const App = () => {
     };
 
     const endRound = () => {
-        socket.emit('end_round', { word: gameData.currentWord });
+        socket.emit('end_round', { word: gameData.currentword });
         clearTimer(timerRef);
     };
 
@@ -171,21 +170,22 @@ const App = () => {
             bottomHeight = 156;
         } else if (page === "createLobby") {
             bottomHeight = 384;
-        } else if (page === "game" && gameData.isOwnTurn) {
+        } else if (page === "game" && gameData.isownturn) {
             bottomHeight = 80;
         } else if (page === "ownRound") {
             bottomHeight = 80;
         }
 
         // different sizes für host because host has extra buttons that need more space
-        if (lobbyData.isHost) {
+        if (lobbyData.ishost) {
             if (page === "words" || page === "players") {
                 bottomHeight = 232;
             } else if (page === "roundScore") {
                 bottomHeight = 80;
             }
         }
-        console.log(bottomHeight);
+
+        // set the calculated height if element is available
         if (middleContainer) {
             const availableHeight = window.innerHeight - 70 - bottomHeight - 40;
             middleContainer.style.height = `${availableHeight}px`;
@@ -204,10 +204,7 @@ const App = () => {
 
     useEffect(() => {
         socket.on('end_round', (data) => {
-            setGameData(prevGameData => {
-                const newGameData = convertGameData(data.game_data);
-                return newGameData;
-            });
+            setGameData(data.gamedata);
             clearTimer(timerRef);
             setPage("roundScore");
         });
@@ -246,8 +243,7 @@ const App = () => {
 
     useEffect(() => {
         socket.on('end_round', (data) => {
-            const newGameData = convertGameData(data.game_data);
-            setGameData(newGameData);
+            setGameData(data.gamedata);
             clearTimer(timerRef);
             setPage("roundScore");
         });
@@ -256,10 +252,7 @@ const App = () => {
     useEffect(() => {
         socket.on('start_game', (data) => {
             console.log("game data:", data);
-            setGameData(prevGameData => {
-                const newGameData = convertGameData(data.game_data);
-                return newGameData;
-            });
+            setGameData(data.gamedata);
             clearTimer(timerRef);
             console.log("start_game")
             setPage("game");
@@ -271,14 +264,28 @@ const App = () => {
             console.log("start round data:", data);
             if (data) {
                 setGameData(prevGameData => {
-                    const newGameData = { ...prevGameData, currentWord: data.word, amountOfTime: data.amountOfTime };
-                    console.log("start_round game data:", newGameData);
-                    return newGameData;
+                    return {
+                        ...prevGameData,
+                        currentword: data.word,
+                        amountOfTime: data.amountoftime
+                    };
+                });
+
+                setCountdown({
+                    timeleft: data.timeatstart,
+                    timeatstart: data.timeatstart,
+                    startdate: new Date(data.startdate).getTime()
                 });
                 setPage("ownRound");
+                clearTimer(timerRef);
+
+                // use data values because the countdown isnt stored yet
+                startTimer({
+                    timeleft: data.timeatstart,
+                    timeatstart: data.timeatstart,
+                    startdate: new Date(data.startdate).getTime()
+                }, setCountdown, timerRef);
             }
-            clearTimer(timerRef);
-            startTimer(setCountdown, 60, timerRef);
         });
     }, []);
 
@@ -337,7 +344,7 @@ const App = () => {
                                 {team.members && team.members.map((member, a) => (
                                     <div key={a} className="row">
                                         <p key={a}>{member}</p>
-                                        {lobbyData.isHost && (
+                                        {lobbyData.ishost && (
                                             <DeleteButton name="Kicken" onClick={() => removeUser(member)} />
                                         )}
                                     </div>
@@ -358,19 +365,19 @@ const App = () => {
                 )}
                 {page === "game" && (
                     <div>
-                        {!gameData.isOwnTurn ? (
+                        {!gameData.isownturn ? (
                             <div className="topContainer">
-                                <Timer timeLeft={countdown.timeLeft} />
+                                <Timer timeLeft={countdown.timeleft} />
                             </div>
                         ) : (
                             <div className="topContainer" />
                         )}
-                        <PlayerCircle currentTurnUser={gameData.currentTurnUser} isOwnTurn={gameData.isOwnTurn} />
+                        <PlayerCircle currentTurnUser={gameData.currentturnuser} isOwnTurn={gameData.isownturn} />
                         <h2>Teammitglieder</h2>
                         <div className="mainContainer" id="teamMembers">
                             {lobbyData.teams && lobbyData.teams.map((team, i) => (
-                                team.team_name === gameData.currentTurnTeam && team.members.map((member, j) => (
-                                    member !== gameData.currentTurnUser && <p key={j}>{member}</p>
+                                team.team_name === gameData.currentturnteam && team.members.map((member, j) => (
+                                    member !== gameData.currentturnuser && <p key={j}>{member}</p>
                                 ))
                             ))}
                         </div>
@@ -379,17 +386,17 @@ const App = () => {
                 {page === "ownRound" && (
                     <div>
                         <div className="topContainer">
-                            <Timer timeLeft={countdown.timeLeft} />
+                            <Timer timeLeft={countdown.timeleft} />
                         </div>
                         <h2 className="wordHeader">Dein Wort</h2>
                         <div className="mainContainer" id="wordContainer">
-                            <h1>{gameData.currentWord}</h1>
+                            <h1>{gameData.currentword}</h1>
                         </div>
                         <h2>Teammitglieder</h2>
                         <div className="mainContainer" id="teamMembers">
                             {lobbyData.teams && lobbyData.teams.map((team, i) => (
-                                team.team_name === gameData.currentTurnTeam && team.members.map((member, j) => (
-                                    member !== gameData.currentTurnUser && <p key={j}>{member}</p>
+                                team.team_name === gameData.currentturnteam && team.members.map((member, j) => (
+                                    member !== gameData.currentturnuser && <p key={j}>{member}</p>
                                 ))
                             ))}
                         </div>
@@ -400,7 +407,7 @@ const App = () => {
                 {page === "roundScore" && (
                     <div>
                         <h2 className="wordHeader">Punktestand</h2>
-                        {gameData.teamsScore && gameData.teamsScore.map((team, i) => (
+                        {gameData.teamsscore && gameData.teamsscore.map((team, i) => (
                             <div key={i} className="mainContainer" id="scoreContainer">
                                 <h2>{team.team_name} Punkte: {team.score}</h2>
                                 {team.members && team.members.map((member, j) => (
@@ -414,7 +421,7 @@ const App = () => {
                 {page === "endData" && (
                     <div>
                         <h2 className="wordHeader">Spiel Vorbei</h2>
-                        {gameData.teamsScore && gameData.teamsScore.map((team, i) => (
+                        {gameData.teamsscore && gameData.teamsscore.map((team, i) => (
                             <div key={i} className="mainContainer" id="scoreContainer">
                                 <h2>{team.team_name}</h2>
                                 <p>Punkte: {team.score}</p>
@@ -457,7 +464,7 @@ const App = () => {
                 {page === "players" && (
                     <>
                         <Input placeholder="Teamname" className="textInput" id="teamName" />
-                        {lobbyData.isHost ? (
+                        {lobbyData.ishost ? (
                             <>
                                 <PrimaryButton name="Team benennen" onClick={() => handleSetTeamName()} />
                                 <SecondaryButton name="Weiter" onClick={() => startWordRound()} />
@@ -470,7 +477,7 @@ const App = () => {
                 {page === "words" && (
                     <>
                         <Input placeholder="Neues Wort" className="textInput" id="wordInput" />
-                        {lobbyData.isHost ? (
+                        {lobbyData.ishost ? (
                             <>
                                 <PrimaryButton name="Wort hinzufügen" onClick={() => addWord()} />
                                 <SecondaryButton name="Weiter" onClick={() => startGame()} />
@@ -482,7 +489,7 @@ const App = () => {
                 )}
                 {page === "ownRound" && (
                     !gameData.isLastWord ? (
-                        countdown.timeLeft > 0 ? (
+                        countdown.timeleft > 0 ? (
                             <PrimaryButton name="Wort richtig" onClick={() => guessedWordCorrect()} />
                         ) : (
                             <SecondaryButton name="Nächster Spieler" onClick={() => nextPlayer()} />
@@ -491,10 +498,10 @@ const App = () => {
                         <SecondaryButton name="Runde Beenden" onClick={() => endRound()} />
                     )
                 )}
-                {page === "game" && gameData.isOwnTurn && (
+                {page === "game" && gameData.isownturn && (
                     <PrimaryButton name="Bereit" onClick={() => startRound()} />
                 )}
-                {page === "roundScore" && lobbyData.isHost && (
+                {page === "roundScore" && lobbyData.ishost && (
                     <PrimaryButton name="Nächste Runde starten" onClick={() => nextRound()} />
                 )}
                 {page === "endData" && (
