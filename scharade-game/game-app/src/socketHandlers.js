@@ -6,13 +6,12 @@ const socket = socketio('http://127.0.0.1:4500');
 const joinLobby = (pin, setLobbyData, setPage, setTitle, setWindowMessages) => {
     socket.emit('join_lobby', { pin: pin }, (data) => {
         if (evalateResponse(data, setWindowMessages)) return;
-        if (data && data.lobby_data) {
-            const newLobbyData = convertLobbyData(data.lobby_data);
-            localStorage.setItem('playerSid', data.lobby_data.player_sid);
+        if (data && data.lobbydata) {
+            localStorage.setItem('playerSid', data.lobbydata.playersid);
             localStorage.removeItem('hostCode'); // delete playerSid to avoid conflicts
-            setLobbyData(newLobbyData);
+            setLobbyData(data.lobbydata);
             setPage("createName");
-            updateTitle(setTitle, newLobbyData.lobbyCode, newLobbyData.lobbyName);
+            updateTitle(setTitle, data.lobbydata.lobbycode, data.lobbydata.lobbyname);
         }
     });
 };
@@ -20,14 +19,13 @@ const joinLobby = (pin, setLobbyData, setPage, setTitle, setWindowMessages) => {
 const createLobby = (config_data, setLobbyData, setPage, setTitle, setWindowMessages) => {
     socket.emit('create_lobby', config_data, (data) => {
         if (evalateResponse(data, setWindowMessages)) return;
-        if (data && data.lobby_data) {
-            localStorage.setItem('hostCode', data.host_code);
+        if (data && data.lobbydata) {
+            localStorage.setItem('hostCode', data.hostcode);
             localStorage.removeItem('playerSid'); // delete playerSid to avoid conflicts
 
-            const lobbyData = convertLobbyData(data.lobby_data);
-            setLobbyData(lobbyData);
+            setLobbyData(data.lobbydata);
             setPage("createName");
-            updateTitle(setTitle, lobbyData.lobbyCode, lobbyData.lobbyName);
+            updateTitle(setTitle, data.lobbydata.lobbycode, data.lobbydata.lobbyname);
         }
     });
 };
@@ -71,31 +69,65 @@ const addNewUserToTeam = (lobbyData, data) => {
     }
 };
 
-const handleHostContinuation = (hostCode, setLobbyData, setGameData, setTitle, setPage) => {
+const handleHostContinuation = (hostCode, setLobbyData, setGameData, setTitle, setPage, setCountdown, timerRef) => {
     const continueLobby = window.confirm("Möchtest du als Host in der vorherigen Runde vortfahren?");
     if (continueLobby) {
-        socket.emit('host_back_to_lobby', { host_code: hostCode }, (data) => {
-            if (data && data.page && data.lobby_data) {
-                const [gameData, lobbyData] = defineNewData(data, setGameData, setLobbyData);
+        socket.emit('host_back_to_lobby', { hostcode: hostCode }, (data) => {
+            if (data && data.page && data.lobbydata) {
                 setPage(data.page);
-                setTitle(lobbyData.lobbyName + " - " + lobbyData.lobbyCode);
+                setLobbyData(data.lobbydata);
+                setGameData(data.gamedata);
+                setTitle(data.lobbydata.lobbyname + " - " + data.lobbydata.lobbycode);
+                setCountdown({
+                    timeleft: data.timeatstart,
+                    timeatstart: data.timeatstart,
+                    startdate: new Date(data.startdate).getTime()
+                });
+                if (data.gamedata.isroundrunning) {
+                    startTimer({
+                        timeleft: data.timeatstart,
+                        timeatstart: data.timeatstart,
+                        startdate: new Date(data.startdate).getTime()
+                    }, setCountdown, timerRef);
+                    if (data.gamedata.isownturn) {
+                        setPage("ownRound");
+                    }
+                }
             }
+
+            console.log("data:", data);
         });
     } else {
         localStorage.removeItem('hostCode');
     }
 };
 
-const handlePlayerContinuation = (playerSid, setLobbyData, setGameData, setTitle, setPage) => {
+const handlePlayerContinuation = (playerSid, setLobbyData, setGameData, setTitle, setPage, setCountdown, timerRef) => {
     const continueAsPlayer = window.confirm("Möchtest du als Spieler in der vorherigen Runde vortfahren?");
     if (continueAsPlayer) {
-        socket.emit('forward_as_player', { player_sid: playerSid }, (data) => {
-            if (data && data.page && data.lobby_data) {
-                localStorage.setItem('playerSid', data.lobby_data.player_sid);
+        socket.emit('forward_as_player', { playersid: playerSid }, (data) => {
+            if (data && data.page && data.lobbydata) {
+                localStorage.setItem('playerSid', data.lobbydata.playersid);
                 const [gameData, lobbyData] = defineNewData(data, setGameData, setLobbyData);
+                setCountdown({
+                    timeleft: data.timeatstart,
+                    timeatstart: data.timeatstart,
+                    startdate: new Date(data.startdate).getTime()
+                });
                 setPage(data.page);
-                setTitle(lobbyData.lobbyName + " - " + lobbyData.lobbyCode);
+                setTitle(lobbyData.lobbyname + " - " + lobbyData.lobbycode);
+                if (data.gamedata.isroundrunning) {
+                    startTimer({
+                        timeleft: data.timeatstart,
+                        timeatstart: data.timeatstart,
+                        startdate: new Date(data.startdate).getTime()
+                    }, setCountdown, timerRef);
+                    if (data.gamedata.isownturn) {
+                        setPage("ownRound");
+                    }
+                }
             }
+            console.log("data:", data);
         });
     } else {
         localStorage.removeItem('playerSid');
@@ -103,18 +135,14 @@ const handlePlayerContinuation = (playerSid, setLobbyData, setGameData, setTitle
 };
 
 const defineNewData = (data, setGameData, setLobbyData) => {
-    let newGameData = {};
-    let newLobbyData = {};
-    if (data.game_data) {
-        newGameData = convertGameData(data.game_data);
-        setGameData(newGameData);
+    if (data.gamedata) {
+        setGameData(data.gamedata);
     }
-    if (data.lobby_data) {
-        newLobbyData = convertLobbyData(data.lobby_data);
-        setLobbyData(newLobbyData);
+    if (data.lobbydata) {
+        setLobbyData(data.lobbydata);
     }
 
-    return [newGameData, newLobbyData];
+    return [data.gamedata, data.lobbydata];
 }
 
 const changeTeamName = (lobbyData, setLobbyData, teamName, oldTeamName) => {
@@ -136,59 +164,29 @@ const changeTeamName = (lobbyData, setLobbyData, teamName, oldTeamName) => {
     }
 };
 
-const convertLobbyData = (data) => {
-    return {
-        lobbyCode: data.lobby_code,
-        isHost: data.is_host || false,
-        lobbyName: data.lobby_name,
-        numberOfRounds: data.number_of_rounds,
-        numberOfTeams: data.number_of_teams,
-        amountOfTime: data.round_time,
-        teams: data.teams || [],
-        words: data.words || [],
-        playerSid: data.player_sid,
-        header: data.lobbyName + " - " + data.lobbyCode
-    };
-};
-
-const convertGameData = (data) => {
-    console.log("game data:", data);
-    return {
-        currentTurnUser: data.current_turn_user,
-        isOwnTurn: data.is_own_turn,
-        currentTurnTeam: data.current_turn_team,
-        timeLeft: data.time_left_at_start,
-        amountOfTime: data.time_left_at_start,
-        currentWord: data.current_word || "",
-        teamsScore: data.teams_score || [],
-        round: data.current_round,
-        roundStarted: data.round_started,
-        isLastWord: data.is_last_word || false,
-    };
-};
-
-
 const updateTitle = (setTitle, lobbyCode, lobbyName) => {
     setTitle(lobbyName + " - " + lobbyCode);
 }
 
-const startTimer = (setCountdown, amountOfTime, timerRef) => {
-    const start = Date.now();
-    amountOfTime = 30; // amountOfTime in seconds
+const startTimer = (countdown, setCountdown, timerRef) => {
+    console.log("countdown:");
+    console.log(countdown);
     timerRef.current = setInterval(() => {
-        const timePassed = Date.now() - start;
-        const timeLeft = amountOfTime - timePassed / 1000;
+        let timeLeft = (countdown.startdate + countdown.timeatstart * 1000 - Date.now()) / 1000;
+        if (timeLeft <= 0) {
+            clearInterval(timerRef.current);
+            timeLeft = 0;
+        }
+
+        // console.log(`now: ${Date.now()} startdate:${countdown.startdate} timeatstart:${countdown.timeatstart} timeLeft:${timeLeft}`);
 
         setCountdown(prevCountdown => {
-            console.log(`timeLeft: ${timeLeft}, amountOfTime: ${amountOfTime}, timePassed: ${timePassed}`);
-            if (timeLeft <= 0) {
-                clearInterval(timerRef.current);
-                return { ...prevCountdown, timeLeft: 0 };
-            } else {
-                return { ...prevCountdown, timeLeft: timeLeft };
+            return {
+                ...prevCountdown,
+                timeleft: timeLeft
             }
         });
-    }, 200);
+    }, 400);
 }
 
 const clearTimer = (timerRef) => {
@@ -219,43 +217,43 @@ const evalateResponse = (response, setWindowMessages) => {
     let error = true;
     let message = "";
     if (response == "game not found") {
-      message = "Spiel existiert nicht";
+        message = "Spiel existiert nicht";
     }
     else if (response == "username empty") {
-      message = "Bitte Nutzernamen angeben";
+        message = "Bitte Nutzernamen angeben";
     }
     else if (response == "teamname empty") {
-      message = "Bitte Teamnamen eingeben";
+        message = "Bitte Teamnamen eingeben";
     }
     else if (response == "word empty") {
-      message = "Bitte Wort eingeben";
+        message = "Bitte Wort eingeben";
     }
     else if (response == "any field empty") {
-      message = "Bitte alle Felder ausfüllen";
+        message = "Bitte alle Felder ausfüllen";
     }
     else if (response == "username is taken") {
-      message = "Nutzername ist schon vergeben";
+        message = "Nutzername ist schon vergeben";
     }
     else if (response == "word contains swear words") {
-      message = "Bitte anderes Wort wählen";
+        message = "Bitte anderes Wort wählen";
     }
     else if (response == "name contains swear words") {
-      message = "Bitte anderen Namen wählen";
+        message = "Bitte anderen Namen wählen";
     }
     else if (response == "roomname is empty") {
-      message = "Bitte Raumnamen angeben";
+        message = "Bitte Raumnamen angeben";
     }
     else {
-      error = false;
+        error = false;
     }
-  
+
     setWindowMessages(prev => ([
-      ...prev,
-      message,
+        ...prev,
+        message,
     ]));
-  
+
     return error;
-  };
+};
 
 
 export {
@@ -268,7 +266,6 @@ export {
     changeTeamName,
     handleHostContinuation,
     handlePlayerContinuation,
-    convertGameData,
     startTimer,
     clearTimer,
     handleRemovedUser,
