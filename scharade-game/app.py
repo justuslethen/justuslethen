@@ -148,7 +148,7 @@ def on_add_word(data):
     
     if check_for_swear_words.censor(word, swear_words)[1]:
         return "word contains swear words"
-    if word.trim() == "":
+    if word.strip() == "":
         return "word empty"
     
     pin = userdata.get_users_lobby_code(sid)
@@ -157,7 +157,7 @@ def on_add_word(data):
 
 @socketio.on("host_back_to_lobby")
 def on_host_back_to_lobby(data):
-    host_code = data["host_code"]
+    host_code = data["hostcode"]
     sid = request.sid
 
     # Update the old sid for the host
@@ -165,7 +165,9 @@ def on_host_back_to_lobby(data):
 
     cur, conn = database.load_database()
     lobby_data = lobby.get_lobby_data(cur, pin, sid)
+    countdown = game.get_countdown(cur, pin)
     conn.close()
+    
     lobby_data["ishost"] = True
     game_data = game.get_game_data(pin, sid)
 
@@ -173,27 +175,32 @@ def on_host_back_to_lobby(data):
         "lobbydata": lobby_data,
         "page": lobby_data["page"],
         "gamedata": game_data,
+        "timeatstart": countdown[0],
+        "startdate": countdown[1]
     }
 
 
 @socketio.on("forward_as_player")
 def on_forward_as_player(data):
     sid = request.sid
-    old_sid = data["player_sid"]
+    old_sid = data["playersid"]
 
     pin = lobby.forward_as_player(sid, old_sid)
 
     cur, conn = database.load_database()
     lobby_data = lobby.get_lobby_data(cur, pin, sid)
-    print("lobby_data: ", lobby_data)
+    countdown = game.get_countdown(cur, pin)
     conn.close()
 
     game_data = game.get_game_data(pin, sid)
+ 
 
     return {
-        "lobby_data": lobby_data,
+        "lobbydata": lobby_data,
         "page": lobby_data["page"],
         "gamedata": game_data,
+        "timeatstart": countdown[0],
+        "startdate": countdown[1]
     }
 
 @socketio.on("remove_user")
@@ -226,12 +233,13 @@ def on_start_round():
 
     cur, conn = database.load_database()
     round_number = game.get_round_number(cur, pin)
-    print(f"round_number: {round_number}")
     word = game.get_random_word(cur, pin)
     is_last_word = game.check_if_is_last_word(cur, pin)
+    time_at_start, start_date = game.get_countdown(cur, pin)
+    
     conn.close()
 
-    connect.emit_start_round_to_others(socketio, pin, sid, word, is_last_word)
+    connect.emit_start_round_to_others(socketio, pin, sid, word, is_last_word, time_at_start, start_date)
 
 
 @socketio.on("guessed_word_correct")
@@ -289,11 +297,9 @@ def on_end_round(data):
 def on_next_round():
     sid = request.sid
     pin = userdata.get_users_lobby_code(sid)
-    # if game.is_game_over(pin):
-    #     lobby.write_page_to_database(pin, "endData")
-    #     team_score = game.get_team_scores_for_rounds(pin)
-    #     connect.emit_end_game_to_others(socketio, pin, team_score)
-    # else:
+    
+    game.set_lost_time(pin)
+    
     game.next_round(pin)
     game_data = game.next_round(pin)
     lobby.write_page_to_database(pin, "game")

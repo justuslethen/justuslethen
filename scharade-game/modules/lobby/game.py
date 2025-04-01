@@ -95,6 +95,7 @@ def get_game_data(pin, sid):
     game_data = format_game_data(result, round_time)
     print(f"round: {game_data['round']}")
     game_data["teamsscore"] = get_teams_total_score(cur, pin)
+    game_data["isroundrunning"] = is_round_still_running(cur, pin)
     game_data["islastword"] = check_if_is_last_word(cur, pin)
     conn.close()
     
@@ -177,7 +178,7 @@ def create_new_round_for_user(cur, pin, sid, round_number):
     lobby_code)
     VALUES (?, ?, ?, ?, ?, ?, ?)
     """
-    cur.execute(query, (round_number, random_user_sid, team_name, round_time, time_left_at_start, 0, pin))
+    cur.execute(query, (round_number, random_user_sid, team_name, time_left_at_start, 0, 0, pin))
     cur.execute("UPDATE users SET turns = turns + 1 WHERE lobby_code = ? AND sid = ?", (pin, sid,))
     return cur.lastrowid
 
@@ -269,11 +270,11 @@ def get_team_scores_for_rounds(pin):
 
 def fetch_team_scores(cur, pin):
     query = """
-    SELECT round, team, SUM(score) as total_score
+    SELECT round_number, team, SUM(score) as total_score
     FROM score
     WHERE lobby_code = ?
-    GROUP BY round, team
-    ORDER BY round ASC
+    GROUP BY round_number, team
+    ORDER BY round_number ASC
     """
     cur.execute(query, (pin,))
     return cur.fetchall()
@@ -310,4 +311,59 @@ def is_game_over(pin):
     round_number = cur.fetchone()[0]
     
     conn.close()
+    
     return round_number or 0 >= max_rounds
+
+
+# get the countdown data for current round for clients
+def get_countdown(cur, pin):
+    # get the time the user has at start of the round
+    # get the date the round has started
+    cur.execute("SELECT time_left_at_start, round_started FROM rounds WHERE lobby_code = ? ORDER BY rowid DESC LIMIT 1", (pin,))
+    res = cur.fetchone()
+    round_started = res[1]
+    
+    return res[0], round_started
+
+
+def is_round_still_running(cur, pin):
+    cur.execute("""
+        SELECT round_started, time_left_at_start 
+        FROM rounds 
+        WHERE lobby_code = ? 
+        ORDER BY rowid DESC 
+        LIMIT 1
+    """, (pin,))
+    
+    result = cur.fetchone()
+    if not result:
+        return False
+    
+    round_started, time_left_at_start = result
+    if round_started is None or time_left_at_start is None:
+        return False
+    
+    current_time = round(time.time() * 1000)
+    
+    return current_time < round_started + time_left_at_start * 1000
+
+
+def set_lost_time(pin):
+    cur, conn = database.load_database()
+    cur.execute("""
+        SELECT time_left_at_start, round_started FROM rounds 
+        WHERE lobby_code = ? ORDER BY rowid DESC LIMIT 1
+    """, (pin,))
+    result = cur.fetchone()
+
+    if result:
+        time_left_at_start, round_started = result
+        if round_started and time_left_at_start:
+            elapsed = (round(time.time() * 1000) - round_started) / 1000
+            cur.execute("""
+                UPDATE rounds SET time_left_at_end = ? 
+                WHERE lobby_code = ? ORDER BY rowid DESC LIMIT 1
+            """, (max(0, int(time_left_at_start - elapsed)), pin))
+            conn.commit()
+    
+    conn.close()

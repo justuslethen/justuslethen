@@ -54,18 +54,18 @@ def emit_start_game_to_others(socketio, game_data, pin):
     users = userdata.get_users_from_lobby(pin)
 
     for i in users:
-        print(f"username: {i['username']}, current_turn_user: {game_data['current_turn_user']}")
+        print(f"username: {i['username']}, current_turn_user: {game_data['currentturnuser']}")
         
         # Config data personal for user
-        if i["username"] != game_data["current_turn_user"]:
-            game_data["is_own_turn"] = False
+        if i["username"] != game_data["currentturnuser"]:
+            game_data["isownturn"] = False
         else:
-            game_data["is_own_turn"] = True
+            game_data["isownturn"] = True
             
-        socketio.emit("start_game", {"game_data": game_data}, to=i["sid"])
+        socketio.emit("start_game", {"gamedata": game_data}, to=i["sid"])
 
 
-def emit_start_round_to_others(socketio, pin, sid, word, is_last_word):
+def emit_start_round_to_others(socketio, pin, sid, word, is_last_word, time_at_start, start_date):
     users = userdata.get_users_from_lobby(pin)
     print("emit_start_round_to_others")
     print(users)
@@ -75,7 +75,7 @@ def emit_start_round_to_others(socketio, pin, sid, word, is_last_word):
         if i["sid"] != sid:
             socketio.emit("start_round", to=i["sid"])
         else:
-            socketio.emit("start_round", {"word": word, "is_last_word": is_last_word}, to=i["sid"])
+            socketio.emit("start_round", {"word": word, "is_last_word": is_last_word, "timeatstart": time_at_start, "startdate": start_date}, to=i["sid"])
 
 
 def emit_end_round_to_others(socketio, pin, game_data):
