@@ -51,7 +51,6 @@ def get_lobby_data(cur, pin, sid):
     data["teams"] = get_team_users(cur, pin)
     data["playersid"] = sid
     data["words"] = get_players_added_words(cur, sid)
-    print(f"words: {data['words']}")
     
     return data
 
