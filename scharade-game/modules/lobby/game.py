@@ -321,6 +321,10 @@ def get_countdown(cur, pin):
     # get the date the round has started
     cur.execute("SELECT time_left_at_start, round_started FROM rounds WHERE lobby_code = ? ORDER BY rowid DESC LIMIT 1", (pin,))
     res = cur.fetchone()
+    
+    if not res:
+        return 0, 0
+    
     round_started = res[1]
     
     return res[0], round_started
