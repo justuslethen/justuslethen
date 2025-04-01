@@ -5,150 +5,191 @@ const socket = socketio('http://127.0.0.1:4500');
 
 const joinLobby = (pin, setLobbyData, setPage, setTitle, setWindowMessages) => {
     socket.emit('join_lobby', { pin: pin }, (data) => {
+
+        // check for errors or missing inputs
         if (evalateResponse(data, setWindowMessages)) return;
+
         if (data && data.lobbydata) {
+
+            // delete hostCode to avoid conflicts
             localStorage.setItem('playerSid', data.lobbydata.playersid);
-            localStorage.removeItem('hostCode'); // delete playerSid to avoid conflicts
-            setLobbyData(data.lobbydata);
-            setPage("createName");
-            updateTitle(setTitle, data.lobbydata.lobbycode, data.lobbydata.lobbyname);
+            localStorage.removeItem('hostCode');
+            
+            // set page, lobbyData and title
+            setUpLobby(data, setTitle, setLobbyData, setPage);
         }
     });
 };
+
 
 const createLobby = (config_data, setLobbyData, setPage, setTitle, setWindowMessages) => {
     socket.emit('create_lobby', config_data, (data) => {
+
+        // check for errors or missing inputs
         if (evalateResponse(data, setWindowMessages)) return;
         if (data && data.lobbydata) {
-            localStorage.setItem('hostCode', data.hostcode);
-            localStorage.removeItem('playerSid'); // delete playerSid to avoid conflicts
 
-            setLobbyData(data.lobbydata);
-            setPage("createName");
-            updateTitle(setTitle, data.lobbydata.lobbycode, data.lobbydata.lobbyname);
+            // delete playerSid to avoid conflicts
+            localStorage.setItem('hostCode', data.hostcode);
+            localStorage.removeItem('playerSid');
+
+            // set page, lobbyData and title
+            setUpLobby(data, setTitle, setLobbyData, setPage);
         }
     });
 };
 
+
+const setUpLobby = (data, setTitle, setLobbyData, setPage) => {
+    setLobbyData(data.lobbydata);
+    setPage("createName");
+    updateTitle(setTitle, data.lobbydata.lobbycode, data.lobbydata.lobbyname);
+}
+
+
 const setUserName = (username, setPage, setWindowMessages) => {
     socket.emit('set_username', { username: username }, (data) => {
+
+        // check for errors creating the name
         if (evalateResponse(data, setWindowMessages)) return;
+
         if (data.username) {
+            // show other teams and their players
             setPage("players");
         }
     });
 };
 
+
 const setTeamName = (teamName, setWindowMessages) => {
     socket.emit('set_team_name', { team_name: teamName }, (data) => {
+        // check for errors creating the name
         if (evalateResponse(data, setWindowMessages)) return;
-        if (data.team_name) {
-            console.log("Team name set to:", data.team);
-        }
     });
 };
+
 
 const addNewUserToTeam = (lobbyData, data) => {
     const username = data.username;
     const teamName = data.team_name;
 
-    if (lobbyData.teams) {
-        const teamExists = lobbyData.teams.some(team => team.team_name === teamName);
-        const updatedTeams = teamExists
-            ? lobbyData.teams.map((team) => {
-                if (team.team_name === teamName) {
-                    return {
-                        ...team,
-                        members: [...team.members, username]
-                    };
-                }
-                return team;
-            })
-            : [...lobbyData.teams, { team_name: teamName, members: [username] }];
-        lobbyData.teams = updatedTeams;
-    }
+    if (lobbyData.teams) return // return if array is missing
+
+    // look for existing team name and return if team was found or not
+    const teamExists = lobbyData.teams.some(team => team.team_name === teamName);
+
+    // map teams and add new member to team
+    const updatedTeams = teamExists
+        ? lobbyData.teams.map((team) => {
+            if (team.team_name === teamName) {
+                return {
+                    ...team,
+                    members: [...team.members, username]
+                };
+            }
+            return team;
+        })
+        : [...lobbyData.teams, { team_name: teamName, members: [username] }]; // add new team and member if team was not found
+    lobbyData.teams = updatedTeams;
 };
+
 
 const handleHostContinuation = (hostCode, setLobbyData, setGameData, setTitle, setPage, setCountdown, timerRef) => {
     const continueLobby = window.confirm("Möchtest du als Host in der vorherigen Runde vortfahren?");
     if (continueLobby) {
         socket.emit('host_back_to_lobby', { hostcode: hostCode }, (data) => {
-            if (data && data.page && data.lobbydata) {
-                setPage(data.page);
-                setLobbyData(data.lobbydata);
-                setGameData(data.gamedata);
-                setTitle(data.lobbydata.lobbyname + " - " + data.lobbydata.lobbycode);
-                setCountdown({
-                    timeleft: data.timeatstart,
-                    timeatstart: data.timeatstart,
-                    startdate: new Date(data.startdate).getTime()
-                });
-                if (data.gamedata.isroundrunning) {
-                    startTimer({
-                        timeleft: data.timeatstart,
-                        timeatstart: data.timeatstart,
-                        startdate: new Date(data.startdate).getTime()
-                    }, setCountdown, timerRef);
-                    if (data.gamedata.isownturn) {
-                        setPage("ownRound");
-                    }
-                }
-            }
-
-            console.log("data:", data);
+            // setup all important configs and data
+            fowardWithGame(data, setLobbyData, setGameData, setTitle, setPage, setCountdown, timerRef);
         });
     } else {
-        localStorage.removeItem('hostCode');
+        localStorage.removeItem('hostCode'); // remove hostCode to avoid the popup after reload
     }
 };
+
 
 const handlePlayerContinuation = (playerSid, setLobbyData, setGameData, setTitle, setPage, setCountdown, timerRef) => {
     const continueAsPlayer = window.confirm("Möchtest du als Spieler in der vorherigen Runde vortfahren?");
     if (continueAsPlayer) {
         socket.emit('forward_as_player', { playersid: playerSid }, (data) => {
-            if (data && data.page && data.lobbydata) {
-                localStorage.setItem('playerSid', data.lobbydata.playersid);
-                const [gameData, lobbyData] = defineNewData(data, setGameData, setLobbyData);
-                setCountdown({
-                    timeleft: data.timeatstart,
-                    timeatstart: data.timeatstart,
-                    startdate: new Date(data.startdate).getTime()
-                });
-                setPage(data.page);
-                setTitle(lobbyData.lobbyname + " - " + lobbyData.lobbycode);
-                if (data.gamedata.isroundrunning) {
-                    startTimer({
-                        timeleft: data.timeatstart,
-                        timeatstart: data.timeatstart,
-                        startdate: new Date(data.startdate).getTime()
-                    }, setCountdown, timerRef);
-                    if (data.gamedata.isownturn) {
-                        setPage("ownRound");
-                    }
-                }
-            }
-            console.log("data:", data);
+            // update playerSid to new one
+            localStorage.setItem('playerSid', data.lobbydata.playersid);
+
+            // setup all important configs and data
+            fowardWithGame(data, setLobbyData, setGameData, setTitle, setPage, setCountdown, timerRef);
         });
     } else {
-        localStorage.removeItem('playerSid');
+        localStorage.removeItem('playerSid'); // remove playerSid to avoid the popup after reload
     }
 };
 
-const defineNewData = (data, setGameData, setLobbyData) => {
-    if (data.gamedata) {
-        setGameData(data.gamedata);
-    }
-    if (data.lobbydata) {
-        setLobbyData(data.lobbydata);
-    }
 
-    return [data.gamedata, data.lobbydata];
+const fowardWithGame = (data, setLobbyData, setGameData, setTitle, setPage, setCountdown, timerRef) => {
+    // if data is not given dont execute
+    if (data && data.page && data.lobbydata && data.gamedata) return false;
+
+    // set title, gameData, lobbyData, coundown and page
+    configAllForwardingData(data, setPage, setGameData, setLobbyData, setTitle, setCountdown);
+
+    // start a new time with the new coundown timer
+    // if the round is still running
+    if (startTimerIfRoundRunning(data, setCountdown, timerRef)) {
+        if (data.gamedata.isownturn) {
+            // when round is running and its own turn
+            // set page to ownRound to continue the round
+            setPage("ownRound");
+        }
+    }
 }
 
+
+const configAllForwardingData = (data, setPage, setGameData, setLobbyData, setTitle, setCountdown) => {
+    // update all important jsons to the data recieved
+
+    setPage(data.page);
+    setLobbyData(data.lobbydata);
+    setGameData(data.gamedata);
+    setCountdownData(data, setCountdown)
+
+    // set title to "{lobbyname} - {code}"
+    updateTitle(setTitle, data.lobbydata.lobbycode, data.lobbydata.lobbyname)
+}
+
+
+const setCountdownData = (data, setCountdown) => {
+    // setCountdown with the data
+    // use the time converted from UTC to local
+
+    setCountdown({
+        timeleft: data.timeatstart,
+        timeatstart: data.timeatstart,
+        startdate: new Date(data.startdate).getTime()
+    });
+}
+
+
+const startTimerIfRoundRunning = (data, setCountdown, timerRef) => {
+    // if the round has started and not endet yet
+    if (data.gamedata.isroundrunning) {
+        // start a new timer with the new given countdown data
+        startTimer({
+            timeleft: data.timeatstart,
+            timeatstart: data.timeatstart,
+            startdate: new Date(data.startdate).getTime()
+        }, setCountdown, timerRef);
+
+        // return if the round is still running
+        return true;
+    }
+    return false;
+}
+
+
+
 const changeTeamName = (lobbyData, setLobbyData, teamName, oldTeamName) => {
-    // Check if the game data contains teams
+    // if teams object is in lobbydata
     if (lobbyData.teams) {
-        // Map through the teams and update the team name if it matches the old team name
+        // map the teams and replace the team name with the new one
+        // dont change the other data
         const updatedTeams = lobbyData.teams.map((team) => {
             if (team.team_name === oldTeamName) {
                 return {
@@ -159,99 +200,117 @@ const changeTeamName = (lobbyData, setLobbyData, teamName, oldTeamName) => {
             return team;
         });
 
-        // Update the game data with the new team names
+        // update the game data with the new team name
         setLobbyData({ ...lobbyData, teams: updatedTeams });
     }
 };
 
+
+// set the title with the given name and code
+// like this: {name} - {code}
 const updateTitle = (setTitle, lobbyCode, lobbyName) => {
     setTitle(lobbyName + " - " + lobbyCode);
 }
 
+
 const startTimer = (countdown, setCountdown, timerRef) => {
-    console.log("countdown:");
-    console.log(countdown);
+    // execute first to update as fast as possible
+    setTimerToState(countdown, setCountdown, timerRef);
+
+    // update every 100 millis to provide a smoth and synced countdown
     timerRef.current = setInterval(() => {
-        let timeLeft = (countdown.startdate + countdown.timeatstart * 1000 - Date.now()) / 1000;
-        if (timeLeft <= 0) {
-            clearInterval(timerRef.current);
-            timeLeft = 0;
-        }
-
-        // console.log(`now: ${Date.now()} startdate:${countdown.startdate} timeatstart:${countdown.timeatstart} timeLeft:${timeLeft}`);
-
-        setCountdown(prevCountdown => {
-            return {
-                ...prevCountdown,
-                timeleft: timeLeft
-            }
-        });
-    }, 400);
+        setTimerToState(countdown, setCountdown, timerRef);
+    }, 100);
 }
 
+
+const setTimerToState = (timerRef, countdown, setCountdown) => {
+    // calc the time left since start
+    // starttime - countdowntime (timeatstart) - now
+    let timeLeft = (countdown.startdate + countdown.timeatstart * 1000 - Date.now()) / 1000;
+
+    // is time is up clear intervall and round timer to 0
+    if (timeLeft <= 0) {
+        clearInterval(timerRef.current);
+        timeLeft = 0;
+    }
+
+    // set the coundown data to calculated times to display changes
+    setCountdown(prevCountdown => {
+        return {
+            ...prevCountdown,
+            timeleft: timeLeft
+        }
+    });
+}
+
+
 const clearTimer = (timerRef) => {
+    // clear the timer countdown
     if (timerRef.current) {
         clearInterval(timerRef.current);
         timerRef.current = null;
     }
 }
 
+
 const handleRemovedUser = (data, setLobbyData, username) => {
+    // if removed user is client itself
     if (data.username === username) {
+        // delete stored data and reload
         localStorage.removeItem('playerSid');
         window.location.reload();
     }
+
+    // update teams in lobbyData
+    // map through teams and delete the user
     setLobbyData(prevLobbyData => {
         const newLobbyData = { ...prevLobbyData };
         newLobbyData.teams = newLobbyData.teams.map((team) => {
             team.members = team.members.filter((member) => member !== data.username);
             return team;
-        }).filter(team => team.members.length > 0); // Remove empty teams
+        }).filter(team => team.members.length > 0); // remove team if empty now
         return newLobbyData;
     });
 }
+
 
 // check the response for any of the error string
 // return true if there is an error
 const evalateResponse = (response, setWindowMessages) => {
     let error = true;
+
+    // set the message to the massage that should be displayed for an error
     let message = "";
     if (response == "game not found") {
         message = "Spiel existiert nicht";
-    }
-    else if (response == "username empty") {
+    } else if (response == "username empty") {
         message = "Bitte Nutzernamen angeben";
-    }
-    else if (response == "teamname empty") {
+    } else if (response == "teamname empty") {
         message = "Bitte Teamnamen eingeben";
-    }
-    else if (response == "word empty") {
+    } else if (response == "word empty") {
         message = "Bitte Wort eingeben";
-    }
-    else if (response == "any field empty") {
+    } else if (response == "any field empty") {
         message = "Bitte alle Felder ausfüllen";
-    }
-    else if (response == "username is taken") {
+    } else if (response == "username is taken") {
         message = "Nutzername ist schon vergeben";
-    }
-    else if (response == "word contains swear words") {
+    } else if (response == "word contains swear words") {
         message = "Bitte anderes Wort wählen";
-    }
-    else if (response == "name contains swear words") {
+    } else if (response == "name contains swear words") {
         message = "Bitte anderen Namen wählen";
-    }
-    else if (response == "roomname is empty") {
+    } else if (response == "roomname is empty") {
         message = "Bitte Raumnamen angeben";
-    }
-    else {
+    } else {
         error = false;
     }
 
+    // set window message with the defined message
     setWindowMessages(prev => ([
         ...prev,
         message,
     ]));
 
+    // return bool if error was found
     return error;
 };
 
