@@ -18,10 +18,13 @@ import {
     changeTeamName,
     handleHostContinuation,
     handlePlayerContinuation,
-    startTimer,
     clearTimer,
     handleRemovedUser,
     evalateResponse,
+    calcBottomHeight,
+    setCountdownData,
+    startTimerWithData,
+    updateGameDataNextWord
 } from './socketHandlers';
 
 const App = () => {
@@ -54,39 +57,50 @@ const App = () => {
         const hostCode = localStorage.getItem('hostCode');
         const playerSid = localStorage.getItem('playerSid');
 
+        // if data from last lobby is stored
+        // ask user to continue in that lobby
         if (hostCode) {
             handleHostContinuation(hostCode, setLobbyData, setGameData, setTitle, setPage, setCountdown, timerRef);
-        } else if (playerSid && !hostCode) {
+        } else if (playerSid) {
             handlePlayerContinuation(playerSid, setLobbyData, setGameData, setTitle, setPage, setCountdown, timerRef);
         }
     }, []);
 
+
     const handleJoinLobby = () => {
+        // triggert with button
         const pin = parseInt(document.querySelector('input').value, 10);
         joinLobby(pin, setLobbyData, setPage, setTitle, setWindowMessages);
     };
 
+
     const handleCreateLobby = () => {
+        // triggert with button
         const config_data = createLobbyData();
         createLobby(config_data, setLobbyData, setPage, setTitle, setWindowMessages);
         console.log("game data:", lobbyData);
     };
 
+
     const handleSetUserName = () => {
+        // triggert with button
         const username = document.querySelector('#username').value;
         setUserName(username, setPage, setWindowMessages);
         console.log(lobbyData);
     };
 
+
     const handleSetTeamName = () => {
+        // triggert with button
         const teamName = document.querySelector('#teamName').value;
-        if (teamName.trim() !== "") {
-            setTeamName(teamName, setWindowMessages);
-            document.querySelector('#teamName').value = '';
-        }
+        setTeamName(teamName, setWindowMessages);
+        document.querySelector('#teamName').value = '';
     };
 
+
     const createLobbyData = () => {
+        // select all data from the inputs
+        // put them in a json and return
         return {
             numberofrounds: parseInt(document.querySelector('#numberOfRounds').value, 10),
             numberofteams: parseInt(document.querySelector('#numberOfTeams').value, 10),
@@ -95,15 +109,22 @@ const App = () => {
         };
     };
 
+
     const startWordRound = () => {
         socket.emit('start_word_round');
     };
 
+
     const addWord = () => {
         const word = document.querySelector('#wordInput').value;
         document.querySelector('#wordInput').value = '';
+
+        // emit the new word
         socket.emit('add_word', { word: word }, (res) => {
+            // check errors
             if (evalateResponse(res, setWindowMessages)) return;
+
+            // add new word to list
             setLobbyData(prevlobbyData => ({
                 ...prevlobbyData,
                 words: [...prevlobbyData.words, word]
@@ -111,26 +132,31 @@ const App = () => {
         });
     };
 
+
     const startGame = () => {
         socket.emit('start_game');
     };
+
 
     const startRound = () => {
         socket.emit('start_round');
     };
 
+
     const guessedWordCorrect = () => {
         setGameData(prevGameData => {
+            // check if user is allowed to mark as correct
             if (prevGameData.isownturn) {
+                // emit the guessed word
                 socket.emit('guessed_word_correct', { word: prevGameData.currentword }, (data) => {
-                    console.log("data:", data);
+                    // update the word to the next word
                     setGameData({ ...prevGameData, currentword: data.word, isLastWord: data.is_last_word });
-                    console.log("data after update:", data);
                 });
             }
             return prevGameData;
         });
     };
+
 
     const nextPlayer = () => {
         socket.emit('next_player');
@@ -138,22 +164,28 @@ const App = () => {
         setPage("game");
     };
 
+
     const nextRound = () => {
         socket.emit('next_round');
         clearTimer(timerRef);
         setPage("game");
     };
 
+
     const endRound = () => {
+        // triggert with button when word was last word
         socket.emit('end_round', { word: gameData.currentword });
         clearTimer(timerRef);
     };
 
+
     const backToStart = () => {
+        // if game is endet
         localStorage.removeItem('hostCode');
         localStorage.removeItem('playerSid');
         window.location.reload();
     }
+
 
     const removeUser = (username) => {
         socket.emit('remove_user', { username: username });
@@ -163,27 +195,7 @@ const App = () => {
     // adjust the middleContainer to avoid the body to be scrollable
     const adjustMiddleContainerHeight = () => {
         const middleContainer = document.querySelector('.middleContainer');
-        let bottomHeight = 0;
-
-        // set every height manually for every page
-        if (page === "start" || page === "gamePin" || page === "createName" || page === "words" || page === "players") {
-            bottomHeight = 156;
-        } else if (page === "createLobby") {
-            bottomHeight = 384;
-        } else if (page === "game" && gameData.isownturn) {
-            bottomHeight = 80;
-        } else if (page === "ownRound") {
-            bottomHeight = 80;
-        }
-
-        // different sizes für host because host has extra buttons that need more space
-        if (lobbyData.ishost) {
-            if (page === "words" || page === "players") {
-                bottomHeight = 232;
-            } else if (page === "roundScore") {
-                bottomHeight = 80;
-            }
-        }
+        const bottomHeight = calcBottomHeight(page, lobbyData, gameData);
 
         // set the calculated height if element is available
         if (middleContainer) {
@@ -191,6 +203,7 @@ const App = () => {
             middleContainer.style.height = `${availableHeight}px`;
         }
     };
+
 
     useEffect(() => {
         socket.on('end_game', (data) => {
@@ -202,6 +215,7 @@ const App = () => {
         });
     }, []);
 
+
     useEffect(() => {
         socket.on('end_round', (data) => {
             setGameData(data.gamedata);
@@ -210,19 +224,22 @@ const App = () => {
         });
     }, []);
 
+
     useEffect(() => {
         socket.on('new_user_joined', (data) => {
+            // does needet data exist
             if (data && data.username && data.team_name) {
-                console.log("Before adding new user:", lobbyData);
+                // add user to team
+                // update lobbyData
                 setLobbyData(prevLobbyData => {
                     const newLobbyData = { ...prevLobbyData };
                     addNewUserToTeam(newLobbyData, data);
-                    console.log("After adding new user:", newLobbyData);
                     return newLobbyData;
                 });
             }
         });
     }, []);
+
 
     useEffect(() => {
         socket.on('new_team_name', (data) => {
@@ -249,64 +266,55 @@ const App = () => {
         });
     }, []);
 
+
     useEffect(() => {
         socket.on('start_game', (data) => {
-            console.log("game data:", data);
+            // update data
             setGameData(data.gamedata);
+
+            // clear timer if exist
             clearTimer(timerRef);
-            console.log("start_game")
             setPage("game");
         });
     }, []);
 
+
     useEffect(() => {
         socket.on('start_round', (data) => {
-            console.log("start round data:", data);
-            if (data) {
-                setGameData(prevGameData => {
-                    return {
-                        ...prevGameData,
-                        currentword: data.word,
-                        amountOfTime: data.amountoftime
-                    };
-                });
+            if (!data) return;
 
-                setCountdown({
-                    timeleft: data.timeatstart,
-                    timeatstart: data.timeatstart,
-                    startdate: new Date(data.startdate).getTime()
-                });
-                setPage("ownRound");
-                clearTimer(timerRef);
+            // update word to new word
+            updateGameDataNextWord(data, setGameData);
 
-                // use data values because the countdown isnt stored yet
-                startTimer({
-                    timeleft: data.timeatstart,
-                    timeatstart: data.timeatstart,
-                    startdate: new Date(data.startdate).getTime()
-                }, setCountdown, timerRef);
-            }
+            setPage("ownRound");
+            setCountdownData(data, setCountdown);
+
+            //clear old timer if exist
+            clearTimer(timerRef);
+
+            // start timer
+            startTimerWithData(data, setCountdown, timerRef);
         });
     }, []);
+
 
     useEffect(() => {
         socket.on('removed_user', (data) => {
-            console.log("removed user:", data);
-            if (data) {
-                console.log("data.username:", data.username, "lobbyData.username:", lobbyData.username);
-                const username = lobbyData.username;
-                handleRemovedUser(data, setLobbyData, username);
-            }
+            if (!data) return;
+
+            const username = lobbyData.username;
+            handleRemovedUser(data, setLobbyData, username);
         });
     }, []);
 
-    useEffect(() => {
 
-        adjustMiddleContainerHeight(); // Initial setzen
-        window.addEventListener('resize', adjustMiddleContainerHeight); // Bei Resize anpassen
+    useEffect(() => {
+        // recalculate bottom with everytime window is resized
+        adjustMiddleContainerHeight();
+        window.addEventListener('resize', adjustMiddleContainerHeight); // adjust when resize
 
         return () => {
-            window.removeEventListener('resize', adjustMiddleContainerHeight); // Cleanup
+            window.removeEventListener('resize', adjustMiddleContainerHeight); // cleanum
         };
     }, []);
 

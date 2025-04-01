@@ -14,7 +14,7 @@ const joinLobby = (pin, setLobbyData, setPage, setTitle, setWindowMessages) => {
             // delete hostCode to avoid conflicts
             localStorage.setItem('playerSid', data.lobbydata.playersid);
             localStorage.removeItem('hostCode');
-            
+
             // set page, lobbyData and title
             setUpLobby(data, setTitle, setLobbyData, setPage);
         }
@@ -114,6 +114,9 @@ const handlePlayerContinuation = (playerSid, setLobbyData, setGameData, setTitle
             // update playerSid to new one
             localStorage.setItem('playerSid', data.lobbydata.playersid);
 
+            console.log("data");
+            console.log(data);
+
             // setup all important configs and data
             fowardWithGame(data, setLobbyData, setGameData, setTitle, setPage, setCountdown, timerRef);
         });
@@ -125,10 +128,12 @@ const handlePlayerContinuation = (playerSid, setLobbyData, setGameData, setTitle
 
 const fowardWithGame = (data, setLobbyData, setGameData, setTitle, setPage, setCountdown, timerRef) => {
     // if data is not given dont execute
-    if (data && data.page && data.lobbydata && data.gamedata) return false;
+    if (!data || !data.page || !data.lobbydata) return false;
 
     // set title, gameData, lobbyData, coundown and page
     configAllForwardingData(data, setPage, setGameData, setLobbyData, setTitle, setCountdown);
+
+    setPage(data.page);
 
     // start a new time with the new coundown timer
     // if the round is still running
@@ -168,14 +173,12 @@ const setCountdownData = (data, setCountdown) => {
 
 
 const startTimerIfRoundRunning = (data, setCountdown, timerRef) => {
+    if (!data.gamedata) return false;
+
     // if the round has started and not endet yet
     if (data.gamedata.isroundrunning) {
         // start a new timer with the new given countdown data
-        startTimer({
-            timeleft: data.timeatstart,
-            timeatstart: data.timeatstart,
-            startdate: new Date(data.startdate).getTime()
-        }, setCountdown, timerRef);
+        startTimerWithData(data, setCountdown, timerRef);
 
         // return if the round is still running
         return true;
@@ -215,11 +218,11 @@ const updateTitle = (setTitle, lobbyCode, lobbyName) => {
 
 const startTimer = (countdown, setCountdown, timerRef) => {
     // execute first to update as fast as possible
-    setTimerToState(countdown, setCountdown, timerRef);
+    setTimerToState(timerRef, countdown, setCountdown);
 
     // update every 100 millis to provide a smoth and synced countdown
     timerRef.current = setInterval(() => {
-        setTimerToState(countdown, setCountdown, timerRef);
+        setTimerToState(timerRef, countdown, setCountdown);
     }, 100);
 }
 
@@ -315,6 +318,52 @@ const evalateResponse = (response, setWindowMessages) => {
 };
 
 
+const calcBottomHeight = (page, lobbyData, gameData) => {
+    let bottomHeight = 0;
+    // set every height manually for every page
+    if (page === "start" || page === "gamePin" || page === "createName" || page === "words" || page === "players") {
+        bottomHeight = 156;
+    } else if (page === "createLobby") {
+        bottomHeight = 384;
+    } else if (page === "game" && gameData.isownturn) {
+        bottomHeight = 80;
+    } else if (page === "ownRound" || page === "endData") {
+        bottomHeight = 80;
+    }
+
+    // different sizes für host because host has extra buttons that need more space
+    if (lobbyData.ishost) {
+        if (page === "words" || page === "players") {
+            bottomHeight = 232;
+        } else if (page === "roundScore") {
+            bottomHeight = 80;
+        }
+    }
+
+    return bottomHeight;
+}
+
+
+const startTimerWithData = (data, setCountdown, timerRef) => {
+    // use data values because the countdown isnt stored yet
+    startTimer({
+        timeleft: data.timeatstart,
+        timeatstart: data.timeatstart,
+        startdate: new Date(data.startdate).getTime()
+    }, setCountdown, timerRef);
+}
+
+
+const updateGameDataNextWord = (data, setGameData) => {
+    setGameData(prevGameData => {
+        return {
+            ...prevGameData,
+            currentword: data.word,
+        };
+    });
+}
+
+
 export {
     socket,
     joinLobby,
@@ -329,4 +378,8 @@ export {
     clearTimer,
     handleRemovedUser,
     evalateResponse,
+    calcBottomHeight,
+    setCountdownData,
+    startTimerWithData,
+    updateGameDataNextWord
 };
