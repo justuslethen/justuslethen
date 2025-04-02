@@ -217,15 +217,6 @@ const App = () => {
 
 
     useEffect(() => {
-        socket.on('end_round', (data) => {
-            setGameData(data.gamedata);
-            clearTimer(timerRef);
-            setPage("roundScore");
-        });
-    }, []);
-
-
-    useEffect(() => {
         socket.on('new_user_joined', (data) => {
             // does needet data exist
             if (data && data.username && data.team_name) {
