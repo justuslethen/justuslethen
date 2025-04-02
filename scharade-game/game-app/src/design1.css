@@ -37,6 +37,8 @@
 body {
     margin: 0px;
     padding: 20px;
+    overflow-x: hidden;
+    overflow-y: auto;
 
     font-family: Noto Sans, sans-serif;
     background-color: var(--background-color);
@@ -90,7 +92,7 @@ h2 {
     align-items: center;
 
     padding-top: 10px;
-    padding-bottom: 20px;
+    padding-bottom: 10px;
 
     width: 100%;
     gap: 16px;
