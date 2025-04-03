@@ -288,6 +288,7 @@ def on_end_round(data):
         connect.emit_end_game_to_others(socketio, pin, team_score)
     else:
         game_data = game.get_game_data(pin, sid)
+        game.set_lost_time(pin)
         lobby.write_page_to_database(pin, "roundScore")
 
         connect.emit_end_round_to_others(socketio, pin, game_data)

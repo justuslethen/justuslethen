@@ -158,8 +158,9 @@ def get_teams_total_score(cur, pin):
         score = cur.fetchone()
         teams_score.append(
             {
-                "team_name": team,
+                "teamname": team,
                 "score": score[0] if score and score[0] is not None else 0,
+                "members": get_team_members(cur, pin, team),
             }
         )
 
@@ -169,6 +170,23 @@ def get_teams_total_score(cur, pin):
     teams_score.sort(key=lambda x: x["score"], reverse=True)
 
     return teams_score
+
+
+def get_team_members(cur, pin, team_name):
+    print(f"pin: {pin}, team_name: {team_name}")
+
+    cur.execute(
+        "SELECT username FROM users WHERE team_name = ? AND lobby_code = ?",
+        (
+            team_name,
+            pin,
+        ),
+    )
+    res = cur.fetchall()
+
+    print(f"usernames res: {res}")
+
+    return [i[0] for i in res] if res else []
 
 
 def get_round_time(cur, pin):
@@ -189,7 +207,14 @@ def create_new_round_for_user(cur, pin, sid, round_number):
     time_left_at_start = get_round_time(cur, pin) + get_missed_time_last_round(
         cur, pin, team_name
     )
-    round_time = get_round_time(cur, pin)
+    print(
+        f"""
+        time_left_at_start: {time_left_at_start},
+        round_time: {get_round_time(cur, pin)},
+        missed_time: {get_missed_time_last_round(cur, pin, team_name)}
+        """
+    )
+    
     query = """
     INSERT INTO rounds 
     (round, 
@@ -222,9 +247,11 @@ def get_missed_time_last_round(cur, pin, team_name):
     ORDER BY rowid DESC
     """
     cur.execute(query, (pin, team_name))
-    result = cur.fetchone()
+    res = cur.fetchone()
 
-    return result[0] if result else 0
+    print(f"missde_time: {res}")
+
+    return res[0] if res else 0
 
 
 def start_round(pin, sid):
@@ -396,32 +423,27 @@ def is_round_still_running(cur, pin):
 
 def set_lost_time(pin):
     cur, conn = database.load_database()
+    time_left_at_start, round_started = get_countdown(cur, pin)
+    
+    now = round(time.time() * 1000)
+    elapsed = now - round_started
+    missed_time = round(time_left_at_start - elapsed / 1000) 
+    print(f"now: {now}")
+    print(f"time_left_at_start: {time_left_at_start}")
+    print(f"round_started: {round_started}")
+    print(f"missed_time: {missed_time}")
+    print(f"elapsed: {elapsed}")
+
     cur.execute(
-        """
-        SELECT time_left_at_start, round_started FROM rounds 
-        WHERE lobby_code = ? ORDER BY rowid DESC LIMIT 1
-    """,
-        (pin,),
+        """UPDATE rounds 
+        SET time_left_at_end = ? 
+        WHERE rowid = (
+            SELECT rowid FROM rounds 
+            WHERE lobby_code = ? 
+            ORDER BY rowid DESC 
+            LIMIT 1
+        )""",
+        (missed_time, pin),
     )
-    result = cur.fetchone()
-
-    if result:
-        time_left_at_start, round_started = result
-        if round_started and time_left_at_start:
-            elapsed = round(time.time() - round_started)
-            print(f"elapsed: {elapsed}")
-
-            cur.execute(
-                """UPDATE rounds 
-                SET time_left_at_end = ? 
-                WHERE rowid = (
-                    SELECT rowid FROM rounds 
-                    WHERE lobby_code = ? 
-                    ORDER BY rowid DESC 
-                    LIMIT 1
-                )""",
-                (time_left_at_start - elapsed, pin),
-            )
-            conn.commit()
-
+    conn.commit()
     conn.close()
