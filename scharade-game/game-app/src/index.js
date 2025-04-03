@@ -251,6 +251,7 @@ const App = () => {
 
     useEffect(() => {
         socket.on('end_round', (data) => {
+            console.log(data);
             setGameData(data.gamedata);
             clearTimer(timerRef);
             setPage("roundScore");
@@ -408,7 +409,7 @@ const App = () => {
                         <h2 className="wordHeader">Punktestand</h2>
                         {gameData.teamsscore && gameData.teamsscore.map((team, i) => (
                             <div key={i} className="mainContainer" id="scoreContainer">
-                                <h2>{team.team_name} Punkte: {team.score}</h2>
+                                <h2>{team.teamname} Punkte: {team.score}</h2>
                                 {team.members && team.members.map((member, j) => (
                                     <p key={j}>{member}</p>
                                 ))}

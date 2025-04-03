@@ -21,7 +21,7 @@ def emit_new_user_to_others(socketio, sid, pin):
     username = escape(username)
     users = userdata.get_users_from_lobby(pin)
     for i in users:
-        socketio.emit("new_user_joined", {"username": username, "team_name": team_name}, to=i["sid"])
+        socketio.emit("new_user_joined", {"username": username, "teamname": team_name}, to=i["sid"])
     
     
 def emit_new_team_name_to_others(socketio, new_team_name, old_team_name, pin):
@@ -29,7 +29,7 @@ def emit_new_team_name_to_others(socketio, new_team_name, old_team_name, pin):
 
     for i in users:
         print(f"Sending new team name to {i['sid']}")
-        socketio.emit("new_team_name", {"team_name": new_team_name, "old_team_name": old_team_name}, to=i["sid"])
+        socketio.emit("new_team_name", {"teamname": new_team_name, "oldteamname": old_team_name}, to=i["sid"])
 
 
 def emit_new_team_to_others(socketio, team_name, pin):
@@ -75,7 +75,7 @@ def emit_start_round_to_others(socketio, pin, sid, word, is_last_word, time_at_s
         if i["sid"] != sid:
             socketio.emit("start_round", to=i["sid"])
         else:
-            socketio.emit("start_round", {"word": word, "is_last_word": is_last_word, "timeatstart": time_at_start, "startdate": start_date}, to=i["sid"])
+            socketio.emit("start_round", {"word": word, "islastword": is_last_word, "timeatstart": time_at_start, "startdate": start_date}, to=i["sid"])
 
 
 def emit_end_round_to_others(socketio, pin, game_data):
@@ -85,7 +85,7 @@ def emit_end_round_to_others(socketio, pin, game_data):
 
     for i in users:
         print(f"Sending end round to {i['sid']}")
-        socketio.emit("end_round", {"game_data": game_data}, to=i["sid"])
+        socketio.emit("end_round", {"gamedata": game_data}, to=i["sid"])
 
 
 def emit_end_game_to_others(socketio, pin, team_score):
