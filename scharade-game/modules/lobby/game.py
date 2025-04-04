@@ -55,13 +55,13 @@ def get_team_with_least_turns(cur, pin):
     for team in teams:
         team_exists = False
         for team_turn in team_turns:
-            if team_turn["team_name"] == team[0]:
+            if team_turn["teamname"] == team[0]:
                 team_turn["turns"] += team[1]
                 team_exists = True
                 break
         if not team_exists:
-            team_turns.append({"team_name": team[0], "turns": team[1]})
-    return min(team_turns, key=lambda x: x["turns"])["team_name"]
+            team_turns.append({"teamname": team[0], "turns": team[1]})
+    return min(team_turns, key=lambda x: x["turns"])["teamname"]
 
 
 def get_turns_from_player(cur, pin):
@@ -371,7 +371,7 @@ def process_team_scores(results):
             round_scores = []
             current_round = round
 
-        round_scores.append({"team_name": team, "score": score})
+        round_scores.append({"teamname": team, "score": score})
 
     if round_scores:
         rounds_scores.append(round_scores)

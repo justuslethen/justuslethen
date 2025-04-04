@@ -81,13 +81,13 @@ def get_team_users(cur, pin):
     teams = []
     for row in response:
         print(f"row: {row}")
-        if row[1] not in [team["team_name"] for team in teams]: # Check if the team is already in the list
+        if row[1] not in [team["teamname"] for team in teams]: # Check if the team is already in the list
             # add if not in list
-            teams.append({"team_name": row[1], "members": []})
+            teams.append({"teamname": row[1], "members": []})
             
         # Iterate over the teams to find the correct team
         for team in teams:
-            if team["team_name"] == row[1]:
+            if team["teamname"] == row[1]:
                 # Add the member to the team
                 team["members"].append(row[0])
                 
@@ -149,14 +149,14 @@ def put_user_in_team(cur, code, sid):
     team_name = ""
     
     # Filter out teams with the name "hasNoTeamYet"
-    teams = [team for team in teams if team["team_name"] != "hasNoTeamYet"]
+    teams = [team for team in teams if team["teamname"] != "hasNoTeamYet"]
     
     if len(teams) < max_teams:
         # Create a new team if the maximum number of teams is not reached
         team_name = f"Team {len(teams) + 1}"
     else:
         # Find the team with the least members
-        team_name = min(teams, key=lambda team: team["members"])["team_name"]
+        team_name = min(teams, key=lambda team: team["members"])["teamname"]
     
     # Put the user in the team
     query = "UPDATE users SET team_name = ? WHERE sid = ?"
@@ -183,12 +183,12 @@ def get_teams_counter(cur, code):
         
         # Dont count users without team
         if team_name is not "hasNoTeamYet":
-            team_element = next((team for team in teams if team["team_name"] == team_name), None)
+            team_element = next((team for team in teams if team["teamname"] == team_name), None)
             print(f"team_element: {team_element}")
             if team_element:
                 team_element["members"] += 1
             else:
-                teams.append({"team_name": team_name, "members": 1})
+                teams.append({"teamname": team_name, "members": 1})
     
     return teams
 
