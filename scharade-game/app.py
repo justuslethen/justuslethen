@@ -27,12 +27,6 @@ def serve_static(path):
     return send_from_directory(app.static_folder, path)
 
 
-@socketio.on("message")
-def handle_message(msg):
-    print("Message: " + msg)
-    send(msg, broadcast=True)
-
-
 @socketio.on("connect")
 def on_connect():
     sid = request.sid
@@ -68,7 +62,6 @@ def on_join_lobby(data):
         username = "Unknown"
     lobby_data["username"] = username
 
-    print("lobby_data: ", lobby_data)
     return {"lobbydata": lobby_data}
 
 
@@ -299,9 +292,6 @@ def on_next_round():
     sid = request.sid
     pin = userdata.get_users_lobby_code(sid)
     
-    game.set_lost_time(pin)
-    
-    game.next_round(pin)
     game_data = game.next_round(pin)
     lobby.write_page_to_database(pin, "game")
     connect.emit_start_game_to_others(socketio, game_data, pin)
@@ -312,7 +302,6 @@ def on_end_game():
     sid = request.sid
     pin = userdata.get_users_lobby_code(sid)
     team_score = game.get_team_scores_for_rounds(pin)
-    print(f"team_score: {team_score}")
     lobby.write_page_to_database(pin, "endData")
 
     connect.emit_end_game_to_others(socketio, pin, team_score)
