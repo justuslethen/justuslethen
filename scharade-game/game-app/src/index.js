@@ -294,9 +294,7 @@ const App = () => {
     useEffect(() => {
         socket.on('removed_user', (data) => {
             if (!data) return;
-
-            const username = lobbyData.username;
-            handleRemovedUser(data, setLobbyData, username);
+            handleRemovedUser(data, setLobbyData, data.amiremoved);
         });
     }, []);
 
