@@ -108,9 +108,12 @@ def on_set_username(data):
 def on_set_team_name(data):
     sid = request.sid
     new_team_name = data["teamname"]
+    pin = userdata.get_users_lobby_code(sid)
     
     if check_for_swear_words.censor(new_team_name, swear_words)[1]:
         return "name contains swear words"
+    if lobby.is_team_name_taken(pin, new_team_name):
+        return "teamname is taken"
     if new_team_name.strip() == "":
         return "teamname empty"
 
@@ -121,7 +124,6 @@ def on_set_team_name(data):
     userdata.set_team_name(sid, new_team_name)
 
     # Emit the new team name to the other users in the lobby
-    pin = userdata.get_users_lobby_code(sid)
     connect.emit_new_team_name_to_others(socketio, new_team_name, old_team_name, pin)
     return {"teamname": new_team_name, "oldteamname": old_team_name}
 

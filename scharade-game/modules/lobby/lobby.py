@@ -317,3 +317,16 @@ def get_sid_from_username(username, pin):
     result = cur.fetchone()
     conn.close()
     return result[0] if result else None
+
+
+def is_team_name_taken(pin, team_name):
+    team_name = team_name.strip()
+    cur, conn = database.load_database()
+    query = """
+    SELECT * FROM users 
+    WHERE LOWER(team_name) = LOWER(?) AND lobby_code = ?
+    """
+    cur.execute(query, (team_name, pin))
+    result = cur.fetchone()
+    conn.close()
+    return result is not None
