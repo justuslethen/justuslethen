@@ -391,7 +391,7 @@ def is_game_over(pin):
     if not round_number:
         round_number = 0
 
-    return round_number >= max_rounds
+    return round_number > max_rounds
 
 
 # get the countdown data for current round for clients
