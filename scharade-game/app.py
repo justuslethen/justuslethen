@@ -123,7 +123,7 @@ def on_set_team_name(data):
     # Emit the new team name to the other users in the lobby
     pin = userdata.get_users_lobby_code(sid)
     connect.emit_new_team_name_to_others(socketio, new_team_name, old_team_name, pin)
-    return {"teamname": new_team_name, "old_team_name": old_team_name}
+    return {"teamname": new_team_name, "oldteamname": old_team_name}
 
 
 @socketio.on("start_word_round")
