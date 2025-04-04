@@ -301,6 +301,8 @@ const evalateResponse = (response, setWindowMessages) => {
         message = "Bitte anderes Wort wählen";
     } else if (response == "name contains swear words") {
         message = "Bitte anderen Namen wählen";
+    } else if (response == "teamname is taken") {
+        message = "Der Teamname ist schon vergeben";
     } else if (response == "roomname is empty") {
         message = "Bitte Raumnamen angeben";
     } else {
