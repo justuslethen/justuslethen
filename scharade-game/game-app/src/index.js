@@ -76,8 +76,8 @@ const App = () => {
 
     const handleCreateLobby = () => {
         // triggert with button
-        const config_data = createLobbyData();
-        createLobby(config_data, setLobbyData, setPage, setTitle, setWindowMessages);
+        const configData = createLobbyData();
+        createLobby(configData, setLobbyData, setPage, setTitle, setWindowMessages);
         console.log("game data:", lobbyData);
     };
 
@@ -150,7 +150,8 @@ const App = () => {
                 // emit the guessed word
                 socket.emit('guessed_word_correct', { word: prevGameData.currentword }, (data) => {
                     // update the word to the next word
-                    setGameData({ ...prevGameData, currentword: data.word, isLastWord: data.is_last_word });
+                    console.log("guesseed word correct data:", data);
+                    setGameData({ ...prevGameData, currentword: data.word, isLastWord: data.islastword });
                 });
             }
             return prevGameData;
@@ -219,7 +220,7 @@ const App = () => {
     useEffect(() => {
         socket.on('new_user_joined', (data) => {
             // does needet data exist
-            if (data && data.username && data.team_name) {
+            if (data && data.username && data.teamname) {
                 // add user to team
                 // update lobbyData
                 setLobbyData(prevLobbyData => {
@@ -234,10 +235,10 @@ const App = () => {
 
     useEffect(() => {
         socket.on('new_team_name', (data) => {
-            console.log(`new team name: ${data.team_name} old team name: ${data.old_team_name}`);
+            console.log(`new team name: ${data.teamname} old team name: ${data.oldteamname}`);
             setLobbyData(prevLobbyData => {
                 const newLobbyData = { ...prevLobbyData };
-                changeTeamName(newLobbyData, setLobbyData, data.team_name, data.old_team_name);
+                changeTeamName(newLobbyData, setLobbyData, data.teamname, data.oldteamname);
                 return newLobbyData;
             });
         });
@@ -340,7 +341,7 @@ const App = () => {
                     <section className="teamsView">
                         {lobbyData.teams && lobbyData.teams.map((team, i) => (
                             <div key={i} className="mainContainer">
-                                <h2>{team.team_name}</h2>
+                                <h2>{team.teamname}</h2>
                                 {team.members && team.members.map((member, a) => (
                                     <div key={a} className="row">
                                         <p key={a}>{member}</p>
@@ -376,7 +377,7 @@ const App = () => {
                         <h2>Teammitglieder</h2>
                         <div className="mainContainer" id="teamMembers">
                             {lobbyData.teams && lobbyData.teams.map((team, i) => (
-                                team.team_name === gameData.currentturnteam && team.members.map((member, j) => (
+                                team.teamname === gameData.currentturnteam && team.members.map((member, j) => (
                                     member !== gameData.currentturnuser && <p key={j}>{member}</p>
                                 ))
                             ))}
@@ -395,7 +396,7 @@ const App = () => {
                         <h2>Teammitglieder</h2>
                         <div className="mainContainer" id="teamMembers">
                             {lobbyData.teams && lobbyData.teams.map((team, i) => (
-                                team.team_name === gameData.currentturnteam && team.members.map((member, j) => (
+                                team.teamname === gameData.currentturnteam && team.members.map((member, j) => (
                                     member !== gameData.currentturnuser && <p key={j}>{member}</p>
                                 ))
                             ))}

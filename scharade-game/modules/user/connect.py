@@ -34,7 +34,7 @@ def emit_new_team_to_others(socketio, team_name, pin):
     users = userdata.get_users_from_lobby(pin)
 
     for i in users:
-        socketio.emit("new_team", {"team_name": team_name}, to=i["sid"])
+        socketio.emit("new_team", {"teamname": team_name}, to=i["sid"])
 
 
 def emit_start_word_round_to_others(socketio, pin):
