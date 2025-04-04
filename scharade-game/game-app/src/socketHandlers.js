@@ -71,17 +71,17 @@ const setTeamName = (teamName, setWindowMessages) => {
 
 const addNewUserToTeam = (lobbyData, data) => {
     const username = data.username;
-    const teamName = data.team_name;
+    const teamName = data.teamname;
 
-    if (lobbyData.teams) return // return if array is missing
+    if (!lobbyData.teams) return // return if array is missing
 
     // look for existing team name and return if team was found or not
-    const teamExists = lobbyData.teams.some(team => team.team_name === teamName);
+    const teamExists = lobbyData.teams.some(team => team.teamname === teamName);
 
     // map teams and add new member to team
     const updatedTeams = teamExists
         ? lobbyData.teams.map((team) => {
-            if (team.team_name === teamName) {
+            if (team.teamname === teamName) {
                 return {
                     ...team,
                     members: [...team.members, username]
@@ -89,7 +89,7 @@ const addNewUserToTeam = (lobbyData, data) => {
             }
             return team;
         })
-        : [...lobbyData.teams, { team_name: teamName, members: [username] }]; // add new team and member if team was not found
+        : [...lobbyData.teams, { teamname: teamName, members: [username] }]; // add new team and member if team was not found
     lobbyData.teams = updatedTeams;
 };
 
