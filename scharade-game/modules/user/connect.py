@@ -85,4 +85,7 @@ def emit_removed_user_to_others(socketio, removed_sid, removed_username, pin):
     users = userdata.get_users_from_lobby(pin)
 
     for i in users:
-        socketio.emit("removed_user", {"username": removed_username, "sid": removed_sid}, to=i["sid"])
+        am_i_removed = False
+        if i["sid"] == removed_sid:
+            am_i_removed = True
+        socketio.emit("removed_user", {"username": removed_username, "sid": removed_sid, "amiremoved": am_i_removed}, to=i["sid"])

@@ -259,7 +259,7 @@ const clearTimer = (timerRef) => {
 
 const handleRemovedUser = (data, setLobbyData, username) => {
     // if removed user is client itself
-    if (data.username === username) {
+    if (data.amiremoved) {
         // delete stored data and reload
         localStorage.removeItem('playerSid');
         window.location.reload();
