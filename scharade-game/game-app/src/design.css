@@ -1,23 +1,52 @@
-@media (prefers-color-scheme: light) {
-    :root {
-        --background-color: #e7ffe7;
-        --light-color: #cbefcb;
-        --middle-light-color: #b2e9b2;
-        --grey-color: #005f2180;
-        --dark-color: #00501c;
-        --middle-dark-color: #006022;
-    }
+/* [data-color="blue"] */
+:root {
+    --color-background: #EBF3FF;
+    --color: #167BFF;
+    --color-text-1: #1B67FF;
+    --color-text-2: #004CB7;
+    --color-text-3: #84BDFF;
+    --color-soft-1: #D3EBFF;
+    --color-soft-2: #BFE0FF;
 }
 
-@media (prefers-color-scheme: dark) {
-    :root {
-        --background-color: #f9e7ff;
-        --light-color: #ecd5f3;
-        --middle-light-color: #e8c5f0;
-        --grey-color: #4b005f80;
-        --dark-color: #5d055d;
-        --middle-dark-color: #730871;
-    }
+[data-color="orange"] {
+    --color-background: #FFF0E2;
+    --color: #FFA52E;
+    --color-text-1: #FF9C1B;
+    --color-text-2: #E78300;
+    --color-text-3: #FFBD7C;
+    --color-soft-1: #FFDDC0;
+    --color-soft-2: #FFD2B7;
+}
+
+[data-color="green"] {
+    --color-background: #EBFFEB;
+    --color: #009F1B;
+    --color-text-1: #008930;
+    --color-text-2: #006305;
+    --color-text-3: #78D782;
+    --color-soft-1: #CCFFCC;
+    --color-soft-2: #B2F7B2;
+}
+
+[data-color="red"] {
+    --color-background: #FFE5E5;
+    --color: #FF4A3A;
+    --color-text-1: #FF1B1B;
+    --color-text-2: #FF9999;
+    --color-text-3: #FF2121;
+    --color-soft-1: #FFD4D4;
+    --color-soft-2: #FFBFBF;
+}
+
+[data-color="purple"] {
+    --color-background: #F6EFFF;
+    --color: #9131F2;
+    --color-text-1: #9A26E2;
+    --color-text-2: #490081;
+    --color-text-3: #C990ED;
+    --color-soft-1: #EEE1FF;
+    --color-soft-2: #E6D2FF;
 }
 
 
@@ -33,7 +62,7 @@ body {
     padding: 20px;
 
     font-family: Arial, sans-serif;
-    background-color: var(--background-color);
+    background-color: var(--color-background);
 }
 
 body::-webkit-scrollbar,
@@ -42,7 +71,7 @@ body::-webkit-scrollbar-thumb {
 }
 
 h1 {
-    color: var(--dark-color);
+    color: var(--color-text-1);
     text-align: center;
     width: 100%;
     margin-top: 10px;
@@ -51,7 +80,7 @@ h1 {
 h2 {
     font-size: 24px;
     margin: 0px 0px 10px 0px;
-    color: var(--dark-color);
+    color: var(--color);
 }
 
 .middleContainer {
@@ -87,7 +116,7 @@ h2 {
     width: 100%;
     gap: 16px;
     height: max-content;
-    background-color: var(--background-color);
+    background-color: var(--color-background);
 }
 
 button {
@@ -105,20 +134,12 @@ button {
 
 .primaryButton {
     color: white;
-    background-color: var(--dark-color);
-}
-
-.primaryButton:hover {
-    background-color: var(--middle-dark-color);
+    background-color: var(--color);
 }
 
 .secondaryButton {
-    background-color: var(--light-color);
-    color: var(--dark-color);
-}
-
-.secondaryButton:hover {
-    background-color: var(--middle-light-color);
+    background-color: var(--color-soft-1);
+    color: var(--color);
 }
 
 input {
@@ -132,12 +153,12 @@ input {
 
     outline: none;
     font-size: 20px;
-    background-color: var(--light-color);
-    color: var(--dark-color);
+    background-color: var(--color-soft-1);
+    color: var(--color);
 }
 
 input::-webkit-input-placeholder {
-    color: var(--grey-color);
+    color: var(--color-text-3);
 }
 
 .numberInput {
@@ -154,7 +175,8 @@ input::-webkit-input-placeholder {
     gap: 10px;
     padding: 20px;
     border-radius: 20px;
-    background-color: var(--light-color);
+    background-color: var(--color-soft-1);
+    border: 1px solid var(--color-soft-2);
 }
 
 .row {
@@ -174,6 +196,7 @@ input::-webkit-input-placeholder {
 }
 
 .teamsView p {
+    color: var(--color-text-2);
     font-size: 18px;
     margin: 0px;
 }
@@ -185,6 +208,7 @@ input::-webkit-input-placeholder {
 }
 
 #wordsContainer p {
+    color: var(--color-text-2);
     font-size: 18px;
     margin: 0px;
 }
@@ -202,11 +226,11 @@ input::-webkit-input-placeholder {
     margin-bottom: 50px;
 
     border-radius: 50%;
-    border: 14px solid var(--light-color);
+    border: 14px solid var(--color-soft-1);
 }
 
 #playersCircle[data-is-own-turn="true"] {
-    border: 14px dashed var(--grey-color);
+    border: 14px dashed var(--color-soft-2);
     animation: outerCircleRotation 20s infinite linear;
 }
 
@@ -232,12 +256,12 @@ input::-webkit-input-placeholder {
     box-sizing: border-box;
     text-align: center;
 
-    background-color: var(--light-color);
-    color: var(--dark-color);
+    background-color: var(--color-soft-1);
+    color: var(--color);
 }
 
 #playersCircle[data-is-own-turn="true"]>div {
-    background-color: var(--dark-color);
+    background-color: var(--color);
     color: white;
     animation: innerCircleRotation 20s infinite linear;
 }
@@ -267,6 +291,7 @@ input::-webkit-input-placeholder {
 }
 
 #teamMembers p {
+    color: var(--color-text-2);
     font-size: 18px;
     margin: 0px;
 }
@@ -295,6 +320,7 @@ input::-webkit-input-placeholder {
 }
 
 #scoreContainer p {
+    color: var(--color-text-2);
     font-size: 18px;
     margin: 0px;
 }
@@ -314,8 +340,8 @@ input::-webkit-input-placeholder {
     border-radius: 20px;
     z-index: 30;
 
-    border: 1px solid var(--Red-Light-2);
-    background-color: var(--Red-Light-1);
+    border: 1px solid var(--color);
+    background-color: var(--color-soft-1);
     animation: windowMessage 3s ease-in-out;
 }
 
@@ -323,7 +349,7 @@ input::-webkit-input-placeholder {
     margin: 0px;
     margin-left: 8px;
     font-size: 18px;
-    color: var(--Text-Red);
+    color: var(--color-text-2);
 }
 
 .windowMessage>img {
@@ -332,11 +358,11 @@ input::-webkit-input-placeholder {
 }
 
 .windowMessage>svg:first-child {
-    stroke: var(--Red-Light-1);
+    stroke: var(--color-text-2);
 }
 
 .windowMessage>svg:last-child {
-    stroke: var(--Red-Light-2);
+    stroke: var(--color-text-2);
 }
 
 @keyframes windowMessage {
@@ -369,7 +395,8 @@ input::-webkit-input-placeholder {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: rgb(255, 255, 255);
+    background-color: var(--color);
+    color: white;
     height: 35px;
     border-radius: 8px;
     font-size: 14px;
