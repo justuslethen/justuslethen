@@ -62,7 +62,7 @@ const setUserName = (username, setPage, setWindowMessages) => {
 
 
 const setTeamName = (teamName, setWindowMessages) => {
-    socket.emit('set_team_name', { team_name: teamName }, (data) => {
+    socket.emit('set_team_name', { teamname: teamName }, (data) => {
         // check for errors creating the name
         if (evalateResponse(data, setWindowMessages)) return;
     });
@@ -194,10 +194,10 @@ const changeTeamName = (lobbyData, setLobbyData, teamName, oldTeamName) => {
         // map the teams and replace the team name with the new one
         // dont change the other data
         const updatedTeams = lobbyData.teams.map((team) => {
-            if (team.team_name === oldTeamName) {
+            if (team.teamname === oldTeamName) {
                 return {
                     ...team,
-                    team_name: teamName
+                    teamname: teamName
                 };
             }
             return team;
