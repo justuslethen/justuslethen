@@ -10,7 +10,7 @@ def start_game(pin, sid):
     team_name, sid = random_players_turn(cur, pin)
 
     round_number = get_round_number(cur, pin)
-    create_new_round_for_user(cur, pin, sid, round_number)
+    create_new_round_for_user(cur, pin, round_number)
     conn.commit()
     conn.close()
 
@@ -24,7 +24,7 @@ def next_player(pin, sid):
     team_name, sid = random_players_turn(cur, pin)
 
     round_number = get_round_number(cur, pin)
-    create_new_round_for_user(cur, pin, sid, round_number)
+    create_new_round_for_user(cur, pin, round_number)
     conn.commit()
 
     game_data = get_game_data(pin, sid)
@@ -34,6 +34,9 @@ def next_player(pin, sid):
 
 
 def random_players_turn(cur, pin):
+    
+    print("random_players_turn was called")
+    
     team_with_least_turns = get_team_with_least_turns(cur, pin)
     cur.execute(
         "SELECT team_name, sid, turns FROM users WHERE lobby_code = ? AND team_name = ? ORDER BY turns ASC LIMIT 1",
@@ -81,7 +84,6 @@ def get_random_word(cur, pin):
 
 
 def get_game_data(pin, sid):
-    print(f"get_game_data pin: {pin}")
     cur, conn = database.load_database()
     query = """
     SELECT time_left_at_start, round, current_turn_user, current_turn_team, round_started
@@ -99,7 +101,6 @@ def get_game_data(pin, sid):
 
     round_time = get_round_time(cur, pin)
     game_data = format_game_data(result, round_time)
-    print(f"round: {game_data['round']}")
     game_data["teamsscore"] = get_teams_total_score(cur, pin)
     game_data["isroundrunning"] = is_round_still_running(cur, pin)
     game_data["islastword"] = check_if_is_last_word(cur, pin)
@@ -127,7 +128,6 @@ def format_game_data(result, round_time):
 
 
 def get_round_number(cur, pin):
-    print(f"get_round_number pin: {pin}")
     query = """
     SELECT MIN(round)
     FROM words
@@ -135,7 +135,6 @@ def get_round_number(cur, pin):
     """
     cur.execute(query, (pin,))
     result = cur.fetchone()
-    print(f"max round result: {result}")
 
     return result[0] if result[0] is not None else 1
 
@@ -164,8 +163,6 @@ def get_teams_total_score(cur, pin):
             }
         )
 
-    print(f"teams score: {teams_score}")
-
     # Sorting by score in descending order
     teams_score.sort(key=lambda x: x["score"], reverse=True)
 
@@ -173,8 +170,6 @@ def get_teams_total_score(cur, pin):
 
 
 def get_team_members(cur, pin, team_name):
-    print(f"pin: {pin}, team_name: {team_name}")
-
     cur.execute(
         "SELECT username FROM users WHERE team_name = ? AND lobby_code = ?",
         (
@@ -183,8 +178,6 @@ def get_team_members(cur, pin, team_name):
         ),
     )
     res = cur.fetchall()
-
-    print(f"usernames res: {res}")
 
     return [i[0] for i in res] if res else []
 
@@ -201,19 +194,14 @@ def get_round_time(cur, pin):
     return result[0] if result else 0
 
 
-def create_new_round_for_user(cur, pin, sid, round_number):
-    print(f"pin: {pin}")
-    team_name, random_user_sid = random_players_turn(cur, pin)
+def create_new_round_for_user(cur, pin, round_number):
+    team_name, random_user_sid = whos_turn_now(cur, pin)
     time_left_at_start = get_round_time(cur, pin) + get_missed_time_last_round(
         cur, pin, team_name
     )
-    print(
-        f"""
-        time_left_at_start: {time_left_at_start},
-        round_time: {get_round_time(cur, pin)},
-        missed_time: {get_missed_time_last_round(cur, pin, team_name)}
-        """
-    )
+    
+    print(f"user_sid: {random_user_sid}")
+    print(f"team_name: {team_name}")
     
     query = """
     INSERT INTO rounds 
@@ -233,10 +221,10 @@ def create_new_round_for_user(cur, pin, sid, round_number):
         "UPDATE users SET turns = turns + 1 WHERE lobby_code = ? AND sid = ?",
         (
             pin,
-            sid,
+            random_user_sid,
         ),
     )
-    return cur.lastrowid
+    return cur.lastrowid, random_user_sid
 
 
 def get_missed_time_last_round(cur, pin, team_name):
@@ -296,8 +284,6 @@ def check_if_is_last_word(cur, pin):
 
     last_word = result[0] < 2 if result else False
 
-    print(f"last_word: {last_word}")
-
     return last_word
 
 
@@ -306,9 +292,8 @@ def next_round(pin):
 
     # Mark the round with the end time
     round_number = get_round_number(cur, pin)
-
-    team_name, sid = random_players_turn(cur, pin)
-    create_new_round_for_user(cur, pin, sid, round_number)
+    
+    sid = create_new_round_for_user(cur, pin, round_number)[1]
 
     # Start a new round
     start_new_round_for_user(cur, pin, sid)
@@ -317,6 +302,39 @@ def next_round(pin):
     conn.close()
 
     return get_game_data(pin, sid)
+
+
+def whos_turn_now(cur, pin):
+    print("whos_turn_now was called")
+    team_name, sid = has_player_time_left(cur, pin)
+    if sid:
+        return team_name, sid
+        
+    team_name, sid = random_players_turn(cur, pin)
+    return team_name, sid
+
+
+def has_player_time_left(cur, pin):
+    
+    print("has_player_time_left was called")
+    
+    # select the most recent round and check if time_left_at_end is greater than 0
+    query = """
+    SELECT current_turn_user, time_left_at_end, current_turn_team
+    FROM rounds
+    WHERE lobby_code = ?
+    ORDER BY rowid DESC
+    LIMIT 1
+    """
+    cur.execute(query, (pin,))
+    res = cur.fetchone()
+
+    if res and res[1] > 0:
+        print(f"user {res[0]} has time left: {res[1]}")
+        return res[2], res[0]  # return the sid (current_turn_user)
+    
+    print(f"user {res[0] if res else False} has no time left")
+    return None, None  # return None if time_left_at_end is not greater than 0
 
 
 def get_team_scores_for_rounds(pin):
@@ -367,8 +385,6 @@ def is_game_over(pin):
     query = "SELECT MIN(round) FROM words WHERE lobby_code = ?"
     cur.execute(query, (pin,))
     round_number = cur.fetchone()[0]
-
-    print(f"max_rounds: {max_rounds} round_number: {round_number}")
 
     conn.close()
 
@@ -428,11 +444,7 @@ def set_lost_time(pin):
     now = round(time.time() * 1000)
     elapsed = now - round_started
     missed_time = round(time_left_at_start - elapsed / 1000) 
-    print(f"now: {now}")
-    print(f"time_left_at_start: {time_left_at_start}")
-    print(f"round_started: {round_started}")
     print(f"missed_time: {missed_time}")
-    print(f"elapsed: {elapsed}")
 
     cur.execute(
         """UPDATE rounds 
