@@ -7,7 +7,7 @@ import SecondaryButton from './components/secondaryButton';
 import Timer from './components/timer';
 import PlayerCircle from './components/playerCirle';
 import Input from './components/input';
-import '../src/design1.css';
+import '../src/design.css';
 import {
     socket,
     joinLobby,
