@@ -423,7 +423,7 @@ const App = () => {
                         <h2 className="wordHeader">Spiel Vorbei</h2>
                         {gameData.teamsscore && gameData.teamsscore.map((team, i) => (
                             <div key={i} className="mainContainer" id="scoreContainer">
-                                <h2>{team.team_name}</h2>
+                                <h2>{team.teamname}</h2>
                                 <p>Punkte: {team.score}</p>
                             </div>
                         ))}
