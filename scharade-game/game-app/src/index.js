@@ -314,7 +314,18 @@ const App = () => {
             {windowMessages.map((message, index) => (
                 message !== "" && (
                     <div key={index} className="windowMessage">
-                        <img src="/windowMessage.svg" />
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <g clip-path="url(#clip0_44_82)">
+                                <circle className='svgFirstCircle' cx="12" cy="12" r="11.5" />
+                                <line className='svgFirstLine' x1="12" y1="6.5" x2="12" y2="13.5" stroke-width="3" stroke-linecap="round" />
+                                <circle className='svgSecoundCircle' cx="12" cy="18.5" r="1.5" />
+                            </g>
+                            <defs>
+                                <clipPath id="clip0_44_82">
+                                    <rect width="24" height="24" fill="white" />
+                                </clipPath>
+                            </defs>
+                        </svg>
                         <p>{message}</p>
                     </div>
                 )
