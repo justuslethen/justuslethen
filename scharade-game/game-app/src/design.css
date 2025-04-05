@@ -130,6 +130,7 @@ button {
     cursor: pointer;
 
     font-size: 20px;
+    transition: background-color 100ms ease-in-out;
 }
 
 .primaryButton {
@@ -137,9 +138,17 @@ button {
     background-color: var(--color);
 }
 
+.primaryButton:hover {
+    background-color: var(--color-text-1);
+}
+
 .secondaryButton {
+    background-color: var(--color-soft-2);
+    color: var(--color-text-2);
+}
+
+.secondaryButton:hover {
     background-color: var(--color-soft-1);
-    color: var(--color);
 }
 
 input {
@@ -153,12 +162,19 @@ input {
 
     outline: none;
     font-size: 20px;
-    background-color: var(--color-soft-1);
+    /* background-color: var(--color-soft-1); */
+    background-color: var(--color-background);
+    border: 2px solid var(--color-soft-2);
     color: var(--color);
+    transition: border 100ms ease-in-out;
 }
 
 input::-webkit-input-placeholder {
     color: var(--color-text-3);
+}
+
+input:focus {
+    border: 2px solid var(--color);
 }
 
 .numberInput {
