@@ -103,6 +103,7 @@ def get_game_data(pin, sid):
     game_data = format_game_data(result, round_time)
     game_data["teamsscore"] = get_teams_total_score(cur, pin)
     game_data["isroundrunning"] = is_round_still_running(cur, pin)
+    game_data["isroundover"] = is_round_already_over(cur, pin)
     game_data["islastword"] = check_if_is_last_word(cur, pin)
     conn.close()
 
@@ -110,6 +111,26 @@ def get_game_data(pin, sid):
     game_data["isownturn"] = game_data["currentturnuser"] == userdata.get_username(sid)
 
     return game_data
+
+
+def is_round_already_over(cur, pin):
+    cur.execute("""
+        SELECT time_left_at_start, round_started
+        FROM rounds
+        WHERE lobby_code = ?
+        ORDER BY rowid DESC
+        LIMIT 1
+    """, (pin,))
+    result = cur.fetchone()
+    if not result:
+        return False
+    
+    time_left_at_start, round_started = result
+    if round_started == 0 or time_left_at_start == 0:
+        return False
+    
+    now = round(time.time() * 1000)
+    return now > round_started + time_left_at_start * 1000
 
 
 def format_game_data(result, round_time):

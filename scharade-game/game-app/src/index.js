@@ -500,18 +500,21 @@ const App = () => {
                     </>
                 )}
                 {page === "ownRound" && (
-                    !gameData.isLastWord ? (
-                        countdown.timeleft > 0 ? (
-                            <PrimaryButton name="Wort richtig" onClick={() => guessedWordCorrect()} />
+                    !gameData.isroundover ? (
+                        !gameData.isLastWord ? (
+                            countdown.timeleft > 0 ? (
+                                <PrimaryButton name="Wort richtig" onClick={() => guessedWordCorrect()} />
+                            ) : (
+                                <SecondaryButton name="Nächster Spieler" onClick={() => nextPlayer()} />
+                            )
                         ) : (
-                            <SecondaryButton name="Nächster Spieler" onClick={() => nextPlayer()} />
-                        )
-                    ) : (
-                        countdown.timeleft > 0 ? (
-                            <SecondaryButton name="Runde Beenden" onClick={() => endRound()} />
-                        ) : (
-                            <SecondaryButton name="Nächster Spieler" onClick={() => nextPlayer()} />
-                        )
+                            countdown.timeleft > 0 ? (
+                                <SecondaryButton name="Runde Beenden" onClick={() => endRound()} />
+                            ) : (
+                                <SecondaryButton name="Nächster Spieler" onClick={() => nextPlayer()} />
+                            )
+                        )) : (
+                        <SecondaryButton name="Nächster Spieler" onClick={() => nextPlayer()} />
                     )
                 )}
                 {page === "game" && gameData.isownturn && (

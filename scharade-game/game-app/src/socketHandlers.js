@@ -114,9 +114,6 @@ const handlePlayerContinuation = (playerSid, setLobbyData, setGameData, setTitle
             // update playerSid to new one
             localStorage.setItem('playerSid', data.lobbydata.playersid);
 
-            console.log("data");
-            console.log(data);
-
             // setup all important configs and data
             fowardWithGame(data, setLobbyData, setGameData, setTitle, setPage, setCountdown, timerRef);
         });
@@ -133,16 +130,16 @@ const fowardWithGame = (data, setLobbyData, setGameData, setTitle, setPage, setC
     // set title, gameData, lobbyData, coundown and page
     configAllForwardingData(data, setPage, setGameData, setLobbyData, setTitle, setCountdown);
 
+
     setPage(data.page);
 
     // start a new time with the new coundown timer
     // if the round is still running
-    if (startTimerIfRoundRunning(data, setCountdown, timerRef)) {
-        if (data.gamedata.isownturn) {
-            // when round is running and its own turn
-            // set page to ownRound to continue the round
-            setPage("ownRound");
-        }
+    startTimerIfRoundRunning(data, setCountdown, timerRef);
+    if (data.gamedata.isownturn) {
+        // when round is running and its own turn
+        // set page to ownRound to continue the round
+        setPage("ownRound");
     }
 }
 
@@ -176,7 +173,7 @@ const startTimerIfRoundRunning = (data, setCountdown, timerRef) => {
     if (!data.gamedata) return false;
 
     // if the round has started and not endet yet
-    if (data.gamedata.isroundrunning) {
+    if (data.gamedata.isroundrunning || data.gamedata.isroundover) {
         // start a new timer with the new given countdown data
         startTimerWithData(data, setCountdown, timerRef);
 
@@ -348,8 +345,9 @@ const calcBottomHeight = (page, lobbyData, gameData) => {
 
 const startTimerWithData = (data, setCountdown, timerRef) => {
     // use data values because the countdown isnt stored yet
+
     startTimer({
-        timeleft: data.timeatstart,
+        timeleft: data.timeleftatstart,
         timeatstart: data.timeatstart,
         startdate: new Date(data.startdate).getTime()
     }, setCountdown, timerRef);
