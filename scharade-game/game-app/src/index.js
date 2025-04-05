@@ -276,17 +276,19 @@ const App = () => {
         socket.on('start_round', (data) => {
             if (!data) return;
 
-            // update word to new word
-            updateGameDataNextWord(data, setGameData);
-
-            setPage("ownRound");
-            setCountdownData(data, setCountdown);
-
             //clear old timer if exist
             clearTimer(timerRef);
 
             // start timer
             startTimerWithData(data, setCountdown, timerRef);
+
+            if (data.word) {
+                // update word to new word
+                updateGameDataNextWord(data, setGameData);
+
+                setPage("ownRound");
+                setCountdownData(data, setCountdown);
+            }
         });
     }, []);
 
@@ -493,7 +495,7 @@ const App = () => {
                                 <SecondaryButton name="Weiter" onClick={() => startGame()} />
                             </>
                         ) : (
-                            <SecondaryButton name="Wort hinzufügen" onClick={() => addWord()} />
+                            <PrimaryButton name="Wort hinzufügen" onClick={() => addWord()} />
                         )}
                     </>
                 )}
@@ -505,7 +507,11 @@ const App = () => {
                             <SecondaryButton name="Nächster Spieler" onClick={() => nextPlayer()} />
                         )
                     ) : (
-                        <SecondaryButton name="Runde Beenden" onClick={() => endRound()} />
+                        countdown.timeleft > 0 ? (
+                            <SecondaryButton name="Runde Beenden" onClick={() => endRound()} />
+                        ) : (
+                            <SecondaryButton name="Nächster Spieler" onClick={() => nextPlayer()} />
+                        )
                     )
                 )}
                 {page === "game" && gameData.isownturn && (
