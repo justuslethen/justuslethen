@@ -143,12 +143,12 @@ button {
 }
 
 .secondaryButton {
-    background-color: var(--color-soft-2);
+    background-color: var(--color-soft-1);
     color: var(--color-text-2);
 }
 
 .secondaryButton:hover {
-    background-color: var(--color-soft-1);
+    background-color: var(--color-soft-2);
 }
 
 input {
