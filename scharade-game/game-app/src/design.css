@@ -357,11 +357,12 @@ input::-webkit-input-placeholder {
     height: 24px;
 }
 
-.windowMessage>svg:first-child {
-    stroke: var(--color-text-2);
+.windowMessage .svgSecoundCircle {
+    fill: var(--color-text-2);
 }
 
-.windowMessage>svg:last-child {
+.windowMessage .svgFirstCircle,
+.windowMessage .svgFirstLine {
     stroke: var(--color-text-2);
 }
 
