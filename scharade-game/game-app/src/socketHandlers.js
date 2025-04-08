@@ -126,6 +126,7 @@ const handlePlayerContinuation = (playerSid, setLobbyData, setGameData, setTitle
 const fowardWithGame = (data, setLobbyData, setGameData, setTitle, setPage, setCountdown, timerRef) => {
     // if data is not given dont execute
     if (!data || !data.page || !data.lobbydata) return false;
+    console.log("fowardWithGame", data);
 
     // set title, gameData, lobbyData, coundown and page
     configAllForwardingData(data, setPage, setGameData, setLobbyData, setTitle, setCountdown);
@@ -137,9 +138,11 @@ const fowardWithGame = (data, setLobbyData, setGameData, setTitle, setPage, setC
     // if the round is still running
     startTimerIfRoundRunning(data, setCountdown, timerRef);
     if (data.gamedata.isownturn) {
-        // when round is running and its own turn
-        // set page to ownRound to continue the round
-        setPage("ownRound");
+        if (data.gamedata.isroundrunning || data.gamedata.isroundover) {
+            // when round is running and its own turn
+            // set page to ownRound to continue the round
+            setPage("ownRound");
+        }
     }
 }
 
