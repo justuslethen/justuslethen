@@ -105,6 +105,7 @@ def get_game_data(pin, sid):
     game_data["isroundrunning"] = is_round_still_running(cur, pin)
     game_data["isroundover"] = is_round_already_over(cur, pin)
     game_data["islastword"] = check_if_is_last_word(cur, pin)
+    game_data["currentword"] = get_random_word(cur, pin)
     conn.close()
 
     # defining is_own_turn bfor the client
