@@ -325,12 +325,10 @@ const calcBottomHeight = (page, lobbyData, gameData) => {
 
     let bottomHeight = 0;
     // set every height manually for every page
-    if (page === "gamePin" || page === "createName" || page === "words" || page === "players") {
+    if (page === "start" || page === "gamePin" || page === "createName" || page === "words" || page === "players") {
         bottomHeight = 156;
     } else if (page === "createLobby") {
         bottomHeight = 384;
-    } else if (page === "start" && gameData.isownturn) {
-        bottomHeight = 80;
     } else if (page === "game" && gameData.isownturn) {
         bottomHeight = 80;
     } else if (page === "ownRound" || page === "endData") {
