@@ -201,11 +201,8 @@ const App = () => {
 
         // set the calculated height if element is available
         if (middleContainer) {
-            console.log("window.innerHeight", window.innerHeight);
-            console.log("bottomHeight", bottomHeight);
-
-            const availableHeight = window.innerHeight - 37 - bottomHeight - 20;
-            availableHeight < 0 ? 0 : availableHeight;
+            let availableHeight = window.innerHeight - 37 - bottomHeight - 20;
+            availableHeight = availableHeight < 0 ? 0 : availableHeight;
             middleContainer.style.height = `${availableHeight}px`;
         }
     };
