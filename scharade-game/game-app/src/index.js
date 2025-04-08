@@ -205,6 +205,7 @@ const App = () => {
             console.log("bottomHeight", bottomHeight);
 
             const availableHeight = window.innerHeight - 37 - bottomHeight - 20;
+            availableHeight < 0 ? 0 : availableHeight;
             middleContainer.style.height = `${availableHeight}px`;
         }
     };
