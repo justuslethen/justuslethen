@@ -321,7 +321,6 @@ const evalateResponse = (response, setWindowMessages) => {
 
 
 const calcBottomHeight = (page, lobbyData, gameData) => {
-    console.log("calcBottomHeight", page, lobbyData, gameData);
 
     let bottomHeight = 0;
     // set every height manually for every page
