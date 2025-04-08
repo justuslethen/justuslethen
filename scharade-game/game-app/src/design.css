@@ -60,6 +60,7 @@
 body {
     margin: 0px;
     padding: 20px;
+    padding-bottom: 0px;
 
     font-family: Arial, sans-serif;
     background-color: var(--color-background);
@@ -74,7 +75,11 @@ h1 {
     color: var(--color-text-1);
     text-align: center;
     width: 100%;
-    margin-top: 10px;
+    margin: 0px;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 h2 {
@@ -294,7 +299,7 @@ input:focus {
 
 .topContainer {
     width: 100%;
-    min-height: 50px;
+    height: 37px;
     display: flex;
     justify-content: center;
     align-items: center;
