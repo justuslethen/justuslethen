@@ -13,20 +13,114 @@
     --red-soft: #FFD1D1;
 }
 
-:root[data-theme="dark"] {
-    --background-main: #000000;
-    --container-background: #272727;
-    --text-1: #FOFOFO;
-    --text-3: #ADADAD;
-    --box-background: #353535;
-    --grey-1: #363636;
-    --grey-2: #3F3F3F;
-    --grey-3: #676767;
-    --blue: #3E92FF;
-    --main-color: #6F8CFF;
-    --main-color-light: #9EB9FF;
-    --red: #FF2F2F;
-    --red-soft: #FFD1D1;
-    --red-soft: #691818;
-    --red: #FF3737;
+@media(prefers-color-scheme: dark) {
+    :root {
+        --background-main: #000000;
+        --container-background: #272727;
+        --text-1: #F0F0F0F0;
+        --text-3: #ADADAD;
+        --box-background: #353535;
+        --grey-1: #363636;
+        --grey-2: #3F3F3F;
+        --grey-3: #676767;
+        --blue: #3E92FF;
+        --main-color: #6F8CFF;
+        --main-color-light: #9EB9FF;
+        --red: #FF2F2F;
+        --red-soft: #FFD1D1;
+        --red-soft: #691818;
+        --red: #FF3737;
+    }
+}
+
+body {
+    background-color: var(--background-main);
+    font-family: Arial, Helvetica, sans-serif, sans-serif;
+    margin: 0px;
+    color: var(--text-1);
+}
+
+header {
+    display: flex;
+    padding: 10px 20px;
+    align-items: center;
+    gap: 10px;
+    align-self: stretch;
+
+    border-bottom: 1px solid var(--grey-1, #363636);
+    background: var(--container-background, #272727);
+}
+
+header h1 {
+    color: var(--text-1);
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+.content {
+    display: flex;
+    padding: 20px;
+    flex-direction: column;
+    gap: 10px;
+    align-self: stretch;
+}
+
+.list {
+    overflow: hidden;
+    border-radius: 14px;
+    border: 1px solid var(--grey-1, #363636);
+    background: var(--container-background, #272727);
+}
+
+.list-element {
+    display: flex;
+    padding: 10px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    border-bottom: 1px solid var(--grey-1, #363636);
+    transition: background-color 120ms ease-in-out
+}
+
+.list-element:hover {
+    background: var(--grey-2);
+    cursor: pointer;
+}
+
+.list-element:last-child {
+    border-bottom: none;
+}
+
+.list-element .body {
+    display: flex;
+    flex-direction: column;
+}
+
+.list-element .header {
+    display: flex;
+    padding-bottom: 4px;
+}
+
+.list-element .header p {
+    color: var(--text-1);
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    margin: 0px;
+}
+
+.list-element .bottom p {
+    color: var(--text-3);
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    margin: 0px;
+}
+
+.list-element .iconButtomSecondary {
+    color: var(--grey-3);
 }
