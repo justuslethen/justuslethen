@@ -196,11 +196,15 @@ const App = () => {
     // adjust the middleContainer to avoid the body to be scrollable
     const adjustMiddleContainerHeight = () => {
         const middleContainer = document.querySelector('.middleContainer');
+
         const bottomHeight = calcBottomHeight(page, lobbyData, gameData);
 
         // set the calculated height if element is available
         if (middleContainer) {
-            const availableHeight = window.innerHeight - 70 - bottomHeight - 40;
+            console.log("window.innerHeight", window.innerHeight);
+            console.log("bottomHeight", bottomHeight);
+
+            const availableHeight = window.innerHeight - 37 - bottomHeight - 20;
             middleContainer.style.height = `${availableHeight}px`;
         }
     };
@@ -305,11 +309,11 @@ const App = () => {
         // recalculate bottom with everytime window is resized
         adjustMiddleContainerHeight();
         window.addEventListener('resize', adjustMiddleContainerHeight); // adjust when resize
-
+    
         return () => {
             window.removeEventListener('resize', adjustMiddleContainerHeight); // cleanum
         };
-    }, []);
+    }, [gameData, page, lobbyData]);
 
     return (
         <>
@@ -335,16 +339,6 @@ const App = () => {
 
             <div className='topContainer'>
                 <Header title={title} />
-            </div>
-            <div className="backgroundAmbiente">
-                <div id="div1" />
-                <div id="div2">
-                    <div>
-                    </div>
-                </div>
-                <div id="div3" />
-                <div id="div4" />
-                <div id="div5" />
             </div>
 
             <div className='middleContainer'>
@@ -527,9 +521,6 @@ const App = () => {
                     <PrimaryButton name="Zurück zum Start" onClick={() => backToStart()} />
                 )}
             </section>
-
-
-            {adjustMiddleContainerHeight()}
         </>
     );
 };

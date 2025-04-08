@@ -212,7 +212,7 @@ const changeTeamName = (lobbyData, setLobbyData, teamName, oldTeamName) => {
 // set the title with the given name and code
 // like this: {name} - {code}
 const updateTitle = (setTitle, lobbyCode, lobbyName) => {
-    setTitle(lobbyName + " - " + lobbyCode);
+    setTitle(lobbyCode + " - " + lobbyName);
 }
 
 
@@ -321,12 +321,16 @@ const evalateResponse = (response, setWindowMessages) => {
 
 
 const calcBottomHeight = (page, lobbyData, gameData) => {
+    console.log("calcBottomHeight", page, lobbyData, gameData);
+
     let bottomHeight = 0;
     // set every height manually for every page
-    if (page === "start" || page === "gamePin" || page === "createName" || page === "words" || page === "players") {
+    if (page === "gamePin" || page === "createName" || page === "words" || page === "players") {
         bottomHeight = 156;
     } else if (page === "createLobby") {
         bottomHeight = 384;
+    } else if (page === "start" && gameData.isownturn) {
+        bottomHeight = 80;
     } else if (page === "game" && gameData.isownturn) {
         bottomHeight = 80;
     } else if (page === "ownRound" || page === "endData") {
