@@ -20,7 +20,7 @@ const App = () => {
   const [configRoomData, setConfigRoomData] = useState({
     roomname: "",
     maxmembers: {
-      selections: [3, 10, 15, 30],
+      selections: [3, 10, 15, 30, 100],
       selected: 0
     },
     privacy: {
