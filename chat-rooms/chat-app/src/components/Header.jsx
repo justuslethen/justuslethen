@@ -16,8 +16,9 @@ const Header = ({ online, name, setPage, recentPage, share, socket }) => {
                 </button>
             </div>
             <div className="headerCenterContainer">
-                <p className="onlineUsers">{online} Online</p>
-                <p className="roomName" onClick={() => setPage("chat")}>{name}</p>
+                {online >= 0 && <p className="onlineUsers">{online} Online</p>}
+                {/* <p className="roomName" onClick={() => setPage("chat")}>{name}</p> */}
+                <p className="roomName">{name}</p>
             </div>
             <div className="headerSideConatiner">
                 {share && (

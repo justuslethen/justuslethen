@@ -179,8 +179,14 @@ const App = () => {
 
       {page === "createRoom" && (
         <>
-          <div className='content'>
-            <h1>Raum erstellen</h1>
+          <Header
+            online={-1}
+            name={"Raum erstellen"}
+            setPage={setPage}
+            recentPage="home"
+            share={false}
+            socket={socket} />
+          <div className='content content-mid-size'>
             <input
               placeholder='Name'
               value={configRoomData.roomname}
@@ -249,7 +255,7 @@ const App = () => {
             name={roomData.roomname}
             setPage={setPage}
             recentPage="home"
-            share="false"
+            share={false}
             socket={socket} />
           <div className='content content-mid-size'>
             <input
@@ -292,7 +298,7 @@ const App = () => {
             name={roomData.roomname}
             setPage={setPage}
             recentPage="chat"
-            share="false"
+            share={false}
             socket={socket} />
           <div className='content'>
             <h1>{roomData.code}</h1>
