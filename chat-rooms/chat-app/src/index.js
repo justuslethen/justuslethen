@@ -32,7 +32,7 @@ const App = () => {
       selected: 0
     },
     hidingmessages: {
-      selections: ["Raum Ende", "1 Std.", "3 Std.", "24 Std."],
+      selections: ["1 Std.", "3 Std.", "24 Std.", "Nie"],
       selected: 0
     },
   });
