@@ -31,6 +31,10 @@ const App = () => {
       selections: ["Heute", "1 Tag", "3 Tage", "7 Tage", "30 Tage"],
       selected: 0
     },
+    hidingmessages: {
+      selections: ["Raum Ende", "1 Std.", "3 Std.", "24 Std."],
+      selected: 0
+    },
   });
 
   // your user data
@@ -237,6 +241,21 @@ const App = () => {
                   ...prev,
                   roomduration: {
                     ...prev.roomduration,
+                    selected: newSelected
+                  }
+                }))
+              }
+            />
+            <Selection
+              header="Nachrichten verschwinden nach"
+              className="selectionRow"
+              selections={configRoomData.hidingmessages.selections}
+              selected={configRoomData.hidingmessages.selected}
+              setSelected={(newSelected) =>
+                setConfigRoomData(prev => ({
+                  ...prev,
+                  hidingmessages: {
+                    ...prev.hidingmessages,
                     selected: newSelected
                   }
                 }))
