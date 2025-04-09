@@ -28,7 +28,7 @@ const App = () => {
       selected: 0
     },
     roomduration: {
-      selections: ["1 Tag", "3 Tage", "7 Tage", "30 Tage"],
+      selections: ["Heute", "1 Tag", "3 Tage", "7 Tage", "30 Tage"],
       selected: 0
     },
   });

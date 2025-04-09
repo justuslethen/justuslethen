@@ -30,7 +30,7 @@ def is_expiring_date_reached(expiring_date):
 def prepare_room_data(config):
     # the choises also displayed on the react interface
     members_choise = [3, 10, 15, 30]
-    duration_choise = [1, 3, 7, 30]
+    duration_choise = [0, 1, 3, 7, 30]
 
     # set members and duration based on the emited index from the choice array
     return {
