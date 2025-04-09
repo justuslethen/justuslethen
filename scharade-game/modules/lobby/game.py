@@ -34,15 +34,19 @@ def next_player(pin, sid):
 
 
 def random_players_turn(cur, pin):
-    
-    print("random_players_turn was called")
-    
     team_with_least_turns = get_team_with_least_turns(cur, pin)
     cur.execute(
-        "SELECT team_name, sid, turns FROM users WHERE lobby_code = ? AND team_name = ? ORDER BY turns ASC LIMIT 1",
+        "SELECT team_name, sid, turns FROM users WHERE lobby_code = ? AND team_name = ? AND valid = 1 ORDER BY turns ASC LIMIT 1",
         (pin, team_with_least_turns),
     )
     selected_player = cur.fetchone()
+    
+    if not selected_player:
+        cur.execute(
+            "SELECT team_name, sid, turns FROM users WHERE lobby_code = ? AND valid = 1 ORDER BY turns ASC LIMIT 1",
+            (pin,),
+        )
+        selected_player = cur.fetchone()
 
     return selected_player[0], selected_player[1]
 
