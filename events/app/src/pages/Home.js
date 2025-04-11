@@ -4,6 +4,8 @@ import Header from '../components/Header';
 import ListElement from '../components/ListElement';
 
 const Home = () => {
+  document.title = "Events";
+
   const navigate = useNavigate();
 
   const events = [
@@ -16,16 +18,13 @@ const Home = () => {
   ];
 
   const handleClick = (eventId) => {
-    console.log("Event ID:", eventId);  // Log the event ID
-    navigate(`/event/${eventId}`);  // Navigate to the event page
+    navigate(`/event/${eventId}`);  // navigate to the event page
   };
 
   return (
     <>
       <Header
-        title="Alle Events"
-        backButton={false}
-        data=""
+        title="Alle Events" backButton={false} addButton={true} addAction="/create"
       />
       <div className='content'>
         <div className='list'>
@@ -35,7 +34,7 @@ const Home = () => {
               name={eventItem.eventname}
               startDate={eventItem.startdate}
               endDate={eventItem.enddate}
-              onClick={() => handleClick(eventItem.eventId)}  // Add click handler
+              onClick={() => handleClick(eventItem.eventId)}  // add click handler
             />
           ))}
         </div>

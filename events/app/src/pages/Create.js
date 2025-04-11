@@ -1,12 +1,12 @@
-import { usePin } from '../contexts/PinContext';
+import Header from '../components/Header';
 import React from 'react';
 
 const Create = () => {
-    const { pin } = usePin();
+    document.title = "Events - Neues Event erstellen";
+
     return (
         <>
-            <h1>Event erstellen</h1>
-            <p>Der aktuelle PIN ist: {pin}</p>
+            <Header title="Neues Event erstellen" backButton={true} addButton={false}/>
         </>
     )
 };
