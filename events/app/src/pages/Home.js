@@ -7,16 +7,17 @@ const Home = () => {
   const navigate = useNavigate();
 
   const events = [
-    { eventname: "Event 1", startdate: "2025-04-20", enddate: "2025-04-27" },
-    { eventname: "Event 2", startdate: "2025-05-01", enddate: "2025-05-05" },
-    { eventname: "Event 3", startdate: "2025-06-10", enddate: "2025-06-15" },
-    { eventname: "Event 4", startdate: "2025-07-01", enddate: "2025-07-07" },
-    { eventname: "Event 5", startdate: "2025-08-05", enddate: "2025-08-12" },
-    { eventname: "Event 6", startdate: "2025-09-15", enddate: "2025-09-20" }
+    { eventname: "Event 1", startdate: "2025-04-20", enddate: "2025-04-27", eventId: 1 },
+    { eventname: "Event 2", startdate: "2025-05-01", enddate: "2025-05-05", eventId: 2 },
+    { eventname: "Event 3", startdate: "2025-06-10", enddate: "2025-06-15", eventId: 3 },
+    { eventname: "Event 4", startdate: "2025-07-01", enddate: "2025-07-07", eventId: 4 },
+    { eventname: "Event 5", startdate: "2025-08-05", enddate: "2025-08-12", eventId: 5 },
+    { eventname: "Event 6", startdate: "2025-09-15", enddate: "2025-09-20", eventId: 6 }
   ];
 
-  const handleClick = (eventname) => {
-    navigate(`/event`);  // Navigate to the event page
+  const handleClick = (eventId) => {
+    console.log("Event ID:", eventId);  // Log the event ID
+    navigate(`/event/${eventId}`);  // Navigate to the event page
   };
 
   return (
@@ -34,7 +35,7 @@ const Home = () => {
               name={eventItem.eventname}
               startDate={eventItem.startdate}
               endDate={eventItem.enddate}
-              onClick={() => handleClick(eventItem.eventname)}  // Add click handler
+              onClick={() => handleClick(eventItem.eventId)}  // Add click handler
             />
           ))}
         </div>
