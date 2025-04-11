@@ -4,7 +4,7 @@ from modules.edit_event import edit_event_bp
 from modules.get_event import get_event_bp
 import os
 
-app = Flask(__name__, static_folder="frontend/build")
+app = Flask(__name__, static_folder="app/build")
 
 # register blueprints
 app.register_blueprint(create_event_bp)
