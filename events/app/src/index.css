@@ -121,6 +121,8 @@ header h1 {
     margin: 0px;
 }
 
-.list-element .iconButtomSecondary {
+.iconButtomSecondary {
+    all: unset;
     color: var(--grey-3);
+    cursor: pointer;
 }

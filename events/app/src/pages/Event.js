@@ -1,18 +1,15 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import Header from '../components/Header';
 import ListElement from '../components/ListElement';
 
 const Event = () => {
-    const navigate = useNavigate();  // Hook to handle navigation
+    const { eventId } = useParams();  // Get eventId from the URL
 
     return (
         <>
-            <Event
-                title="Event"
-                backButton={false}
-                data=""
-            />
+            <Header title="Event 1" backButton={true} />
+            
         </>
     );
 };

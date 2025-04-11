@@ -9,7 +9,7 @@ const AppRoutes = () => {
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/create" element={<Create />} />
-      <Route path="/event" element={<Event />} />
+      <Route path="/event/:eventId" element={<Event />} />
     </Routes>
   );
 };
