@@ -57,6 +57,7 @@ header h1 {
     font-style: normal;
     font-weight: 400;
     line-height: normal;
+    width: 100%;
 }
 
 .content {
@@ -123,6 +124,25 @@ header h1 {
 
 .iconButtomSecondary {
     all: unset;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
     color: var(--grey-3);
+    cursor: pointer;
+}
+
+.iconButtonPrimary {
+    all: unset;
+
+    display: flex;
+    padding: 10px;
+    justify-content: center;
+    align-items: center;
+
+    color: white;
+    background: var(--main-color);
+    border-radius: 13px;
+
     cursor: pointer;
 }
