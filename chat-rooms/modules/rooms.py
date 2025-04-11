@@ -31,6 +31,7 @@ def prepare_room_data(config):
     # the choises also displayed on the react interface
     members_choise = [3, 10, 15, 30, 100]
     duration_choise = [0, 1, 3, 7, 30]
+    disappearing_messages_choise = [1, 3, 24, 720]
 
     # set members and duration based on the emited index from the choice array
     return {
@@ -39,6 +40,9 @@ def prepare_room_data(config):
         "max_members": members_choise[config["maxmembers"]["selected"]],
         "private": config["privacy"]["selected"],
         "duration": duration_choise[config["roomduration"]["selected"]],
+        "messages_duration": disappearing_messages_choise[
+            config["messagesduration"]["selected"]
+        ],
     }
 
 
