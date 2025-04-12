@@ -201,7 +201,7 @@ input:focus {
     gap: 10px;
 }
 
-.column-header,
+.row-header,
 .subevent-header {
     width: 100%;
     display: flex;
@@ -209,13 +209,13 @@ input:focus {
     gap: 10px;
 }
 
-.column-header h3,
+.row-header h3,
 .subevent-header h3 {
     width: 100%;
     margin: 0px;
 }
 
-.column-body,
+.row-body,
 .subevent-body {
     width: 100%;
     display: flex;
@@ -240,21 +240,21 @@ input:focus {
     cursor: pointer;
 }
 
-.columns-box {
+.rows-box {
     display: flex;
     flex-direction: row;
     gap: 10px;
     width: 100%;
 }
 
-.columns {
+.rows {
     display: flex;
     flex-direction: column;
     gap: 10px;
     width: 100%;
 }
 
-.column-input {
+.row-input {
     display: flex;
     flex-direction: column;
     gap: 10px;

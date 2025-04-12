@@ -1,5 +1,5 @@
 import React from 'react';
-import SubeventColumnCreate from './SubeventColumnCreate';
+import SubeventRowCreate from './SubeventRowCreate';
 import IconButton from './IconButton';
 import Button from './Button';
 
@@ -34,20 +34,20 @@ const SubeventCreate = (props) => {
           onChange={(e) => props.handleSubeventChange(props.index, "enddate", e.target.value)}
         />
 
-        <div className='columns-box'>
+        <div className='rows-box'>
           <div className='side-line'></div>
-          <div className='columns'>
-            {props.subevent.columns.map((column, colIndex) => (
-              <SubeventColumnCreate
-                column={column}
-                colIndex={colIndex}
+          <div className='rows'>
+            {props.subevent.rows.map((row, rowIndex) => (
+              <SubeventRowCreate
+                row={row}
+                rowindex={rowIndex}
                 index={props.index}
                 focus={true}
-                action={props.handleColumnChange}
-                handleDeleteColumn={props.handleDeleteColumn}
+                action={props.handleRowChange}
+                handleDeleterow={props.handleDeleteRow}
               />
             ))}
-            <Button type='secondary' text='+ Spalte' onclick={() => { props.handleAddColumn(props.index) }} />
+            <Button type='secondary' text='+ Spalte' onclick={() => { props.handleAddRow(props.index) }} />
           </div>
         </div>
       </div>
