@@ -7,6 +7,7 @@ const Header = (props) => {
 
 
   if (!props.data) {
+    // render without next event display
     return (
       <header>
         {props.backButton && (
