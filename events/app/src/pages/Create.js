@@ -8,6 +8,10 @@ const Create = () => {
         eventname: "",
         subevents: []
     });
+    const [focusedIndex, setFocuedIndex] = React.useState({
+        subeventIndex: 0,
+        rowIndex: 0,
+    });
 
     document.title = "Events - Neues Event erstellen";
 
@@ -26,23 +30,23 @@ const Create = () => {
         setEventData(prev => ({ ...prev, subevents: updatedSubevents }));
     };
 
-    const handleColumnChange = (subeventIndex, columnIndex, field, value) => {
+    const handleRowChange = (subeventIndex, rowIndex, field, value) => {
         // create copy of subevents
         const updatedSubevents = [...eventData.subevents];
 
         // set the new value
-        updatedSubevents[subeventIndex].columns[columnIndex][field] = value;
+        updatedSubevents[subeventIndex].rows[rowIndex][field] = value;
 
         // update the data to the new value
         setEventData(prev => ({ ...prev, subevents: updatedSubevents }));
     };
 
-    const handleDeleteColumn = (subeventIndex, columnIndex) => {
-         // create copy of subevents
+    const handleDeleteRow = (subeventIndex, rowIndex) => {
+        // create copy of subevents
         const updatedSubevents = [...eventData.subevents];
 
-        // remove the column
-        updatedSubevents[subeventIndex].columns.splice(columnIndex, 1);
+        // remove the row
+        updatedSubevents[subeventIndex].rows.splice(rowIndex, 1);
 
         // set new data
         setEventData(prev => ({ ...prev, subevents: updatedSubevents }));
@@ -61,25 +65,74 @@ const Create = () => {
 
     const handleAddSubevent = () => {
         // JSON patern for a subevent
-        const newSubevent = {
-            subeventname: "",
-            startdate: "",
-            enddate: "",
-            columns: [
-                { columnname: "", columncontext: "" },
-            ],
-        };
+        const newSubevent = createSubeventJSONPattern();
         setEventData(prev => ({ ...prev, subevents: [...prev.subevents, newSubevent] }));
+        setFocusedSubevent(eventData.subevents.length);
     };
 
-    const handleAddColumn = (subeventIndex) => {
+    const createSubeventJSONPattern = () => {
+        // create a JSON pattern and fill it with last used values
+
+        const lastSubevent = eventData.subevents[eventData.subevents.length - 1] || {}; // last subevent in the list
+        return {
+            subeventname: "Neuer Programmpunkt",
+            startdate: lastSubevent.enddate || "",
+            enddate: lastSubevent.enddate || "",
+            rows: [
+                createRowJSONPattern(0)
+            ],
+        };
+    }
+
+    const createRowJSONPattern = (rowIndex) => {
+        // create a JSON pattern and fill it with last used values
+
+        // get the last subevent
+        const lastRowName = getLastRowName(rowIndex);
+
+        return { rowname: lastRowName || "", rowcontext: "" }
+    }
+
+    const getLastRowName = (rowIndex) => {
+        // set the index to the last index to loop from the back
+        let index = eventData.subevents.length - 1 || 0;
+        let lastRowName = "";
+
+        while (index >= 0) {
+            const subEvent = eventData.subevents[index];
+            if (subEvent && subEvent.rows.length > rowIndex) {
+                if (subEvent.rows[rowIndex].rowname !== "") {
+                    lastRowName = subEvent.rows[rowIndex].rowname || "";
+                    break;
+                }
+            }
+            index--;
+        }
+
+        return lastRowName;
+    }
+
+    const handleAddRow = (subeventIndex) => {
         // create copy of subevents
         const updatedSubevents = [...eventData.subevents];
 
-        // add the JSON pattern for a new column
-        const newColumn = { columnname: "", columncontext: "" };
-        updatedSubevents[subeventIndex].columns.push(newColumn); // add a new column
+        // get index of current row
+        const index = eventData.subevents[subeventIndex].rows.length;
+
+        // add the JSON pattern for a new row
+        const newrow = createRowJSONPattern(index);
+        updatedSubevents[subeventIndex].rows.push(newrow); // add a new row
         setEventData(prev => ({ ...prev, subevents: updatedSubevents })); // save
+
+        setFocusedRow(eventData.subevents[focusedIndex.subeventIndex].rows.length - 1);
+    };
+
+    const setFocusedRow = (index) => {
+        setFocuedIndex(prev => ({ ...prev, rowIndex: index }));
+    };
+
+    const setFocusedSubevent = (index) => {
+        setFocuedIndex(prev => ({ ...prev, subeventIndex: index }));
     };
 
     return (
@@ -87,11 +140,11 @@ const Create = () => {
             <Header title="Neues Event erstellen" backButton={true} addButton={false} />
 
             <div className='content'>
-                <h3>Event</h3>
+                <h3>Veranstaltung</h3>
                 <input
                     value={eventData.eventname}
                     onChange={(e) => handleChange("eventname", e.target.value)}
-                    placeholder="Name des Events"
+                    placeholder="Name der Veranstaltung"
                 />
 
 
@@ -102,17 +155,20 @@ const Create = () => {
                             <SubeventCreate
                                 subevent={subevent}
                                 index={index}
-                                focus={true}
+                                focus={index == focusedIndex.subeventIndex}
                                 handleChange={handleChange}
                                 handleSubeventChange={handleSubeventChange}
-                                handleColumnChange={handleColumnChange}
-                                handleDeleteColumn={handleDeleteColumn}
+                                handleRowChange={handleRowChange}
+                                handleDeleteRow={handleDeleteRow}
                                 handleDeleteSubevent={handleDeleteSubevent}
-                                handleAddColumn={handleAddColumn}
+                                handleAddRow={handleAddRow}
                                 handleAddSubevent={handleAddSubevent}
+                                setFocusedSubevent={setFocusedSubevent}
+                                setFocusedRow={setFocusedRow}
+                                focusedRowIndex={focusedIndex.rowIndex}
                             />
                         ))}
-                        <Button type='secondary' text='+ Event' onclick={() => { handleAddSubevent() }} />
+                        <Button type='secondary' text='+ Programmpunkt' onclick={() => { handleAddSubevent() }} />
                     </div>
                 </div>
 
