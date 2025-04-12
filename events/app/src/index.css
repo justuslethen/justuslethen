@@ -267,13 +267,14 @@ input:focus {
     padding: 10px;
     justify-content: center;
     align-items: center;
+    box-sizing: border-box;
     width: 100%;
     border-radius: 14px;
     cursor: pointer;
 }
 
 .button p {
-    font-family: Inter;
+    margin: 0px;
     font-size: 18px;
     font-style: normal;
     font-weight: 400;
@@ -288,4 +289,11 @@ input:focus {
 .button-secondary {
     background-color: var(--grey-1);
     color: var(--text-3);
+}
+
+.subevents {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 10px;
 }

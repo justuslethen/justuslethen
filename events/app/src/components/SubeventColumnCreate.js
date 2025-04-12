@@ -6,8 +6,8 @@ const SubeventColumnCreate = (props) => {
     <div key={props.colIndex} className='column-input'>
       <div className='column-header'>
         <h3>Reihe {props.colIndex + 1}</h3>
-        <IconButton onclick={() => {props.handleDeleteColumn(props.index, props.colIndex)}} type="red" icon="bin"/>
-        <IconButton onclick={() => {console.log(`iconButton click`)}} type="secondary" icon="arrow" rotate={0.25}/>
+        <IconButton onclick={() => { props.handleDeleteColumn(props.index, props.colIndex) }} type="red" icon="bin" />
+        <IconButton onclick={() => { console.log(`iconButton click`) }} type="secondary" icon="arrow" rotate={0.25} />
       </div>
 
       {props.focus && (
