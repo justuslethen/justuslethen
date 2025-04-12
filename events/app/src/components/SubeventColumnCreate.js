@@ -1,25 +1,25 @@
 import React from 'react';
 import IconButton from "./IconButton";
 
-const SubeventColumnCreate = ({ column, colIndex, index, focus, action }) => {
+const SubeventColumnCreate = (props) => {
   return (
-    <div key={colIndex} className='column-input'>
+    <div key={props.colIndex} className='column-input'>
       <div className='column-header'>
-        <h3>Reihe {colIndex + 1}</h3>
-        <IconButton onclick={() => {console.log(`iconButton click`)}} type="red" icon="bin"/>
+        <h3>Reihe {props.colIndex + 1}</h3>
+        <IconButton onclick={() => {props.handleDeleteColumn(props.index, props.colIndex)}} type="red" icon="bin"/>
         <IconButton onclick={() => {console.log(`iconButton click`)}} type="secondary" icon="arrow" rotate={0.25}/>
       </div>
 
-      {focus && (
+      {props.focus && (
         <div className='column-body'>
           <input
-            value={column.columnname}
-            onChange={(e) => action(index, colIndex, "columnname", e.target.value)}
+            value={props.column.columnname}
+            onChange={(e) => props.action(props.index, props.colIndex, "columnname", e.target.value)}
             placeholder="Spaltenname"
           />
           <input
-            value={column.columncontext}
-            onChange={(e) => action(index, colIndex, "columncontext", e.target.value)}
+            value={props.column.columncontext}
+            onChange={(e) => props.action(props.index, props.colIndex, "columncontext", e.target.value)}
             placeholder="Spalteninhalt"
           />
         </div>
