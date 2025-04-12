@@ -1,9 +1,10 @@
 import React from 'react';
 
 const Button = (props) => {
+    // define the className based on the given type name
     const className = "button-" + props.type;
 
-    retrun (
+    return (
         <button className={className + " button"} onClick={props.onclick}>
             <p>{props.text}</p>
         </button>
