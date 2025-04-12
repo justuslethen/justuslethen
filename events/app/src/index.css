@@ -260,3 +260,32 @@ input:focus {
     gap: 10px;
     width: 100%;
 }
+
+.button {
+    all: unset;
+    display: flex;
+    padding: 10px;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    border-radius: 14px;
+    cursor: pointer;
+}
+
+.button p {
+    font-family: Inter;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+.button-primary {
+    background-color: var(--main-color);
+    color: white;
+}
+
+.button-secondary {
+    background-color: var(--grey-1);
+    color: var(--text-3);
+}
