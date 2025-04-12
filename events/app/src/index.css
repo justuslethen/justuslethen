@@ -236,6 +236,7 @@ input:focus {
 
     border-radius: 8px;
     background: var(--red-soft);
+    color: var(--red);
     cursor: pointer;
 }
 
