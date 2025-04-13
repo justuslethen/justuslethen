@@ -131,10 +131,18 @@ const Create = () => {
     };
 
     const setFocusedRow = (index) => {
+        // when focused row is clicked hide it
+        if (index == focusedIndex.rowIndex) {
+            index = -1; // unfocus all
+        }
         setFocuedIndex(prev => ({ ...prev, rowIndex: index }));
     };
 
     const setFocusedSubevent = (index) => {
+        // when focused subevent is clicked hide it
+        if (index == focusedIndex.subeventIndex) {
+            index = -1; // unfocus all
+        }
         setFocuedIndex(prev => ({ ...prev, subeventIndex: index }));
     };
 
