@@ -19,11 +19,9 @@ def build():
 def build_main_event_table(cur):
     cur.execute("""
         CREATE TABLE IF NOT EXISTS main_events (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            event_id INTEGER PRIMARY KEY AUTOINCREMENT,
             name TEXT NOT NULL,
-            description TEXT,
             pin INTEGER DEFAULT 0,
-            public INTEGER DEFAULT 0,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
     """)
@@ -31,24 +29,24 @@ def build_main_event_table(cur):
 
 def build_sub_event_table(cur):
     cur.execute("""
-        CREATE TABLE IF NOT EXISTS main_events (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+        CREATE TABLE IF NOT EXISTS sub_events (
+            subevent_id INTEGER PRIMARY KEY AUTOINCREMENT,
+            event_id INTEGER NOT NULL,
             name TEXT NOT NULL,
             start_date TIMESTAMP NOT NULL,
-            end_date TIMESTAMP NOT NULL,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            end_date TIMESTAMP NOT NULL
         );
     """)
  
 
 def build_cols_event_table(cur):
     cur.execute("""
-        CREATE TABLE IF NOT EXISTS main_events (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+        CREATE TABLE IF NOT EXISTS rows (
+            row_id INTEGER PRIMARY KEY AUTOINCREMENT,
+            event_id INTEGER NOT NULL,
             subevent_id INTEGER NOT NULL,
             name TEXT NOT NULL,
-            context TEXT NOT NULL,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            context TEXT NOT NULL
         );
     """)
  
@@ -59,5 +57,4 @@ def load():
     return cursor, conn
  
 
-if __name__ == "__main__":
-    build()
+build()
