@@ -159,7 +159,7 @@ const Create = () => {
             .then((data) => {
                 // returns the new id at data.eventid
                 // open the created event
-                navigate(`event/${data.eventid}`);
+                navigate(`/event/${data.eventid}`);
             })
             .catch((error) => {
                 console.error('Error:', error);
