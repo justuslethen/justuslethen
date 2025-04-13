@@ -67,10 +67,10 @@ def get_start_date_from_event(cur, event_id):
 def get_end_date_from_event(cur, event_id):
     # sort to find MAX
     cur.execute(
-        """SELECT MAX(start_date) AS latest_start_date
+        """SELECT MAX(end_date) AS latest_end_date
         FROM sub_events
         WHERE event_id = ?;
         """,
         (event_id,)
     )
-    return cur.fetchone()[0]  # latest start_date
+    return cur.fetchone()[0]  # latest end_date
