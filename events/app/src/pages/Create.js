@@ -2,8 +2,11 @@ import Header from '../components/Header';
 import SubeventCreate from '../components/SubeventCreate';
 import Button from '../components/Button';
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Create = () => {
+    const navigate = useNavigate();
+
     const [eventData, setEventData] = React.useState({
         eventname: "",
         subevents: []
@@ -135,6 +138,24 @@ const Create = () => {
         setFocuedIndex(prev => ({ ...prev, subeventIndex: index }));
     };
 
+    const postCreateData = () => {
+        // post data to server to create new event
+        fetch('http://127.0.0.1:4000/data/create/main-event', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', },
+            body: JSON.stringify(eventData),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                // returns the new id at data.eventid
+                // open the created event
+                navigate(`event/${data.eventid}`);
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+    };
+
     return (
         <>
             <Header title="Neues Event erstellen" backButton={true} addButton={false} />
@@ -172,7 +193,7 @@ const Create = () => {
                     </div>
                 </div>
 
-                <Button type='primary' text='Veranstaltung speichern' onclick={() => { console.log("hehe") }} />
+                <Button type='primary' text='Veranstaltung speichern' onclick={() => { postCreateData() }} />
             </div>
         </>
     );
