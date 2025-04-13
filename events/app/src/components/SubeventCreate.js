@@ -23,12 +23,14 @@ const SubeventCreate = (props) => {
             placeholder="Subeventname"
           />
 
+          <h4>Startzeit</h4>
           <input
             type="datetime-local"
             value={props.subevent.startdate}
             onChange={(e) => props.handleSubeventChange(props.index, "startdate", e.target.value)}
           />
 
+          <h4>Endzeit</h4>
           <input
             type="datetime-local"
             value={props.subevent.enddate}
