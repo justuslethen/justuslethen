@@ -6,9 +6,11 @@ import { useNavigate } from 'react-router-dom';
 
 const Create = () => {
     const navigate = useNavigate();
+    const domain = "http://127.0.0.1:4000";
 
     const [eventData, setEventData] = React.useState({
         eventname: "",
+        pin: "",
         subevents: []
     });
     const [focusedIndex, setFocuedIndex] = React.useState({
@@ -148,7 +150,7 @@ const Create = () => {
 
     const postCreateData = () => {
         // post data to server to create new event
-        fetch('http://127.0.0.1:4000/data/create/main-event', {
+        fetch(`${domain}/data/create/main-event`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', },
             body: JSON.stringify(eventData),
@@ -174,6 +176,11 @@ const Create = () => {
                     value={eventData.eventname}
                     onChange={(e) => handleChange("eventname", e.target.value)}
                     placeholder="Name der Veranstaltung"
+                />
+                <input
+                    value={eventData.pin}
+                    onChange={(e) => handleChange("pin", e.target.value)}
+                    placeholder="Pin"
                 />
 
 
