@@ -9,8 +9,8 @@ def create_event():
     data = request.get_json()
 
     # create rows for every subevent and subevent-row
-    build_new_event(data)
-    return "creating main event", 200
+    event_id = build_new_event(data)
+    return {"eventid": event_id}
 
 
 @create_event_bp.route("/data/create/sub-event", methods=["POST"])
@@ -30,6 +30,8 @@ def build_new_event(data):
     
     conn.commit()
     conn.close()
+    
+    return event_id
 
 
 def create_event(cur, event_name, pin):
