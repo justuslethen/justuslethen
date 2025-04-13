@@ -3,9 +3,12 @@ import React from 'react';
 const ListElement = ({ name, startDate, endDate, onClick }) => {
   const formatDate = (isoDate) => {
     if (!isoDate) return '';
-    const [year, month, day] = isoDate.split('-');
+    
+    const [year, month, day] = isoDate.split('T')[0].split('-');
+    
     return `${day}.${month}.${year}`;
-  };
+  }
+  
 
   return (
     <div className="list-element" onClick={onClick} style={{ cursor: 'pointer' }}>
