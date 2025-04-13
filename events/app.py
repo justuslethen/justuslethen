@@ -2,6 +2,7 @@ from flask import Flask, send_from_directory
 from modules.create_event import create_event_bp
 from modules.edit_event import edit_event_bp
 from modules.get_event import get_event_bp
+from modules.permission import permission_bp
 import os
 
 app = Flask(__name__, static_folder="app/build")
@@ -10,6 +11,7 @@ app = Flask(__name__, static_folder="app/build")
 app.register_blueprint(create_event_bp)
 app.register_blueprint(edit_event_bp)
 app.register_blueprint(get_event_bp)
+app.register_blueprint(permission_bp)
 
 
 # server react app files for any path
