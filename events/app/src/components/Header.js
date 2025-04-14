@@ -14,9 +14,14 @@ const Header = (props) => {
           <IconButton onclick={() => { window.history.back() }} type="secondary" icon="arrow" />
         )}
         <h1>{props.title}</h1>
-        {props.addButton && (
-          <IconButton onclick={() => { navigate(props.addAction) }} type="primary" icon="plus" />
-        )}
+        <div className='buttons'>
+          {props.editButton && (
+            <IconButton onclick={() => { console.log('edit event clicked') }} type="primary" icon="pencil" />
+          )}
+          {props.addButton && (
+            <IconButton onclick={() => { navigate(props.addAction) }} type="primary" icon="plus" />
+          )}
+        </div>
       </header>
     );
   }
