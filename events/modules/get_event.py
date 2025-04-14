@@ -16,7 +16,7 @@ def get_event(event_id):
         return {"error": "no permission"}
 
     event_data = get_all_event_data(event_id)
-    return {"event": event_data}
+    return {"event": event_data, "error": False}
 
 
 @get_event_bp.route("/data/get/sub-event/<subevent_id>", methods=["GET"])
