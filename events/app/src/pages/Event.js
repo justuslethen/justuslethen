@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import Header from '../components/Header';
+import PinInputBox from '../components/PinInputBox';
 import WindowContainer from '../components/WindowContainer';
 
 const Event = () => {
@@ -17,6 +18,10 @@ const Event = () => {
 
     // fetch event_data from api
     useEffect(() => {
+        getEventFromAPI();
+    }, []);
+
+    const getEventFromAPI = () => {
         fetch(`${domain}/data/get/main-event/${eventId}`)
             .then(res => res.json())
             .then(data => {
@@ -26,19 +31,52 @@ const Event = () => {
                 setEventData(data); // set events to fetched data
             })
             .catch(console.error);
-    }, []);
+    }
 
+    const hidePinInput = () => {
+        setPageData(prev => ({ ...prev, pinInputWindow: false }))
+    }
+
+    const tryForPermission = () => {
+        // get PIN from input
+        const pin = document.querySelector('.pinInput').value || '';
+
+        fetch(`${domain}/data/create/permission-to-event/${eventId}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', },
+            body: JSON.stringify({ pin: pin }), // send PIN in body
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                if (!data.error) {
+                    hidePinInput();
+                    getEventFromAPI(); // try to load the event now
+                }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+    }
 
     return (
         <>
             {pageData.pinInputWindow ? (
-                <WindowContainer title={"PIN für " + eventData.event.eventname + " benötigt"} innerContent=''/>
+                <WindowContainer
+                    title={"PIN für " + eventData.event.eventname + " benötigt"}
+                    innerContent={<PinInputBox onclick={() => { tryForPermission() }} />}
+                    onclick={() => { hidePinInput() }}
+                />
             ) : pageData.addSubeventEventWindow ? (
                 <WindowContainer title={"Neuen Programmpunkt für " + eventData.event.eventname + " erstellen"} innerContent='' />
             ) : null}
 
-            <Header title="Event 1" backButton={true} addButton={true} addAction={addPage} />
-            {console.log(eventData)}
+            <Header title="Event 1" backButton={true} editButton={true} addButton={true} addAction={addPage} />
+
+            <div className='content'>
+                {eventData.error == "no permission" ? (
+                    <h3>Du hast keine Berechtigung für dieses Event.</h3>
+                ) : (null)}
+            </div>
         </>
     );
 };
