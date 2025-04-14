@@ -168,7 +168,7 @@ const Create = () => {
 
     return (
         <>
-            <Header title="Neues Event erstellen" backButton={true} addButton={false} />
+            <Header title="Neues Event erstellen" editButton={false} backButton={true} addButton={false} />
 
             <div className='content'>
                 <h3>Veranstaltung</h3>
