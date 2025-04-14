@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, make_response
 from modules import database, permission
 
 get_event_bp = Blueprint("get_event", __name__)
@@ -12,21 +12,32 @@ def get_events():
 
 @get_event_bp.route("/data/get/main-event/<event_id>", methods=["GET"])
 def get_event(event_id):
-    event_data = get_all_event_data(event_id)
-
-    if not permission.check_room_permissions(event_id, ""):
-        return {
-            "error": "no permission",
-            "event": {"eventname": event_data["eventname"]},
-        }
-
-    return {"event": event_data, "error": False}
+    # check if has permission and if not then create if allowed
+    has_access, token_existed, token = permission.check_event_permissions(event_id, "")
+    
+    event_data = get_event_based_on_permissions(event_id, has_access)
+    
+    # provide event and error object in JSON
+    res_json = {"event": event_data, "error": False if has_access else "no permission"}
+    res = make_response(jsonify(res_json))
+    res.set_cookie("token", token, max_age=60*60*24*365*10)
+    
+    return res
 
 
 @get_event_bp.route("/data/get/sub-event/<subevent_id>", methods=["GET"])
 def get_sub_event(subevent_id):
     return "surving sub-event", 200
 
+
+def get_event_based_on_permissions(event_id, has_access):
+    event_data = get_all_event_data(event_id)
+    
+    # only serve eventname when has no permission
+    if not has_access:
+        event_data = {"eventname": event_data["eventname"]}
+    
+    return event_data
 
 def get_list_of_all_events():
     cur, conn = database.load()
