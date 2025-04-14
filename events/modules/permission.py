@@ -57,12 +57,12 @@ def check_room_permissions(event_id, pin):
     
     # if entered pin is coreect give permissions
     elif check_pin(cur, event_id, pin):
-        add_event_to_permissions(token, event_id) # create new permissions row
+        add_event_to_permissions(cur, token, event_id) # create new permissions row
         has_access = True
         
     # if pin is empty give permissions
     elif not has_event_a_pin(cur, event_id):
-        add_event_to_permissions(token, event_id) # create new permissions row
+        add_event_to_permissions(cur, token, event_id) # create new permissions row
         has_access = True
         
     conn.commit()
@@ -78,7 +78,7 @@ def has_event_a_pin(cur, event_id):
     
     # return False if pin is empty ("") or pin was not found
     if res:
-        return res == ""
+        return not res[0] == ""
     else:
         return False
 
@@ -91,9 +91,7 @@ def has_token_access_to_event(cur, token, event_id):
     return res[0] if res else False # when no res then False
 
 
-def add_event_to_permissions(token, event_id):
-    cur, conn = database.load()
-    
+def add_event_to_permissions(cur, token, event_id):
     token_id = get_token_id(cur, token)
     
     cur.execute("INSERT INTO permissions (token_id, event_id) VALUES (?, ?)", (token_id, event_id,))
