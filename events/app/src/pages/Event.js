@@ -32,9 +32,9 @@ const Event = () => {
     return (
         <>
             {pageData.pinInputWindow ? (
-                <WindowContainer title={"PIN für " + eventData.name + " benötigt"} innerContent=''/>
+                <WindowContainer title={"PIN für " + eventData.event.eventname + " benötigt"} innerContent=''/>
             ) : pageData.addSubeventEventWindow ? (
-                <WindowContainer title={"Neuen Programmpunkt für " + eventData.name + " erstellen"} innerContent='' />
+                <WindowContainer title={"Neuen Programmpunkt für " + eventData.event.eventname + " erstellen"} innerContent='' />
             ) : null}
 
             <Header title="Event 1" backButton={true} addButton={true} addAction={addPage} />
