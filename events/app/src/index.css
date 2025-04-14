@@ -11,6 +11,8 @@
     --main-color-light: #3E92FF;
     --red: #FF2F2F;
     --red-soft: #FFD1D1;
+    --window-container: rgba(0, 0, 0, 0.2);
+    --button-text: white;
 }
 
 @media(prefers-color-scheme: dark) {
@@ -30,6 +32,8 @@
         --red-soft: #FFD1D1;
         --red-soft: #691818;
         --red: #FF3737;
+        --window-container: rgba(0, 0, 0, 0.4);
+        --button-text: black;
     }
 }
 
@@ -60,7 +64,8 @@ header h1 {
     width: 100%;
 }
 
-h3, h4 {
+h3,
+h4 {
     color: var(--text-1);
     font-size: 18px;
     font-style: normal;
@@ -153,7 +158,7 @@ h4 {
     justify-content: center;
     align-items: center;
 
-    color: white;
+    color: var(--button-text);
     background: var(--main-color);
     border-radius: 13px;
 
@@ -293,7 +298,7 @@ input:focus {
 
 .button-primary {
     background-color: var(--main-color);
-    color: white;
+    color: var(--button-text);
 }
 
 .button-secondary {
@@ -304,5 +309,70 @@ input:focus {
 .subevents {
     display: flex;
     flex-direction: column;
+    width: 100%;
+}
+
+.main-window-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    z-index: 20;
+
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100vw;
+    height: 100vh;
+    background-color: var(--window-container);
+}
+
+.window-container {
+    display: flex;
+    max-width: calc(100vw - 20px);
+    height: max-content;
+
+    padding: 10px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    border-radius: 26px;
+    border: 1px solid var(--grey-2);
+    background: var(--background-main);
+}
+
+.window-container .header {
+    display: flex;
+    padding: 10px;
+    align-items: center;
+    gap: 10px;
+}
+
+.window-container .header p {
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    margin: 0px;
+
+    color: var(--text-1);
+}
+
+.window-container .body {
+    display: flex;
+    padding: 10px;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    align-self: stretch;
+}
+
+.PinInputBox {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    gap: 10px;
     width: 100%;
 }
