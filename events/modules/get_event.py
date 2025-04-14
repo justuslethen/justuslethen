@@ -12,10 +12,14 @@ def get_events():
 
 @get_event_bp.route("/data/get/main-event/<event_id>", methods=["GET"])
 def get_event(event_id):
-    if not permission.check_room_permissions(event_id, ""):
-        return {"error": "no permission"}
-
     event_data = get_all_event_data(event_id)
+
+    if not permission.check_room_permissions(event_id, ""):
+        return {
+            "error": "no permission",
+            "event": {"eventname": event_data["eventname"]},
+        }
+
     return {"event": event_data, "error": False}
 
 
@@ -87,7 +91,7 @@ def get_all_event_data(event_id):
 
     event_data = {"eventname": event_name, "subevents": subevents}
     conn.close()
-    
+
     return event_data  # return all important event-data
 
 
@@ -114,10 +118,10 @@ def get_subevents(cur, event_id):
                 "subeventname": subevent[1],
                 "startdate": subevent[2],
                 "enddate": subevent[3],
-                "rows": rows
+                "rows": rows,
             }
         )
-        
+
     return subevents
 
 
