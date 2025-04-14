@@ -1,8 +1,28 @@
-from flask import Blueprint, request
+from flask import Blueprint, request, make_response
 from modules import database
 import random
 
 permission_bp = Blueprint("permission", __name__)
+
+
+@permission_bp.route("/data/create/permission-to-event/<event_id>", methods=["POST"])
+def get_events(event_id):
+    data = request.get_json()
+    token = request.cookies.get("token")
+    
+    cur, conn = database.load()
+    
+    # create new permission
+    access = check_access(cur, token, event_id, data["pin"])
+    
+    # create res with cockie
+    res = make_response({"error": False if access else "no permission"})
+    res.set_cookie("token", token, max_age=60*60*24*365*10)
+    
+    conn.commit()
+    conn.close()
+    return res
+
 
 def build_new_token():
     cur, conn = database.load()
