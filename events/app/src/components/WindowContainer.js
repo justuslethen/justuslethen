@@ -7,7 +7,7 @@ const WindowContainer = (props) => {
             <div className='window-container'>
                 <div className='header'>
                     <p>{props.title}</p>
-                    <IconButton type='secondary' icon="plus" rotate="0.125" onclick/>
+                    <IconButton type='secondary' icon="plus" rotate="0.125" onclick={props.onclick} />
                 </div>
                 <div className='body'>
                     {/* Render innerContent from props */}

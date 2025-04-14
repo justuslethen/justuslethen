@@ -26,7 +26,7 @@ const Home = () => {
   return (
     <>
       <Header
-        title="Alle Events" backButton={false} addButton={true} addAction="/create"
+        title="Alle Events" editButton={false} backButton={false} addButton={true} addAction="/create"
       />
       <div className='content'>
         <div className='list'>
