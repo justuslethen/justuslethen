@@ -384,3 +384,54 @@ input:focus {
     gap: 10px;
     width: 100%;
 }
+
+.event-list {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    flex: 1 0 0;
+}
+
+.subevent-container {
+    display: flex;
+    padding: 10px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    align-self: stretch;
+
+    border-radius: 14px;
+    border: 1px solid var(--grey-1);
+    background: var(--container-background);
+}
+
+.subevent-container .header {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    align-self: stretch;
+}
+
+.subevent-container .header .icon-button-secondary {
+    color: var(--text-3);
+}
+
+.subevent-container .header .event-time {
+    color: var(--text-3);
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    margin: 0px;
+}
+
+.subevent-container .header .event-name {
+    color: var(--text-1, #3B3B3B);
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    width: 100%;
+    margin: 0px;
+}
