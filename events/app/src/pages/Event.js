@@ -1,12 +1,11 @@
 import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import Header from '../components/Header';
+import SubEventsTimeline from '../components/SubEventsTimeline';
 import PinInputBox from '../components/PinInputBox';
 import WindowContainer from '../components/WindowContainer';
 
 const Event = () => {
-    document.title = "Events - Event 1";
-
     const { eventId } = useParams();  // get eventId from the URL
     const addPage = `/edit/${eventId}`;  // construct the addPage URL
     const [eventData, setEventData] = React.useState({});
@@ -15,6 +14,10 @@ const Event = () => {
         addSubeventEventWindow: false
     });
     const domain = "http://127.0.0.1:4000";
+
+    const setTitle = (eventName) => {
+        document.title = `${eventName || 'Event'} - Events`;
+    }
 
     // fetch event_data from api
     useEffect(() => {
@@ -29,6 +32,7 @@ const Event = () => {
                     setPageData(prev => ({ ...prev, pinInputWindow: true }))
                 }
                 setEventData(data); // set events to fetched data
+                setTitle(data.event.eventname);
             })
             .catch(console.error);
     }
@@ -73,9 +77,12 @@ const Event = () => {
             <Header title="Event 1" backButton={true} editButton={true} addButton={true} addAction={addPage} />
 
             <div className='content'>
-                {eventData.error == "no permission" ? (
+                {console.log(eventData)}
+                {eventData.error === "no permission" ? (
                     <h3>Du hast keine Berechtigung für dieses Event.</h3>
-                ) : (null)}
+                ) : eventData.event ? (
+                    <SubEventsTimeline subevents={eventData.event.subevents || []} />
+                ) : null}
             </div>
         </>
     );
