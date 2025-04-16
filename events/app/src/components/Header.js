@@ -16,10 +16,10 @@ const Header = (props) => {
         <h1>{props.title}</h1>
         <div className='buttons'>
           {props.editButton && (
-            <IconButton onclick={() => { console.log('edit event clicked') }} type="primary" icon="pencil" />
+            <IconButton onclick={() => { props.editAction()}} type="primary" icon="pencil" />
           )}
           {props.addButton && (
-            <IconButton onclick={() => { navigate(props.addAction) }} type="primary" icon="plus" />
+            <IconButton onclick={() => { props.addAction() }} type="primary" icon="plus" />
           )}
         </div>
       </header>
