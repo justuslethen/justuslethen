@@ -4,6 +4,8 @@ import Header from '../components/Header';
 import SubEventsTimeline from '../components/SubEventsTimeline';
 import PinInputBox from '../components/PinInputBox';
 import WindowContainer from '../components/WindowContainer';
+import NextEventTimer from '../components/NextEventTimer';
+import AddSubevent from '../components/AddSubevent';
 
 const Event = () => {
     const { eventId } = useParams();  // get eventId from the URL
@@ -62,6 +64,14 @@ const Event = () => {
             });
     }
 
+    const hideAddSubevent = () => {
+        setPageData(prev => ({ ...prev, addSubeventEventWindow: false }))
+    }
+
+    const showAddSubevent = () => {
+        setPageData(prev => ({ ...prev, addSubeventEventWindow: true }))
+    }
+
     return (
         <>
             {pageData.pinInputWindow ? (
@@ -71,12 +81,16 @@ const Event = () => {
                     onclick={() => { hidePinInput() }}
                 />
             ) : pageData.addSubeventEventWindow ? (
-                <WindowContainer title={"Neuen Programmpunkt für " + eventData.event.eventname + " erstellen"} innerContent={
-                    <SubeventCreate />
-                } />
+                <WindowContainer
+                    title={"Neuen Programmpunkt für " + eventData.event.eventname + " erstellen"}
+                    innerContent={
+                        <AddSubevent eventid={eventId} refresh={getEventFromAPI} />
+                    }
+                    onclick={() => { hideAddSubevent() }}
+                />
             ) : null}
 
-            <Header title="Event 1" backButton={true} editButton={true} addButton={true} addAction={addPage} />
+            <Header title={<NextEventTimer subevents={subevents} />} backButton={true} editButton={true} addButton={true} editAction={addPage} addAction={showAddSubevent} />
 
             <div className='content'>
                 {console.log(eventData)}
