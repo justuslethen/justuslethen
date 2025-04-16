@@ -90,7 +90,14 @@ const Event = () => {
                 />
             ) : null}
 
-            <Header title={<NextEventTimer subevents={subevents} />} backButton={true} editButton={true} addButton={true} editAction={addPage} addAction={showAddSubevent} />
+            <Header
+                title={<NextEventTimer subevents={eventData.event?.subevents || []} />}
+                backButton={true}
+                editButton={true}
+                addButton={true}
+                editAction={addPage}
+                addAction={showAddSubevent}
+            />
 
             <div className='content'>
                 {console.log(eventData)}
