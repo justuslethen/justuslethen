@@ -71,7 +71,9 @@ const Event = () => {
                     onclick={() => { hidePinInput() }}
                 />
             ) : pageData.addSubeventEventWindow ? (
-                <WindowContainer title={"Neuen Programmpunkt für " + eventData.event.eventname + " erstellen"} innerContent='' />
+                <WindowContainer title={"Neuen Programmpunkt für " + eventData.event.eventname + " erstellen"} innerContent={
+                    <SubeventCreate />
+                } />
             ) : null}
 
             <Header title="Event 1" backButton={true} editButton={true} addButton={true} addAction={addPage} />
