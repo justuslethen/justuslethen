@@ -21,7 +21,7 @@ const ListElement = ({ name, startDate, endDate, onClick }) => {
           <p>{formatDate(startDate)} - {formatDate(endDate)}</p>
         </div>
       </div>
-      <IconButton onclick={() => { }} type="secondary" icon="arrow" />
+      <IconButton onclick={() => { }} type="secondary" icon="arrow" rotate={0.5} />
     </div>
   );
 };
