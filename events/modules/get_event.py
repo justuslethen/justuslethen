@@ -99,6 +99,7 @@ def get_all_event_data(event_id):
     cur, conn = database.load()
     event_name = get_eventname_by_id(cur, event_id)
     subevents = get_subevents(cur, event_id)
+    subevents = sorted(subevents, key=lambda x: x["startdate"])
 
     event_data = {"eventname": event_name, "subevents": subevents}
     conn.close()
