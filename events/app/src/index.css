@@ -499,6 +499,38 @@ input:focus {
     color: white !important;
 }
 
+.event-over {
+    opacity: 60%;
+}
+
 .event-over .header p {
-    text-decoration-line: strikethrough;
+    text-decoration-line: line-through !important;
+}
+
+.section-container {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.section-container .timeline-stroke {
+    width: 24px;
+    align-self: stretch;
+}
+
+.section-container .timeline-stroke-dot {
+    position: absolute;
+    left: 32px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    z-index: 20;
+    transform: translate(-50%, -50%);
+
+    background-color: var(--main-color);
+}
+
+.timeline-stroke-canvas {
+    width: 4px;
+    border-radius: 50%;
 }
