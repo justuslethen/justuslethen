@@ -61,6 +61,7 @@ header h1 {
     font-weight: 400;
     line-height: normal;
     width: 100%;
+    margin: 0px;
 }
 
 header .buttons {
@@ -547,4 +548,25 @@ input:focus {
 .timeline-stroke-canvas {
     width: 4px;
     border-radius: 50%;
+}
+
+.timer {
+    display: flex;
+    padding: 10px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+
+    border-radius: 7px;
+    border: 1px solid var(--grey-2);
+    background: var(--box-background);
+}
+
+.timer p {
+    color: var(--text-1, #3B3B3B);
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    margin: 0px;
 }
