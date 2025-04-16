@@ -5,14 +5,23 @@ const SubEventContainer = (props) => {
     // make from yyyy-mm-ddThh:mm to hh:mm
     const startTime = new Date(props.subevent.startdate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
     
+    
     // get all date data
     const now = new Date();
     const startDate = new Date(props.subevent.startdate);
-    const endDate = new Date(props.subevent.enddate);
+    let endDate = new Date(props.subevent.enddate);
+    if (isNaN(endDate.getTime())) {
+        endDate = startDate;
+    }
 
+    console.log(now, startDate, endDate);
+    
     // calc if event is running or over
     const isEventRunning = now >= startDate && now <= endDate;
     const isEventOver = now > endDate;
+    
+    console.log(isEventRunning, isEventOver);
+
 
     return (
         <div
