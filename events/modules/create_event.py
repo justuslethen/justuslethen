@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from modules import database
+from modules import database, permission
 
 create_event_bp = Blueprint("create_event", __name__)
 
@@ -13,9 +13,22 @@ def create_event():
     return {"eventid": event_id}
 
 
-@create_event_bp.route("/data/create/sub-event", methods=["POST"])
-def create_sub_event():
-    return "creating sub event", 200
+@create_event_bp.route("/data/create/sub-event/<event_id>", methods=["POST"])
+def create_sub_event(event_id):
+    subevent = request.get_json()
+    token = request.cookies.get("token")
+    
+    cur, conn = database.load()
+    if not permission.check_access(cur, token, event_id, ""):
+        conn.close()
+        return jsonify({"error": "no permission"})
+    
+    build_subevent(cur, subevent, event_id)
+    
+    conn.commit()
+    conn.close()
+    
+    return jsonify({"eventid": event_id})
 
 
 def build_new_event(data):

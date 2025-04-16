@@ -338,17 +338,25 @@ input:focus {
 
 .window-container {
     display: flex;
-    max-width: calc(100vw - 20px);
+    max-width: calc(100vw - 40px);
     height: max-content;
+    max-height: calc(100svh - 40px);
 
     padding: 10px;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
+    box-sizing: border-box;
+    align-items: start;
+    overflow-y: scroll;
+    overflow-x: hidden;
 
     border-radius: 26px;
     border: 1px solid var(--grey-2);
-    background: var(--background-main);
+    background-color: var(--background-main);
+}
+
+.window-container::-webkit-scrollbar {
+    display: none;
 }
 
 .window-container .header {
@@ -356,6 +364,12 @@ input:focus {
     padding: 10px;
     align-items: center;
     gap: 10px;
+}
+
+.inner-window-container {
+    display: flex;
+    flex-direction: column;
+    height: max-content;
 }
 
 .window-container .header p {
@@ -524,7 +538,7 @@ input:focus {
     width: 14px;
     height: 14px;
     border-radius: 50%;
-    z-index: 20;
+    z-index: 10;
     transform: translate(-50%, -50%);
 
     background-color: var(--main-color);
