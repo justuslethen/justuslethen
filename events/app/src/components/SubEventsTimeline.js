@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import SubEventContainer from './SubEventContainer'
+import TimelineStroke from './TimelineStroke'
 
 const SubEventsTimeline = (props) => {
     const [subevents, setSubevents] = useState(props.subevents);
@@ -16,7 +17,9 @@ const SubEventsTimeline = (props) => {
 
     return (
         <div className='section-container'>
-            <div className='timeline-stroke'></div>
+            <div className='timeline-stroke'>
+                <TimelineStroke key={JSON.stringify(subevents)} subevents={subevents} />
+            </div>
             <div className='event-list'>
                 {subevents.map((subevent, index) => (
                     <SubEventContainer key={index} subevent={subevent} onclick={() => { changeFocused(index) }} />
