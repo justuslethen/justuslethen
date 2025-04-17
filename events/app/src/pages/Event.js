@@ -23,9 +23,14 @@ const Event = () => {
         document.title = `${eventName || 'Event'} - Events`;
     }
 
-    // fetch event_data from api
     useEffect(() => {
         getEventFromAPI();
+    
+        const interval = setInterval(() => {
+            getEventFromAPI();
+        }, 60000); // 60 seconds
+    
+        return () => clearInterval(interval); // cleanup on unmount
     }, []);
 
     const getEventFromAPI = () => {
