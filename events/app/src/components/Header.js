@@ -3,9 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import IconButton from './IconButton';
 
 const Header = (props) => {
-  const navigate = useNavigate();
-
-
   if (!props.data) {
     // render without next event display
     return (

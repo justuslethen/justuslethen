@@ -29,6 +29,7 @@ const Event = () => {
     }, []);
 
     const getEventFromAPI = () => {
+        // fetch the API to get the eventData by the eventId
         fetch(`${domain}/data/get/main-event/${eventId}`)
             .then(res => res.json())
             .then(data => {
@@ -67,10 +68,12 @@ const Event = () => {
     }
 
     const hideAddSubevent = () => {
+        // set the display value for AddSubevent to false
         setPageData(prev => ({ ...prev, addSubeventEventWindow: false }))
     }
 
     const showAddSubevent = () => {
+        // set the display value for AddSubevent to true
         setPageData(prev => ({ ...prev, addSubeventEventWindow: true }))
     }
 
