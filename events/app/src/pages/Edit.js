@@ -20,18 +20,18 @@ const Edit = () => {
     }, [setEventData]);
 
     const getEventFromAPI = () => {
+        // get eventData from API
         fetch(`${domain}/data/get/main-event/${eventId}`)
             .then(res => res.json())
             .then(data => {
+                // open PIN input if user has no access
                 if (data.error == "no permission") {
                     setPageData(prev => ({ ...prev, pinInputWindow: true }))
                 }
+
                 setEventData(data.event); // set events to fetched data
 
-                console.log(data);
-                console.log(data.event);
-
-                setTitle(data.event.eventname);
+                setTitle(data.event.eventname); // set new dynamic title
             })
             .catch(console.error);
     }

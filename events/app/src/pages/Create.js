@@ -8,9 +8,6 @@ const Create = (props) => {
     const navigate = useNavigate();
     const domain = "http://127.0.0.1:4000";
 
-    console.log(props);
-    console.log(props.eventData);
-
     const [eventData, setEventData] = React.useState({
         eventname: "",
         pin: "",
@@ -19,6 +16,7 @@ const Create = (props) => {
     );
 
     useEffect(() => {
+        // if Create is used as component and the eventData was given as prop then copy in eventData
         if (Array.isArray(props.eventData?.subevents)) {
             setEventData({
                 ...props.eventData,
@@ -26,8 +24,6 @@ const Create = (props) => {
             });
         }
     }, [props.eventData]);
-
-    
 
     const [focusedIndex, setFocuedIndex] = React.useState({
         subeventIndex: 0,

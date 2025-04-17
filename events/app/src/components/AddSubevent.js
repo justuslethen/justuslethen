@@ -20,13 +20,20 @@ const AddSubevent = (props) => {
     };
 
     const handleRowChange = (rowIndex, field, value) => {
+        // get changes in "value" and store them at the given place "field", "rowIndex"
         const updatedRows = [...subEventData.rows];
         updatedRows[rowIndex][field] = value;
         setSubEventData(prev => ({ ...prev, rows: updatedRows }));
     };
 
     const handleAddRow = () => {
-        setSubEventData(prev => ({ ...prev, rows: [...prev.rows, { rowname: '', rowcontext: '' }] }));
+        // add the patern for a new, empty row to the subevent
+        setSubEventData(prev => ({
+            ...prev, rows: [...prev.rows, {
+                rowname: '',
+                rowcontext: ''
+            }]
+        }));
     };
 
     const handleDeleteRow = (rowIndex) => {
@@ -49,6 +56,7 @@ const AddSubevent = (props) => {
     };
 
     const addSubevent = () => {
+        // fetch the API
         fetch(`${domain}/data/create/sub-event/${props.eventid}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', },
@@ -59,7 +67,11 @@ const AddSubevent = (props) => {
                 // returns the new id at data.eventid
                 // open the created event
                 console.log(data);
+
+                // returns a string in error if user has no access
                 if (!data.error) {
+                    // do the refresh function if everithing went well
+                    // function like getDataFromAPI
                     props.refresh();
                 }
             })
