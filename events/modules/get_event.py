@@ -146,6 +146,6 @@ def get_all_rows_for_subevent(cur, subevent_id):
 
     for row in res:
         # append row JSON with context and name
-        rows.append({"name": row[0], "context": row[1]})
+        rows.append({"rowname": row[0], "rowcontext": row[1]})
 
     return rows  # return all rows for subevent
