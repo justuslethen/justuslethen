@@ -1,24 +1,40 @@
 import Header from '../components/Header';
 import SubeventCreate from '../components/SubeventCreate';
 import Button from '../components/Button';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const Create = () => {
+const Create = (props) => {
     const navigate = useNavigate();
     const domain = "http://127.0.0.1:4000";
+
+    console.log(props);
+    console.log(props.eventData);
 
     const [eventData, setEventData] = React.useState({
         eventname: "",
         pin: "",
         subevents: []
-    });
+    }
+    );
+
+    useEffect(() => {
+        if (Array.isArray(props.eventData?.subevents)) {
+            setEventData({
+                ...props.eventData,
+                pin: ''
+            });
+        }
+    }, [props.eventData]);
+
+    
+
     const [focusedIndex, setFocuedIndex] = React.useState({
         subeventIndex: 0,
         rowIndex: 0,
     });
 
-    document.title = "Events - Neues Event erstellen";
+    document.title = props.title ? props.title : "Events - Neues Event erstellen";
 
     const handleChange = (field, value) => {
         setEventData(prev => ({ ...prev, [field]: value }));
@@ -150,7 +166,9 @@ const Create = () => {
 
     const postCreateData = () => {
         // post data to server to create new event
-        fetch(`${domain}/data/create/main-event`, {
+        const url = props.url ? props.url : `${domain}/data/create/main-event`;
+
+        fetch(url, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', },
             body: JSON.stringify(eventData),
@@ -168,7 +186,7 @@ const Create = () => {
 
     return (
         <>
-            <Header title="Neues Event erstellen" editButton={false} backButton={true} addButton={false} />
+            <Header title={props.title ? props.title : "Neues Event erstellen"} editButton={false} backButton={true} addButton={false} editAction={() => { navigate('/edit/' + eventData.eventid) }} />
 
             <div className='content'>
                 <h3>Veranstaltung</h3>
