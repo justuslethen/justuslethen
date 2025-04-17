@@ -42,8 +42,8 @@ const SubEventContainer = (props) => {
                 <div className='table'>
                     {props.subevent.rows.map((row, index) => (
                         <div className='row' key={index}>
-                            <div className='col'>{row.name}</div>
-                            <div className='col'>{row.context}</div>
+                            <div className='col'>{row.rowname}</div>
+                            <div className='col'>{row.rowcontext}</div>
                         </div>
                     ))}
                 </div>

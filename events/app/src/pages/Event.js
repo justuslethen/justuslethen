@@ -6,6 +6,7 @@ import PinInputBox from '../components/PinInputBox';
 import WindowContainer from '../components/WindowContainer';
 import NextEventTimer from '../components/NextEventTimer';
 import AddSubevent from '../components/AddSubevent';
+import { useNavigate } from 'react-router-dom';
 
 const Event = () => {
     const { eventId } = useParams();  // get eventId from the URL
@@ -16,6 +17,7 @@ const Event = () => {
         addSubeventEventWindow: false
     });
     const domain = "http://127.0.0.1:4000";
+    const navigate = useNavigate();
 
     const setTitle = (eventName) => {
         document.title = `${eventName || 'Event'} - Events`;
@@ -95,7 +97,7 @@ const Event = () => {
                 backButton={true}
                 editButton={true}
                 addButton={true}
-                editAction={addPage}
+                editAction={() => { navigate("/edit/" + eventId) }}
                 addAction={showAddSubevent}
             />
 

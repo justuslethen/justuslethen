@@ -36,7 +36,7 @@ const NextEventTimer = (props) => {
 
     return (
         <div className='timer'>
-            <p>{`Als nächstes: ${nextEvent.eventName} in ${nextEvent.timeLeft}`}</p>
+            <p>{nextEvent.eventName} in: {nextEvent.timeLeft}</p>
         </div>
     );
 };
