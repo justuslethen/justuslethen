@@ -92,7 +92,7 @@ const AddSubevent = (props) => {
                 <input
                     value={subEventData.subeventname}
                     onChange={(e) => handleSubeventChange("subeventname", e.target.value)}
-                    placeholder="subeventname"
+                    placeholder="Name"
                 />
 
                 <h4>Startzeit</h4>

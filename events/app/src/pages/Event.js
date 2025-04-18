@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import Header from '../components/Header';
 import SubEventsTimeline from '../components/SubEventsTimeline';
 import PinInputBox from '../components/PinInputBox';
+import IconButton from '../components/IconButton';
 import WindowContainer from '../components/WindowContainer';
 import NextEventTimer from '../components/NextEventTimer';
 import AddSubevent from '../components/AddSubevent';
@@ -25,13 +26,36 @@ const Event = () => {
 
     useEffect(() => {
         getEventFromAPI();
-    
-        const interval = setInterval(() => {
-            getEventFromAPI();
-        }, 60000); // 60 seconds
-    
-        return () => clearInterval(interval); // cleanup on unmount
     }, []);
+
+    useEffect(() => {
+        setTimeout(() => {
+            scrollToLatestEvent();
+        }, 100);
+    }, []);
+
+    const scrollToLatestEvent = () => {
+        // get all elements with .event-running and .event-over classes
+        const running = Array.from(document.querySelectorAll('.event-running'));
+        const over = Array.from(document.querySelectorAll('.event-over'));
+
+        // chose the latest in list
+        // if no event-running choose the latest event-over
+        const target = running.length > 0 ? running[running.length - 1] : over[over.length - 1];
+
+        if (target) scrollToTarget(target)
+    }
+
+    const scrollToTarget = (target) => {
+        const rect = target.getBoundingClientRect();
+        const offsetTop = window.pageYOffset + rect.top;
+        const targetPosition = offsetTop - (window.innerHeight / 2) + (rect.height / 2);
+
+        window.scrollTo({
+            top: targetPosition,
+            behavior: 'smooth'
+        });
+    }
 
     const getEventFromAPI = () => {
         // fetch the API to get the eventData by the eventId
@@ -84,6 +108,10 @@ const Event = () => {
 
     return (
         <>
+            <div className='floating-buttons'>
+                <IconButton icon='clock' type='primary' onclick={scrollToLatestEvent} />
+            </div>
+
             {pageData.pinInputWindow ? (
                 <WindowContainer
                     title={"PIN für " + eventData.event.eventname + " benötigt"}
@@ -109,7 +137,7 @@ const Event = () => {
                 addAction={showAddSubevent}
             />
 
-            <div className='content'>
+            <div className='content content-small'>
                 {console.log(eventData)}
                 {eventData.error === "no permission" ? (
                     <h3>Du hast keine Berechtigung für dieses Event.</h3>

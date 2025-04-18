@@ -3,6 +3,7 @@ import { ReactComponent as BinIcon } from '../icons/bin.svg';
 import { ReactComponent as PlusIcon } from '../icons/plus.svg';
 import { ReactComponent as ArrowIcon } from '../icons/arrow.svg';
 import { ReactComponent as PencilIcon } from '../icons/pencil.svg';
+import { ReactComponent as ClockIcon } from '../icons/clock.svg';
 
 const IconButton = (props) => {
     // define the className based on the given type name
@@ -24,6 +25,8 @@ const IconButton = (props) => {
                 <ArrowIcon className="icon" style={{ transform: `rotate(${rotation}deg)` }} />
             ) : props.icon === 'pencil' ? (
                 <PencilIcon className="icon" style={{ transform: `rotate(${rotation}deg)` }} />
+            ) : props.icon === 'clock' ? (
+                <ClockIcon className="icon" style={{ transform: `rotate(${rotation}deg)` }} />
             ) : null}
         </button>
     )
