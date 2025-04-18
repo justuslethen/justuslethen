@@ -45,10 +45,17 @@ body {
 }
 
 header {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    box-sizing: border-box;
     display: flex;
     padding: 10px 20px;
     align-items: center;
     gap: 10px;
+
+    z-index: 18;
 
     border-bottom: 1px solid var(--grey-1, #363636);
     background: var(--container-background, #272727);
@@ -89,7 +96,10 @@ h4 {
     padding: 20px;
     flex-direction: column;
     gap: 10px;
-    align-self: stretch;
+    width: 100%;
+    box-sizing: border-box;
+
+    margin-top: 61px;
 }
 
 .list {
@@ -564,9 +574,31 @@ input:focus {
 
 .timer p {
     color: var(--text-1, #3B3B3B);
-    font-size: 16px;
+    font-size: 14px;
     font-style: normal;
     font-weight: 400;
     line-height: normal;
     margin: 0px;
+}
+
+.content-small {
+    margin-top: 75px;
+}
+
+.floating-buttons {
+    display: flex;
+    flex-direction: column;
+    
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 19;
+}
+
+.floating-buttons .icon-button-primary {
+    width: 45px;
+    height: 45px;
+    border-radius: 16px;
+
+    box-shadow: 0px 0px 8px 0px var(--main-color-light);
 }
