@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
-	"strings"
-	"regexp"
 )
 
 type NewUser struct {
@@ -19,34 +17,11 @@ func validateRegisterInputs(u *NewUser) map[string]string {
 	errors := make(map[string]string)
 
 	validateUsernameInput(&errors, u.Username)
-	if u.Email == "" {
-		errors["email"] = EM("email_required")
-	}
-	if u.FirstName == "" {
-		errors["firstname"] = EM("first_name_required")
-	}
-	if len(u.Password) < 6 {
-		errors["password"] = EM("password_too_short")
-	}
+	validateEmailInput(&errors, u.Email)
+	validateFirstNameInput(&errors, u.FirstName)
+	validatePasswordInput(&errors, u.Password)
 
 	return errors
-}
-
-func validateUsernameInput(errors *map[string]string, username string) {
-	// check for empty username
-	if strings.TrimSpace(username) == "" {
-		(*errors)["username"] = EM("username_required")
-		return
-	}
-	
-	// Compile the regex pattern
-	re := regexp.MustCompile(`^[a-zA-Z0-9._-]+$`)
-
-	// Check if the username matches the pattern
-	if !re.MatchString(username) {
-		(*errors)["username"] = EM("invalid_username")
-		return
-	}
 }
 
 func createNewUser(u *NewUser) (int, error) {
@@ -59,7 +34,7 @@ func createNewUser(u *NewUser) (int, error) {
 func makeRegisterResponse(c *gin.Context, user *NewUser, errors map[string]string) {
 	// If there are any validation errors, return them
 	if len(errors) > 0 {
-		c.JSON(http.StatusBadRequest, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"error": errors,
 		})
 		return
