@@ -6,12 +6,19 @@ package controllers
 // if the key is not found, it returns "unknown_error"
 func EM(key string) string {
 	error_messages := map[string]string{
-		"username_required":   "username_reqired",
-		"password_required":   "password_required",
-		"email_required":      "email_required",
-		"first_name_required": "first_name_required",
-		"password_too_short":  "password_too_short",
-		"invalid_request":     "invalid_request",
+		"username_required":   	"username_reqired",
+		"password_required":	"password_required",
+		"email_required":     	"email_required",
+		"first_name_required": 	"first_name_required",
+
+		"invalid_username":   	"invalid_username",
+		"invalid_password":   	"invalid_password",
+		"invalid_email":        "invalid_email",
+		"invalid_first_name": 	"invalid_first_name",
+
+		"password_too_short":  	"password_too_short",
+		
+		"invalid_request":     	"invalid_request",
 	}
 
 	message, exists := error_messages[key]
