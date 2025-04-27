@@ -70,6 +70,9 @@ func createTasksTable() {
         task_end INTEGER DEFAULT (strftime('%s','now') * 1000),
         task_duration INTEGER DEFAULT 0,
         task_status TEXT NOT NULL,
+        repeation_from INTEGER DEFAULT 0,
+        interval INTEGER DEFAULT 0,
+        repeation_number INTEGER DEFAULT 0,
         created_at INTEGER DEFAULT (strftime('%s','now') * 1000),
         FOREIGN KEY (user_id) REFERENCES users(user_id),
         FOREIGN KEY (token_id) REFERENCES tokens(token_id)
