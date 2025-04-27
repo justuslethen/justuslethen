@@ -32,6 +32,8 @@ go.work.sum
 *.log
 *.pid
 
+*.pyc
+
 # === IDEs / Editor Files ===
 .vscode/
 .idea/
