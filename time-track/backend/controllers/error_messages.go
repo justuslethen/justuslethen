@@ -1,0 +1,25 @@
+package controllers
+
+
+// server centralized error messages
+// returns the error message for the given key
+// if the key is not found, it returns "unknown_error"
+func EM(key string) string {
+	error_messages := map[string]string{
+		"username_required":   "username_reqired",
+		"password_required":   "password_required",
+		"email_required":      "email_required",
+		"first_name_required": "first_name_required",
+		"password_too_short":  "password_too_short",
+		"invalid_request":     "invalid_request",
+	}
+
+	message, exists := error_messages[key]
+
+	// if error message is not defined return an unknown error
+	if !exists {
+		return "unknown_error"
+	}
+
+	return message
+}
