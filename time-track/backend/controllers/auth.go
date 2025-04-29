@@ -4,10 +4,12 @@ import (
 	"crypto/rand"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/golang-jwt/jwt/v5"
 	"html"
 	"math/big"
 	"net/http"
 	"strings"
+	"time"
 )
 
 type NewUser struct {
@@ -61,6 +63,10 @@ func createNewUser(c *gin.Context, u *NewUser) (int, error) {
 	// Add token to user as token that has created the account
 	addNewTokenToUser(userID, tokenID)
 
+	accessToken := generateToken(userID)
+	saveAccessToken(c, accessToken)
+	saveRefreshToken(c, token)
+
 	fmt.Println("Token created:", token)
 
 	fmt.Println("User created with ID:", userID)
@@ -77,7 +83,7 @@ func buildRefreshToken(c *gin.Context, userID int) (string, int, error) {
 	// UserAgent and IP
 	userData := getUserDataForToken(c)
 	tokenID := saveRefreshTokenToDB(userID, token, &userData)
-	
+
 	if tokenID == 0 {
 		return "", 0, fmt.Errorf("failed to save token to DB")
 	}
@@ -99,7 +105,7 @@ func addNewTokenToUser(userID int, tokenID int) {
 	}
 }
 
-func saveRefreshTokenToDB(userID int, token string, userData *map[string]string) (int) {
+func saveRefreshTokenToDB(userID int, token string, userData *map[string]string) int {
 	// Save the refresh token to the database
 	// Save user_agent, ip and token
 	result, err := DB.Exec(`
@@ -110,7 +116,7 @@ func saveRefreshTokenToDB(userID int, token string, userData *map[string]string)
 	if err != nil {
 		return 0
 	}
-	
+
 	tokenID, _ := result.LastInsertId()
 
 	return int(tokenID)
@@ -134,7 +140,7 @@ func generateRefreshToken() (string, error) {
 	// Small and big sized chars + numbers between 0-9
 
 	const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-	const tokenLength = 20
+	const tokenLength = 40
 	var token string
 
 	for i := 0; i < tokenLength; i++ {
@@ -149,6 +155,46 @@ func generateRefreshToken() (string, error) {
 	}
 
 	return token, nil
+}
+
+func saveAccessToken(c *gin.Context, token string) {
+	c.SetCookie("access_token", token, 3600, "/", "", false, true)
+}
+
+func saveRefreshToken(c *gin.Context, token string) {
+	// Set refresh token with longer expiry
+	c.SetCookie("refresh_token", token, 604800, "/", "", false, true)
+}
+
+func checkAccessToken(c *gin.Context) (int, error) {
+	// Check if access token is valid
+	tokenStr, err := c.Cookie("access_token")
+	if err != nil {
+		return 0, fmt.Errorf("no access token found")
+	}
+
+	token, err := jwt.Parse(tokenStr, func(token *jwt.Token) (interface{}, error) {
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("unexpected signing method")
+		}
+		return jwtSecret, nil
+	})
+
+	if err != nil || !token.Valid {
+		return 0, fmt.Errorf("invalid token")
+	}
+
+	claims, ok := token.Claims.(jwt.MapClaims)
+	if !ok || claims["user_id"] == nil {
+		return 0, fmt.Errorf("invalid claims")
+	}
+
+	userIDFloat, ok := claims["user_id"].(float64)
+	if !ok {
+		return 0, fmt.Errorf("user_id not float")
+	}
+
+	return int(userIDFloat), nil
 }
 
 func insertUserIntoDB(data *map[string]string) (int, error) {
@@ -184,6 +230,25 @@ func makeRegisterResponse(c *gin.Context, user *NewUser, errors map[string]strin
 		"message": "Register OK",
 		"user":    user,
 	})
+}
+
+func generateToken(userID int) string {
+	// Set token claims
+	claims := jwt.MapClaims{
+		"user_id": userID,
+		"exp":     time.Now().Add(time.Hour * 1).Unix(), // Token expires in 72 hours
+	}
+
+	// Create token
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+
+	// Sign token with secret
+	signedToken, err := token.SignedString(jwtSecret)
+	if err != nil {
+		return ""
+	}
+
+	return signedToken
 }
 
 func RegisterUser(c *gin.Context) {

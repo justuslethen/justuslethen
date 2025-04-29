@@ -1,3 +1,3 @@
 package controllers
 
-var JwtSecret = []byte("secret123")
+var jwtSecret = []byte("secret123")
