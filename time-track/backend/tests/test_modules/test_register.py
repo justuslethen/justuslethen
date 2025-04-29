@@ -5,10 +5,10 @@ def test_register():
     path = "register-new-user"
     method = "POST"
     data = {
-        "username": "testuser",
-        "password": "testpassword",
-        "email": "email@example.com",
-        "firstname": "",
+        "username": "Nutzer1",
+        "password": "Helo1$fgd",
+        "email": "test@web.de",
+        "firstname": "NutzerH",
     }
     
     execute_request(path, method, data)
