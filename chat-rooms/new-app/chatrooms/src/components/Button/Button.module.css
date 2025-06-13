@@ -1,0 +1,58 @@
+.button {
+    all: unset;
+    display: inline-flex;
+    padding: 8px 12px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+
+    font-family: manrope;
+    font-weight: 700;
+
+    border-radius: 20px;
+}
+
+.button:hover {
+    opacity: 0.7;
+}
+
+.button:active {
+    opacity: 0.9;
+}
+
+.button-orange {
+    background-color: var(--orange-soft);
+    color: var(--orange-text);
+}
+
+.button-purple {
+    background-color: var(--purple-soft);
+    color: var(--purple-text);
+}
+
+.button-blue {
+    background-color: var(--blue-soft);
+    color: var(--blue-text);
+}
+
+.button-green {
+    background-color: var(--green-soft);
+    color: var(--green-text);
+}
+
+.button-white {
+    background-color: var(--white-soft);
+    color: var(--white-text);
+    border: 1px solid var(--grey-text);
+    /* Add a subtle border for white buttons */
+}
+
+.button-grey {
+    background-color: var(--grey-soft);
+    color: var(--grey-text);
+}
+
+.button-black {
+    background-color: var(--black-soft);
+    color: var(--black-text);
+}
