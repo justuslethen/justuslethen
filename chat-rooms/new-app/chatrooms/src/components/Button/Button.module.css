@@ -5,11 +5,13 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 10px;
+    width: max-content;
 
     font-family: manrope;
     font-weight: 700;
 
     border-radius: 20px;
+    animation: button-in 1s;
 }
 
 .button:hover {
@@ -43,8 +45,6 @@
 .button-white {
     background-color: var(--white-soft);
     color: var(--white-text);
-    border: 1px solid var(--grey-text);
-    /* Add a subtle border for white buttons */
 }
 
 .button-grey {
@@ -55,4 +55,14 @@
 .button-black {
     background-color: var(--black-soft);
     color: var(--black-text);
+}
+
+@keyframes button-in {
+    0% {
+        opacity: 0;    
+    }
+    
+    100% {
+        opacity: 1;
+    }
 }

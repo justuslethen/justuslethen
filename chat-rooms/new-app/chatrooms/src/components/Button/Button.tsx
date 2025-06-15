@@ -1,14 +1,14 @@
 import styles from './Button.module.css';
 
 interface ButtonProps {
-    name: string
+    text: string
     color: string
 }
 
 const Button = (props: ButtonProps) => {
     return (
         <button className={`${styles.button} ${styles["button-" + props.color]}`}>
-            {props.name}
+            {props.text}
         </button>
     )
 }
