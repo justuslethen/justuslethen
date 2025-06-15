@@ -3,6 +3,8 @@
     font-family: manrope;
     font-style: normal;
     line-height: normal;
+    box-sizing: border-box;
+    width: 100%;
     margin: 0px;
     animation: text-in 500ms;
 }
@@ -39,7 +41,8 @@
 }
 
 .container {
-    width: 100svw;
+    box-sizing: border-box;
+    width: 100%;
     height: max-content;
     padding: _ 8px;
 }
@@ -66,6 +69,22 @@
 
 .container-description {
     padding: 4px _;
+}
+
+.color-1 {
+    color: var(--text-1);
+}
+
+.color-2 {
+    color: var(--text-2);
+}
+
+.color-3 {
+    color: var(--text-3);
+}
+
+.color-4 {
+    color: var(--text-4);
 }
 
 @keyframes text-in {
