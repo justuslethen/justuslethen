@@ -52,27 +52,27 @@
 }
 
 .container-h1 {
-    padding: 18px _;
+    padding: 18px 8px;
 }
 
 .container-h2 {
-    padding: 12px _;
+    padding: 12px 8px;
 }
 
 .container-h3 {
-    padding: 8px _;
+    padding: 8px 8px;
 }
 
 .container-p1 {
-    padding: 12px _;
+    padding: 12px 8px;
 }
 
 .container-p2 {
-    padding: 8px _;
+    padding: 8px 8px;
 }
 
 .container-description {
-    padding: 4px _;
+    padding: 4px 8px;
 }
 
 .color-1 {
