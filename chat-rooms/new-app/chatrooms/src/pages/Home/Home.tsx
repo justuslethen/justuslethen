@@ -17,7 +17,7 @@ const Home = () => {
                     <Text text={t("home.welcome")} type="h1" center={true} />
                     <Text text={t("home.description")} type="description" center={true} />
                     <Spaceholder size={1} />
-                    <Button text={t("links.dicover_rooms")} color="grey" onclick={() => { navigate("/public-rooms") }} />
+                    <Button text={t("links.dicover_rooms")} color="grey" onclick={() => { navigate("/rooms") }} />
                     <Button text={t("links.create_room")} color="black" onclick={() => { navigate("/create-room") }}  />
                 </section>
             </div>
