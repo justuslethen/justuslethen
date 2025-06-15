@@ -9,8 +9,12 @@
     animation: text-in 500ms;
 }
 
+.center-true {
+    text-align: center;
+}
+
 .text-h1 {
-    font-size: 24px;
+    font-size: 32px;
     font-weight: 700;
 }
 
