@@ -1,3 +1,18 @@
 {
-    "welcome": "Welcome to Chatrooms! The online tool to create minimalistic and anonym chats."
+    "home": {
+        "welcome": "Welcome to chatrooms",
+        "description": "Chatrooms is a free service that allows you to create own private or public rooms to chat with friends. You can also use a canvas to share and build ideas together."
+    },
+    "notFound": {
+        "title": "404 Page not found",
+        "description": "The page requested was not found.",
+        "button": "Back to start"
+    },
+    "publicRooms": {
+        "title": "Public rooms"
+    },
+    "links": {
+        "dicover_rooms": "Explore rooms",
+        "create_room": "Create room"
+    }
 }

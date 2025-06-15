@@ -8,6 +8,9 @@
         "description": "Die gesuchte Seite wurde nicht gefunden.",
         "button": "Zurück zum Start"
     },
+    "publicRooms": {
+        "title": "Öffentliche Räume"
+    },
     "links": {
         "dicover_rooms": "Räume entdecken",
         "create_room": "Raum erstellen"
