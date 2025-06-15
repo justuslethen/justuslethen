@@ -1,6 +1,8 @@
 {
-    "welcome": "Herzlich wilkommen zu chatrooms!",
-    "general_description": "Mit chatrooms kannst du kostenlos private oder öffentliche Räume für dich und deine Freunde erstellen um mit ihnen zu chatten. Du kannst auch eine Leinwand nutzen, um gemeinsame Ideen auszutauschen und zu skizzieren.",
+    "home": {
+        "welcome": "Herzlich wilkommen zu chatrooms!",
+        "description": "Mit chatrooms kannst du kostenlos private oder öffentliche Räume für dich und deine Freunde erstellen um mit ihnen zu chatten. Du kannst auch eine Leinwand nutzen, um gemeinsame Ideen auszutauschen und zu skizzieren."
+    },
     "links": {
         "dicover_rooms": "Räume entdecken",
         "create_room": "Raum erstellen"
