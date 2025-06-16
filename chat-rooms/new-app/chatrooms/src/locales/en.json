@@ -1,18 +1,33 @@
 {
+    "app_name": "chatrooms",
     "home": {
-        "welcome": "Welcome to chatrooms",
-        "description": "Chatrooms is a free service that allows you to create own private or public rooms to chat with friends. You can also use a canvas to share and build ideas together."
+        "welcome": "Welcome to chatrooms!",
+        "description": "With chatrooms, you can create free private or public rooms for you and your friends to chat. You can also use a canvas to share and sketch ideas together."
     },
     "notFound": {
         "title": "404 Page not found",
-        "description": "The page requested was not found.",
-        "button": "Back to start"
+        "description": "The page you are looking for was not found.",
+        "button": "Back to Home"
     },
-    "publicRooms": {
-        "title": "Public rooms"
+    "rooms": {
+        "title": "chatrooms",
+        "public": {
+            "name": "Public",
+            "title": "Public Rooms"
+        },
+        "recent": {
+            "name": "Recent",
+            "title": "Recently Visited Rooms"
+        },
+        "join_btn": "Join"
+    },
+    "create_room": {
+        "title": "Create Room",
+        "create_btn": "Start Room",
+        "description": "Create a room anytime for chatting and drawing"
     },
     "links": {
-        "dicover_rooms": "Explore rooms",
-        "create_room": "Create room"
+        "discover_rooms": "Discover Rooms",
+        "create_room": "Create Room"
     }
 }

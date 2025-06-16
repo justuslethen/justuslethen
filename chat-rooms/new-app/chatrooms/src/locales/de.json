@@ -1,4 +1,5 @@
 {
+    "app_name": "chatrooms",
     "home": {
         "welcome": "Herzlich willkommen zu chatrooms!",
         "description": "Mit chatrooms kannst du kostenlos private oder öffentliche Räume für dich und deine Freunde erstellen um mit ihnen zu chatten. Du kannst auch eine Leinwand nutzen, um gemeinsame Ideen auszutauschen und zu skizzieren."
@@ -20,8 +21,13 @@
         },
         "join_btn": "Beitreten"
     },
+    "create_room": {
+        "title": "Raum erstellen",
+        "create_btn": "Raum starten",
+        "description": "Erstelle jederzeit einen Raum zum Chatten und Zeichnen"
+    },
     "links": {
-        "dicover_rooms": "Räume entdecken",
+        "discover_rooms": "Räume entdecken",
         "create_room": "Raum erstellen"
     }
 }
