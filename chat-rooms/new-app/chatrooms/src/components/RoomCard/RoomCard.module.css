@@ -1,0 +1,57 @@
+.container {
+    display: flex;
+    width: 100%;
+    box-sizing: border-box;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.header {
+    display: flex;
+    padding: 0px 22px;
+    align-items: flex-start;
+    align-self: stretch;
+}
+
+.col {
+    width: 100%;
+    align-self: stretch;
+}
+
+.col:first-of-type,
+.col:last-of-type {
+    min-width: 70px;
+}
+
+.code {
+    color: var(--text-3, #4F4F4F);
+    text-align: center;
+    font-family: Manrope;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    margin: 0px;
+}
+
+.online {
+    color: var(--green-text, #1ADB13);
+    text-align: right;
+    font-family: manrope;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    margin: 0px;
+}
+
+.name {
+    color: var(--text-2, #323232);
+    font-family: manrope;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    margin: 0px;
+}
