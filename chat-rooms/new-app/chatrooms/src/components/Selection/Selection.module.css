@@ -54,8 +54,15 @@
 }
 
 .option-selected {
+    color: var(--grey-soft-1, #F4F4F4);
     background: var(--text-1, #000);
     box-shadow: -1px 2px 4px 0px rgba(0, 0, 0, 0.32);
+}
+
+.hiddenSelect {
+    opacity: 0 !important;
+    position: absolute;
+    z-index: -1;
 }
 
 @keyframes selection-in {
