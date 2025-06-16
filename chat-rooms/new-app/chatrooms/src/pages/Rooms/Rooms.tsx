@@ -11,8 +11,8 @@ const Rooms = () => {
                 <Text text={t("rooms.title")} type="h1" />
             </div>
 
-            <Navbar links={[{ path: "public", tag: t("rooms.public") },
-            { path: "recent", tag: t("rooms.recent") }
+            <Navbar links={[{ path: "public", tag: t("rooms.public.name") },
+            { path: "recent", tag: t("rooms.recent.name") }
             ]} />
 
             <div className={`content ${styles.content}`}>
