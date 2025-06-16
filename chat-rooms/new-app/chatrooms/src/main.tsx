@@ -7,7 +7,7 @@ import { initTranslations } from './i18n';
 
 const root = ReactDOM.createRoot(document.getElementById('root')!);
 
-initTranslations(localStorage.getItem('lang') || 'de')
+initTranslations(localStorage.getItem('lang') || 'en')
   .then(() => {
     root.render(
       <React.StrictMode>

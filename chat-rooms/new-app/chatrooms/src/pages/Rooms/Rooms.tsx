@@ -7,7 +7,7 @@ import { Outlet } from 'react-router-dom';
 const Rooms = () => {
     return (
         <>
-            <div className={`content ${styles.content1}`}>
+            <div className="text-content">
                 <Text text={t("rooms.title")} type="h1" />
             </div>
 
