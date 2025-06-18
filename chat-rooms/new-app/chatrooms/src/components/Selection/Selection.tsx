@@ -20,7 +20,7 @@ const Selection = (props: SelectionProps) => {
             const value = selectRef.current.value;
             changeSelectedValue(value);
         }
-        focusSelect();
+        setTimeout(focusSelect, 500);
     }
 
     const changeSelectedTo = (value: string) => {
