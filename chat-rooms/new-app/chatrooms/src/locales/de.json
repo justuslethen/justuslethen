@@ -19,7 +19,8 @@
             "name": "Zuletzt",
             "title": "Zuletzt besuchte Räume"
         },
-        "join_btn": "Beitreten"
+        "join_btn": "Beitreten",
+        "create_room_btn": "Raum erstellen"
     },
     "create_room": {
         "title": "Raum erstellen",
