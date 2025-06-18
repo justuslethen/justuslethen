@@ -1,0 +1,52 @@
+.inputContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    gap: 4px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.input {
+    all: unset;
+
+    display: flex;
+    width: 100%;
+    box-sizing: border-box;
+
+    padding: 14px;
+    align-items: center;
+    gap: 10px;
+
+    border-radius: 18px;
+    background: var(--grey-soft-1, #F4F4F4);
+    color: var(--text-1, #4F4F4F);
+
+    border: 2px solid rgba(0, 0, 0, 0);
+
+    text-align: start;
+    font-family: manrope;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+}
+
+.input::placeholder {
+    color: var(--text-3, #4F4F4F);
+}
+
+.input:focus {
+    border: 2px solid var(--main-background);
+    outline: 2px solid var(--text-4);
+}
+
+.label {
+    color: var(--text-1, #000);
+    text-align: start;
+    font-family: manrope;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+}

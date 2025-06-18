@@ -37,6 +37,12 @@
                 "accessibility": "Sichtbarkeit"
             }
         },
+        "inputs": {
+            "name_input": {
+                "label": "Raumname",
+                "placeholder": "Namen für Raum eingeben"
+            }
+        },
         "select_description_1": "Wenn der Raum Öffentlich ist, kann jeder ihm  beitreten. Für private Räume braucht man den Link, den Code oder den QR-Code.",
         "select_description_2": "Lege fest, wie viele Teilnehmer dem Raum maximal gleichzeitig beitreten dürfen.",
         "description": "Erstelle jederzeit einen Raum zum Chatten und Zeichnen"
