@@ -8,7 +8,7 @@
     align-items: center;
     gap: 10px;
 
-    border-radius: 16px;
+    border-radius: 32px;
     border: 1px solid var(--grey-soft-1, #F4F4F4);
     background: var(--main-background);
     animation: selection-in 700ms;
