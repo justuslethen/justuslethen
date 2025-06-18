@@ -3,6 +3,7 @@ import Text from '../../components/Text/Text.tsx';
 import Button from '../../components/Button/Button.tsx';
 import Selection from '../../components/Selection/Selection.tsx';
 import Spaceholder from '../../components/Spaceholder/Spaceholder.tsx';
+import Input from '../../components/Input/Input.tsx';
 import { t } from '../../i18n.ts';
 
 const CreateRoom = () => {
@@ -25,6 +26,12 @@ const CreateRoom = () => {
                 <Text text={t("create_room.description")} type="h2" />
                 <Spaceholder size={3} />
 
+                <Input
+                    placeholder={t("create_room.inputs.name_input.placeholder")}
+                    label={t("create_room.inputs.name_input.label")}
+                />
+                <Spaceholder size={5} />
+
                 <Selection options={accessibilityOptions} title={t("create_room.options.header.accessibility")} />
                 <Text text={t("create_room.select_description_1")} type="description" />
                 <Spaceholder size={5} />
@@ -33,7 +40,7 @@ const CreateRoom = () => {
                 <Text text={t("create_room.select_description_2")} type="description" />
                 <Spaceholder size={5} />
 
-                <Button text={t("create_room.create_btn")} color="green" onclick={() => { }} />
+                <Button text={t("create_room.create_btn")} color="orange" onclick={() => { }} />
             </div>
         </>
     )
