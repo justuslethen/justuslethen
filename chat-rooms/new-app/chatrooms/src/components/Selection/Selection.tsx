@@ -20,6 +20,7 @@ const Selection = (props: SelectionProps) => {
             const value = selectRef.current.value;
             changeSelectedValue(value);
         }
+        focusSelect();
     }
 
     const changeSelectedTo = (value: string) => {
@@ -27,6 +28,7 @@ const Selection = (props: SelectionProps) => {
             selectRef.current.value = value;
         }
         changeSelectedValue(value);
+        focusSelect();
     }
 
     const focusSelect = () => {

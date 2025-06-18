@@ -50,7 +50,7 @@
     align-items: center;
     flex: 1 0 0;
 
-    border-radius: 16px;
+    border-radius: 20px;
 }
 
 .option-selected {
@@ -61,8 +61,11 @@
 
 .hiddenSelect {
     opacity: 0 !important;
-    position: absolute;
+    position: relative;
     z-index: -1;
+    
+    max-height: 0px;
+    max-width: 0px;
 }
 
 @keyframes selection-in {
