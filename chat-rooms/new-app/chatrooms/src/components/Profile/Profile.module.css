@@ -9,6 +9,7 @@
 
     border-radius: 32px;
     background: var(--grey-soft-1, #F4F4F4);
+    animation: profile-in 700ms;
 }
 
 .name {
@@ -43,4 +44,13 @@
     font-weight: 600;
     line-height: normal;
     margin: 0px;
+}
+
+@keyframes profile-in {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
 }

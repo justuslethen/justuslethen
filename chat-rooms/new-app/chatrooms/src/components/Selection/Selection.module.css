@@ -45,6 +45,7 @@
 
 .option {
     display: flex;
+    color: var(--text-1, #000);
     padding: 6px;
     flex-direction: column;
     justify-content: center;
