@@ -1,0 +1,46 @@
+.profileContainer {
+    display: flex;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+
+    border-radius: 32px;
+    background: var(--grey-soft-1, #F4F4F4);
+}
+
+.name {
+    display: flex;
+    padding: 6px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 4px;
+    align-self: stretch;
+}
+
+.input {
+    all: unset;
+    color: var(--text-3, #4F4F4F);
+    width: 100%;
+    box-sizing: border-box;
+    text-align: left;
+    font-family: manrope;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+}
+
+.label {
+    color: var(--text-1, #000);
+    text-align: center;
+    font-family: Manrope;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    margin: 0px;
+}

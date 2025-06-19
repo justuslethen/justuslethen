@@ -49,6 +49,15 @@
         "select_description_3": "Lege fest, nach wie vielen Tagen der Raum geschlossen werden soll. Wenn du 0 auswählst wird er heute nacht geschlossen.",
         "description": "Erstelle jederzeit einen Raum zum Chatten und Zeichnen"
     },
+    "join_room": {
+        "title": "Raum beitreten",
+        "profile": {
+            "name": {
+                "title": "Name",
+                "placeholder": "Bitte Namen eingeben"
+            }
+        }
+    },
     "links": {
         "discover_rooms": "Räume entdecken",
         "create_room": "Raum erstellen"
