@@ -1,0 +1,79 @@
+.colorSelect {
+    display: flex;
+    padding: 6px;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    align-self: stretch;
+
+    border-radius: 32px;
+    border: 1px solid var(--grey-1, #DEDEDE);
+    background: var(--main-background, #FFF);
+}
+
+.optionContainer {
+    display: flex;
+    padding: 4px;
+    width: max-content;
+    justify-content: center;
+    align-items: center;
+}
+
+.colorOption {
+    display: flex;
+    width: 24px;
+    height: 24px;
+    box-sizing: border-box;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    border-radius: 12px;
+    outline-width: 0px;
+    border: 3px solid var(--main-background);
+}
+
+.colorOptionChoosen {
+    outline-width: 3px;
+}
+
+.blue-1 {
+    background-color: var(--user-blue-1);
+    outline-color: var(--user-blue-1);
+    outline-style: solid;
+}
+
+.blue-2 {
+    background-color: var(--user-blue-2);
+    outline-color: var(--user-blue-2);
+    outline-style: solid;
+}
+
+.purple {
+    background-color: var(--user-purple);
+    outline-color: var(--user-purple);
+    outline-style: solid;
+}
+
+.pink {
+    background-color: var(--user-pink);
+    outline-color: var(--user-pink);
+    outline-style: solid;
+}
+
+.red {
+    background-color: var(--user-red);
+    outline-color: var(--user-red);
+    outline-style: solid;
+}
+
+.orange {
+    background-color: var(--user-orange);
+    outline-color: var(--user-orange);
+    outline-style: solid;
+}
+
+.green {
+    background-color: var(--user-green);
+    outline-color: var(--user-green);
+    outline-style: solid;
+}
