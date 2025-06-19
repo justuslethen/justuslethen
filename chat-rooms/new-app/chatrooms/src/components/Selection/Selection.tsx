@@ -79,20 +79,22 @@ const Selection = (props: SelectionProps) => {
                 </div>
             </div>
 
-            {/* render hidden select */}
-            <select ref={selectRef} onChange={changeSelected} className={styles.hiddenSelect}>
-                {props.options.map((option, index) => {
-                    // render the options in the array as options
-                    // provide functionallity with the select object
-                    // hide <select>
+            <div className={styles.selectContainer}>
+                {/* render hidden select */}
+                <select ref={selectRef} onChange={changeSelected} className={styles.hiddenSelect}>
+                    {props.options.map((option, index) => {
+                        // render the options in the array as options
+                        // provide functionallity with the select object
+                        // hide <select>
 
-                    return (
-                        <option key={index} value={option.value}>
-                            {option.label}
-                        </option>
-                    )
-                })}
-            </select>
+                        return (
+                            <option key={index} value={option.value}>
+                                {option.label}
+                            </option>
+                        )
+                    })}
+                </select>
+            </div>
         </>
     )
 }
