@@ -5,6 +5,7 @@
     gap: 4px;
     width: 100%;
     box-sizing: border-box;
+    animation: input-in 700ms;
 }
 
 .input {
@@ -49,4 +50,13 @@
     font-style: normal;
     font-weight: 600;
     line-height: normal;
+}
+
+@keyframes input-in {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
 }
