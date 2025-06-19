@@ -47,9 +47,13 @@ const Selection = (props: SelectionProps) => {
      * make the <select> focused for autocomplete
      */
     const focusSelect = () => {
-        // only focus if exists
-        if (selectRef.current) {
-            selectRef.current.focus();
+        // only focus on desktop
+        // skif for devices with touch
+        if (window.matchMedia && window.matchMedia('(pointer: fine)').matches) {
+            // only focus if exists
+            if (selectRef.current) {
+                selectRef.current.focus();
+            }
         }
     }
 
