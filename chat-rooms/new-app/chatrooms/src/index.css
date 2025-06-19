@@ -34,6 +34,14 @@ body {
   --black-soft: #000000;
   --white-text: #707070;
   --white-soft: #FFFFFF;
+
+  --user-blue-1: #00CCFF;
+  --user-blue-2: #3B93FF;
+  --user-purple: #9C5AFF;
+  --user-pink: #EC19FF;
+  --user-red: #FF1B1B;
+  --user-orange: #FFA600;
+  --user-green: #21F019;
 }
 
 .content {
