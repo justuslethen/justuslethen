@@ -34,7 +34,8 @@
             "public": "Öffentlich",
             "header": {
                 "max_members": "Maximale Teilnehmer",
-                "accessibility": "Sichtbarkeit"
+                "accessibility": "Sichtbarkeit",
+                "room_duraction": "Raum dauer"
             }
         },
         "inputs": {
@@ -45,6 +46,7 @@
         },
         "select_description_1": "Wenn der Raum Öffentlich ist, kann jeder ihm  beitreten. Für private Räume braucht man den Link, den Code oder den QR-Code.",
         "select_description_2": "Lege fest, wie viele Teilnehmer dem Raum maximal gleichzeitig beitreten dürfen.",
+        "select_description_3": "Lege fest, nach wie vielen Tagen der Raum geschlossen werden soll. Wenn du 0 auswählst wird er heute nacht geschlossen.",
         "description": "Erstelle jederzeit einen Raum zum Chatten und Zeichnen"
     },
     "links": {
