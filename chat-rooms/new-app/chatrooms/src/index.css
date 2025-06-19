@@ -6,11 +6,11 @@
 body {
   font-family: manrope;
   margin: 0px;
+  background-color: var(--main-background);
 }
 
 :root {
   --main-background: #FFFFFF;
-  --main-background-dark: #000000;
   --container-shadow: #00000039;
   --text-1: #000000;
   --text-2: #323232;
@@ -42,6 +42,35 @@ body {
   --user-red: #FF1B1B;
   --user-orange: #FFA600;
   --user-green: #21F019;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --main-background: #000000;
+    --container-shadow: #00000039;
+    --text-1: #ffffff;
+    --text-2: #d8d8d8;
+    --text-3: #bfbfbf;
+    --text-4: #bdbdbd;
+    --grey-1: #3d3d3d;
+    --grey-4: #9a9a9a;
+    --grey-soft-1: #252525;
+
+    --orange-text: #FF951B;
+    --orange-soft: #362701;
+    --blue-text: #4F8CFF;
+    --blue-soft: #0f283b;
+    --purple-text: #AB1BFF;
+    --purple-soft: #271142;
+    --green-text: #1ADB13;
+    --green-soft: #102b07;
+    --grey-text: #e8e8e8;
+    --grey-soft: #232323;
+    --black-text: #000000;
+    --black-soft: #ffffff;
+    --white-text: #ffffff;
+    --white-soft: #000000;
+  }
 }
 
 .content {

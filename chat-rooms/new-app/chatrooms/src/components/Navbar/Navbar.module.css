@@ -6,6 +6,7 @@
     padding: 0px 16px;
     align-items: center;
 
+    background-color: var(--main-background);
     border-bottom: 1px solid var(--grey-1, #DEDEDE);
     animation: navbar-in 1s;
 }
