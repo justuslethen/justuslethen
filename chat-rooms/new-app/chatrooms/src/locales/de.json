@@ -35,7 +35,7 @@
             "header": {
                 "max_members": "Maximale Teilnehmer",
                 "accessibility": "Sichtbarkeit",
-                "room_duraction": "Raum dauer"
+                "room_duraction": "Raum Dauer"
             }
         },
         "inputs": {
@@ -51,12 +51,15 @@
     },
     "join_room": {
         "title": "Raum beitreten",
+        "title_2": "Beitreten als",
+        "description_1": "Du kannst deinen Namen und deine Farbe später noch ändern.",
         "profile": {
             "name": {
                 "title": "Name",
                 "placeholder": "Bitte Namen eingeben"
             }
-        }
+        },
+        "join_btn": "Beitreten"
     },
     "links": {
         "discover_rooms": "Räume entdecken",

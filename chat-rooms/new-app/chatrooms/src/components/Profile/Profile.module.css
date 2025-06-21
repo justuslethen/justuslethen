@@ -24,7 +24,7 @@
 
 .input {
     all: unset;
-    color: var(--text-3, #4F4F4F);
+    color: var(--text-1, #000);
     width: 100%;
     box-sizing: border-box;
     text-align: left;
@@ -36,7 +36,7 @@
 }
 
 .label {
-    color: var(--text-1, #000);
+    color: var(--text-3, #4F4F4F);
     text-align: center;
     font-family: Manrope;
     font-size: 14px;
