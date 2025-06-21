@@ -18,14 +18,14 @@ function App() {
 
       <Route path="/create-room" element={<CreateRoom />} />
 
-      <Route path="/join-room/*" element={<JoinRoom />} />
+      <Route path="/join-room/:code" element={<JoinRoom />} />
 
       <Route path="/rooms" element={<Rooms />}>
         <Route path="public" element={<Public />} />
         <Route path="recent" element={<Recent />} />
       </Route>
 
-      <Route path="/room/*" element={<Room />}>
+      <Route path="/room/:code/" element={<Room />}>
         <Route path="users" element={<RoomUsers />} />
         <Route path="info" element={<RoomInfo />} />
         <Route path="profile" element={<RoomUserProfile />} />
