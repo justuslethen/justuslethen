@@ -64,5 +64,12 @@
     "links": {
         "discover_rooms": "Räume entdecken",
         "create_room": "Raum erstellen"
+    },
+    "room": {
+        "link": {
+            "info": "Info",
+            "user": "Nutzer",
+            "profile": "Profil"
+        }
     }
 }
