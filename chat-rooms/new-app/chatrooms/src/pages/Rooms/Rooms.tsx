@@ -9,6 +9,11 @@ import Button from '../../components/Button/Button.tsx';
 
 const Rooms = () => {
     const navigate = useNavigate();
+    const links = [
+        { path: "public", tag: t("rooms.public.name") },
+        { path: "recent", tag: t("rooms.recent.name") }
+    ];
+
     return (
         <>
             <BottomBar>
@@ -19,9 +24,7 @@ const Rooms = () => {
                 <Text text={t("rooms.title")} type="h1" />
             </div>
 
-            <Navbar links={[{ path: "public", tag: t("rooms.public.name") },
-            { path: "recent", tag: t("rooms.recent.name") }
-            ]} />
+            <Navbar links={links} />
 
             <div className={`content ${styles.content}`}>
                 <Outlet />
