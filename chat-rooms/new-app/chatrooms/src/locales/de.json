@@ -68,8 +68,13 @@
     "room": {
         "link": {
             "info": "Info",
-            "user": "Nutzer",
+            "user": "Mitglieder",
             "profile": "Profil"
+        },
+        "profile": {
+            "title": "Dein Profil",
+            "save_changes_btn": "Speichern",
+            "leave_btn": "Verlassen"
         }
     }
 }
