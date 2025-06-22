@@ -75,6 +75,18 @@
             "title": "Dein Profil",
             "save_changes_btn": "Speichern",
             "leave_btn": "Verlassen"
+        },
+        "info": {
+            "title": "Raum Informationen",
+            "specs": {
+                "title": "Konfiguration"
+            },
+            "data": {
+                "title": "Raum Daten"
+            }
         }
+    },
+    "table": {
+        "empty": "Keine Daten vorhanden."
     }
 }
