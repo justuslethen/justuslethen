@@ -1,7 +1,7 @@
-import { t } from '../../i18n';
+import { t } from '../../i18n.ts';
 import styles from './NotFound.module.css';
-import Background from '../../components/Background/Background';
-import Text from '../../components/Text/Text';
+import Background from '../../components/Background/Background.tsx';
+import Text from '../../components/Text/Text.tsx';
 import Button from '../../components/Button/Button.tsx';
 import Spaceholder from '../../components/Spaceholder/Spaceholder.tsx';
 import { useNavigate } from 'react-router-dom';
