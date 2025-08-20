@@ -1,6 +1,6 @@
 import { t } from '../../../i18n.ts';
 import Text from '../../../components/Text/Text.tsx';
-import styles from './Recent.module.css';
+// import styles from './Recent.module.css';
 
 const Recent = () => {
     return (
