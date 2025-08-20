@@ -9,9 +9,10 @@ import (
 )
 
 type Config struct {
-    DBUser     string
-    DBPassword string
-    Port       string
+    DBUser      string
+    DBPassword  string
+    DBPort      string
+    ServerPort  string
 }
 
 // global var
@@ -24,10 +25,9 @@ func LoadConfig() {
     }
 
     AppConfig = Config{
-        DBUser:     os.Getenv("DB_USER"),
-        DBPassword: os.Getenv("DB_PASSWORD"),
-        Port:       os.Getenv("PORT"),
+        DBUser:         os.Getenv("DB_USER"),
+        DBPassword:     os.Getenv("DB_PASSWORD"),
+        DBPort:         os.Getenv("DB_PORT"),
+        ServerPort:     os.Getenv("SERVER_PORT"),
     }
-
-    fmt.Println(AppConfig)
 }
