@@ -1,4 +1,3 @@
-import styles from './JoinRoom.module.css';
 import Text from '../../components/Text/Text.tsx';
 import Profile from '../../components/Profile/Profile.tsx';
 import Button from '../../components/Button/Button.tsx';

@@ -3,10 +3,10 @@ import ColorSelect from '../ColorSelect/ColorSelect.tsx';
 import { t } from '../../i18n.ts';
 
 const Profile = () => {
-    const profile = {
-        name: "Justus",
-        color: "purple"
-    }
+    // const profile = {
+    //     name: "Justus",
+    //     color: "purple"
+    // }
 
     return (
         <>
