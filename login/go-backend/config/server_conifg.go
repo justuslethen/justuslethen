@@ -2,7 +2,7 @@
 package config
 
 import (
-    "fmt"
+    "log"
     "os"
 
     "github.com/joho/godotenv"
@@ -23,10 +23,13 @@ type Config struct {
 // global var
 var ServerConfig Config
 
-func LoadConfig() {
+func LoadConfig() error {
+    // load the .env file
     err := godotenv.Load()
     if err != nil {
-        fmt.Println("Error no .env file found")
+        // return if .env cannot be loaded
+        log.Fatalf("Error no .env file found")
+        return err
     }
 
     ServerConfig = Config{
@@ -43,4 +46,7 @@ func LoadConfig() {
         LoginAttempts:      os.Getenv("TIMEOUT_DURATION"),
         PasswordMinLen:     os.Getenv("PASSWORD_MIN_LENGTH"),
     }
+
+    // no err
+    return nil
 }
