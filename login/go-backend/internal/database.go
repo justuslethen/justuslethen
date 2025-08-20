@@ -11,12 +11,12 @@ import (
 
 var DB *sql.DB
 
-func Connect() error {
+func ConnectDB() error {
 	// get server config with db config
 	config := config.ServerConfig
 
 	// login data
-	dsn := fmt.Sprintf("%s:%s@tcp(%s)/%s", config.DBUser, config.DBPassword, config.DBPort, config.DBName)
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", config.DBUser, config.DBPassword, config.DBHost, config.DBPort, config.DBName)
 
 	// get connection to sql database
 	database, err := sql.Open("mysql", dsn)
@@ -39,6 +39,9 @@ func setupDatabase() {
 	createUserTable()
 	createTokensTable()
 	createLoginAttempts()
+	createAPIKeysTable()
+
+	fmt.Println("created tables")
 }
 
 func createUserTable() {
@@ -47,7 +50,7 @@ func createUserTable() {
         userid INT AUTO_INCREMENT PRIMARY KEY,
         name VARCHAR(100) NOT NULL,
         username VARCHAR(100) NOT NULL,
-        email VARCHAR(100) UNIQUE NOT NULL,
+        email VARCHAR(100) NOT NULL,
 		ip_created VARCHAR(20) NOT NULL,
 		password VARCHAR(40) NOT NULL,
         last_used TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -55,7 +58,7 @@ func createUserTable() {
     )
 	`)
 	if err != nil {
-		log.Fatal("Failed creating table:", err)
+		log.Fatal("Failed creating users table:", err)
 	}
 }
 
@@ -63,18 +66,18 @@ func createTokensTable() {
 	_, err := DB.Exec(`
     CREATE TABLE IF NOT EXISTS tokens (
         tokenid INT AUTO_INCREMENT PRIMARY KEY,
-        userid INT AUTO_INCREMENT PRIMARY KEY,
+        userid INT NOT NULL,
         token VARCHAR(100) NOT NULL,
         username VARCHAR(100) NOT NULL,
-        ip_last_used VARCHAR(20) UNIQUE NOT NULL,
+        ip_last_used VARCHAR(20) NOT NULL,
 		ip_created VARCHAR(20) NOT NULL,
-		number_used VARCHAR(9) NOT NULL,
+		number_used INT NOT NULL,
         last_used TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )
 	`)
 	if err != nil {
-		log.Fatal("Failed creating table:", err)
+		log.Fatal("Failed creating tokens table:", err)
 	}
 }
 
@@ -83,12 +86,28 @@ func createLoginAttempts() {
     CREATE TABLE IF NOT EXISTS login_attempts (
         loginid INT AUTO_INCREMENT PRIMARY KEY,
 		ip VARCHAR(20) NOT NULL,
-		userid VARCHAR(20) NOT NULL,
-		number_used VARCHAR(9) NOT NULL,
+		userid INT NOT NULL,
+		number_used INT NOT NULL,
         tried_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )
 	`)
 	if err != nil {
-		log.Fatal("Failed creating table:", err)
+		log.Fatal("Failed creating login_attempts table:", err)
+	}
+}
+
+func createAPIKeysTable() {
+	_, err := DB.Exec(`
+    CREATE TABLE IF NOT EXISTS API_keys (
+        keyid INT AUTO_INCREMENT PRIMARY KEY,
+		API_key VARCHAR(30) NOT NULL,
+		key_name VARCHAR(20) NOT NULL,
+		userid INT NOT NULL,
+		was_viewed BOOLEAN DEFAULT FALSE,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+	`)
+	if err != nil {
+		log.Fatal("Failed creating API_keys table:", err)
 	}
 }
