@@ -1,6 +1,7 @@
-package gobackend
+package main
 
 import (
+	"go-backend/config"
     // "database/sql"
     // "fmt"
     // "net/http"
@@ -8,5 +9,5 @@ import (
 )
 
 func main() {
-	
+	config.LoadConfig()
 }
