@@ -62,8 +62,8 @@
         "join_btn": "Beitreten"
     },
     "links": {
-        "discover_rooms": "Räume entdecken",
-        "create_room": "Raum erstellen"
+        "create_account": "Account erstellen",
+        "login": "Einloggen"
     },
     "room": {
         "link": {

@@ -15,8 +15,8 @@ const Home = () => {
                 <Text text={t("home.description")} type="p2" center={true} />
                 <section className={styles.section}>
                     <Spaceholder size={1} />
-                    <Button text={t("links.discover_rooms")} color="blue" onclick={() => { navigate("/rooms/public") }} />
-                    <Button text={t("links.create_room")} color="black" onclick={() => { navigate("/create-room") }}  />
+                    <Button text={t("links.create_account")} color="grey" onclick={() => { navigate("/registrate") }} />
+                    <Button text={t("links.login")} color="black" onclick={() => { navigate("/login") }}  />
                 </section>
             </div>
         </>
