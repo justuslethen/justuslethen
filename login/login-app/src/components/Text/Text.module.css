@@ -91,6 +91,14 @@
     color: var(--text-4);
 }
 
+.button {
+    cursor: pointer;
+}
+
+.button:hover {
+    opacity: 0.5;
+}
+
 @keyframes text-in {
     0% {
         transform: translateY(40px);

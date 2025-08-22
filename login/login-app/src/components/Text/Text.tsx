@@ -5,6 +5,7 @@ interface TextProps {
     type: string
     color?: number
     center?: boolean
+    onclick?: () => void
 }
 
 const Text = (props: TextProps) => {
@@ -13,7 +14,8 @@ const Text = (props: TextProps) => {
             ${styles.container}
             ${styles["container-" + props.type]}
             ${styles["center-" + props.center]}
-        `}>
+            ${styles[props.onclick ? "button" : ""]}
+        `} onClick={props.onclick}>
             <p className={`
                 ${styles.text}
                 ${styles["text-" + props.type]}
