@@ -1,8 +1,8 @@
 {
-    "app_name": "chatrooms",
+    "app_name": "Account Center",
     "home": {
-        "welcome": "Herzlich willkommen zu chatrooms!",
-        "description": "Mit chatrooms kannst du kostenlos private oder öffentliche Räume für dich und deine Freunde erstellen um mit ihnen zu chatten. Du kannst auch eine Leinwand nutzen, um gemeinsame Ideen auszutauschen und zu skizzieren."
+        "welcome": "Herzlich willkommen zum account center!",
+        "description": "Account center ermöglicht dir, für mehrere Web-Apps einen einzigen login zu nutzen."
     },
     "notFound": {
         "title": "404 Seite nicht gefunden",
@@ -10,7 +10,7 @@
         "button": "Zurück zum Start"
     },
     "rooms": {
-        "title": "chatrooms",
+        "title": "Account Center",
         "public": {
             "name": "Öffentlich",
             "title": "Öffentliche Räume"
