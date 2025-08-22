@@ -1,11 +1,17 @@
 import { Routes, Route } from 'react-router-dom';
 import Home from './pages/Home/Home.tsx';
 import NotFound from './pages/NotFound/NotFound.tsx';
+import Registrate from './pages/Registrate/Registrate.tsx';
+import Login from './pages/Login/Login.tsx';
 
 function App() {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
+
+      <Route path="/registrate" element={<Registrate />} />
+
+      <Route path="/login" element={<Login />} />
 
       <Route path="*" element={<NotFound />} />
     </Routes>
