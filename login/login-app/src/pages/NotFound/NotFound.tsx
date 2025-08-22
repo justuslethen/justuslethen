@@ -1,6 +1,5 @@
 import { t } from '../../i18n.ts';
 import styles from './NotFound.module.css';
-import Background from '../../components/Background/Background.tsx';
 import Text from '../../components/Text/Text.tsx';
 import Button from '../../components/Button/Button.tsx';
 import Spaceholder from '../../components/Spaceholder/Spaceholder.tsx';
@@ -11,7 +10,6 @@ const NotFound = () => {
 
     return (
         <>
-            <Background design={2} />
             <div className={`content ${styles.content}`}>
                 <section className={styles.section}>
                     <Text text={t("notFound.title")} type="h1" center={true} />
