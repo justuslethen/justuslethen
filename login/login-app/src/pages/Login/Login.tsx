@@ -17,16 +17,18 @@ const Login = () => {
             </div>
 
             <div className={`content ${styles.content}`}>
-                <section className={styles.section}>
-                    <Input label={t("input.username-email.label")} placeholder={t("input.username-email.placeholder")} />
-                </section>
+                <div className={styles.container}>
+                    <section className={styles.section}>
+                        <Input label={t("input.username-email.label")} placeholder={t("input.username-email.placeholder")} />
+                    </section>
 
-                <section className={styles.section}>
-                    <Input label={t("input.password.label")} placeholder={t("input.password.placeholder")} />
-                    <Text text={t("login.forgot_password")} type="h3" onclick={() => { }} />
-                </section>
+                    <section className={styles.section}>
+                        <Input label={t("input.password.label")} placeholder={t("input.password.placeholder")} />
+                        <Text text={t("login.forgot_password")} type="h3" onclick={() => { }} />
+                    </section>
 
-                <Button text={t("login.button")} color="black" onclick={() => { /* Handle login */ }} />
+                    <Button text={t("login.button")} color="black" onclick={() => { /* Handle login */ }} />
+                </div>
             </div>
         </>
     )
