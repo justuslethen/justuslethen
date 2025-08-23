@@ -4,6 +4,7 @@ import Text from '../../components/Text/Text.tsx';
 import Button from '../../components/Button/Button.tsx';
 import Input from '../../components/Input/Input.tsx';
 import styles from './Registrate.module.css';
+import Container from '../../components/Container/Container.tsx';
 // import { useNavigate } from 'react-router-dom';
 
 const Registrate = () => {
@@ -17,7 +18,7 @@ const Registrate = () => {
             </div>
 
             <div className={`content ${styles.content}`}>
-                <div className={styles.container}>
+                <Container>
                     <section className={styles.section}>
                         <Input label={t("input.email.label")} placeholder={t("input.email.placeholder")} />
                     </section>
@@ -36,8 +37,10 @@ const Registrate = () => {
                         <Text text={t("registrate.password.description")} type="description" />
                     </section>
 
-                    <Button text={t("registrate.button")} color="black" onclick={() => { /* Handle login */ }} />
-                </div>
+                    <section className={styles.section}>
+                        <Button text={t("registrate.button")} color="black" onclick={() => { /* Handle login */ }} />
+                    </section>
+                </Container>
             </div>
         </>
     )

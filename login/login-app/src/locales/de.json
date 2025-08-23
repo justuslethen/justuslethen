@@ -26,7 +26,7 @@
         "username": {
             "description": "Der Nutzername muss zwischen 3 und 20 Zeichen lang sein und darf nur Buchstaben, Zahlen und Unterstriche enthalten."
         },
-        "button": "Bestätigen"
+        "button": "Konto erstellen"
     },
     "table": {
         "empty": "Keine Daten vorhanden."
