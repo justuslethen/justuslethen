@@ -17,8 +17,8 @@ const Login = () => {
                 <Text text={t("login.title")} type="h2" center={true} />
             </div>
 
-            <Container>
-                <div className={styles.container}>
+            <div className={`content ${styles.content}`}>
+                <Container maxWidth={380}>
                     <section className={styles.section}>
                         <Input label={t("input.username-email.label")} placeholder={t("input.username-email.placeholder")} />
                     </section>
@@ -29,8 +29,8 @@ const Login = () => {
                     </section>
 
                     <Button text={t("login.button")} color="black" onclick={() => { /* Handle login */ }} />
-                </div>
-            </Container>
+                </Container>
+            </div>
         </>
     )
 }

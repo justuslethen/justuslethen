@@ -18,7 +18,7 @@ const Registrate = () => {
             </div>
 
             <div className={`content ${styles.content}`}>
-                <Container>
+                <Container maxWidth={380}>
                     <section className={styles.section}>
                         <Input label={t("input.email.label")} placeholder={t("input.email.placeholder")} />
                     </section>
