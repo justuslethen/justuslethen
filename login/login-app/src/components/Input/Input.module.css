@@ -15,11 +15,11 @@
     width: 100%;
     box-sizing: border-box;
 
-    padding: 14px;
+    padding: 8px;
     align-items: center;
     gap: 10px;
 
-    border-radius: 18px;
+    border-radius: 12px;
     background: var(--grey-soft-1, #F4F4F4);
     color: var(--text-1, #4F4F4F);
 
