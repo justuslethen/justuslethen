@@ -1,6 +1,6 @@
 import { t } from '../../i18n.ts';
 import Text from '../../components/Text/Text.tsx';
-// import Spaceholder from '../../components/Spaceholder/Spaceholder.tsx';
+import Spaceholder from '../../components/Spaceholder/Spaceholder.tsx';
 import Button from '../../components/Button/Button.tsx';
 import Input from '../../components/Input/Input.tsx';
 import styles from './Registrate.module.css';
@@ -35,6 +35,11 @@ const Registrate = () => {
                     <section className={styles.section}>
                         <Input label={t("input.password.label")} placeholder={t("input.password.placeholder")} />
                         <Text text={t("registrate.password.description")} type="description" />
+                    </section>
+
+                    <section className={styles.section}>
+                        <Input multiline={true} label={t("input.bio.label")} placeholder={t("input.bio.placeholder")} />
+                        <Spaceholder size={1} />
                     </section>
 
                     <section className={styles.section}>

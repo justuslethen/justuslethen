@@ -8,6 +8,11 @@
     animation: input-in 700ms;
 }
 
+.textarea {
+    all: unset;
+    height: calc((42px - 16px + 3px) * 3) !important;
+}
+
 .input {
     all: unset;
 
@@ -56,6 +61,7 @@
     0% {
         opacity: 0;
     }
+
     100% {
         opacity: 1;
     }
