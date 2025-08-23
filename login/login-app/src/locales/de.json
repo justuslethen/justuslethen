@@ -55,6 +55,10 @@
         "verification": {
             "label": "Bestätigungscode",
             "placeholder": "Bestätigungscode eingeben"
+        },
+        "bio": {
+            "label": "Bio",
+            "placeholder": "Erzähle über dich"
         }
     }
 }
