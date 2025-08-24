@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { t } from '../../i18n.ts';
+import { API_URL } from '../../config.ts';
+
 import Text from '../../components/Text/Text.tsx';
 import Spaceholder from '../../components/Spaceholder/Spaceholder.tsx';
 import Button from '../../components/Button/Button.tsx';
@@ -10,6 +12,8 @@ import Container from '../../components/Container/Container.tsx';
 
 const Registrate = () => {
     // const navigate = useNavigate();
+
+    // all form states to registrate
     const [email, setEmail] = useState("");
     const [name, setName] = useState("");
     const [userName, setUserName] = useState("");
@@ -28,7 +32,30 @@ const Registrate = () => {
         setEmail(lowercased);
     }
 
-    
+
+    const getFormDataJSON = () => {
+        return {
+            email: email,
+            name: name,
+            username: userName,
+            bio: bio,
+            password: password
+        }
+    }
+
+
+    const sendFormular = () => {
+        // send the formular data to backend
+        const data: any = getFormDataJSON();
+        fetchData(data);
+    }
+
+
+
+
+
+
+
     return (
         <>
             <div className="text-content">
@@ -53,7 +80,7 @@ const Registrate = () => {
                             label={t("input.name.label")}
                             onChange={(e) => { setName(e.target.value) }}
                             placeholder={t("input.name.placeholder")}
-                            />
+                        />
                     </section>
 
                     <section className={styles.section}>
@@ -62,11 +89,11 @@ const Registrate = () => {
                             label={t("input.username.label")}
                             onChange={(e) => { setUserName(e.target.value) }}
                             placeholder={t("input.username.placeholder")}
-                            />
+                        />
                         <Text
                             text={t("registrate.username.description")}
                             type="description"
-                            />
+                        />
                     </section>
 
                     <section className={styles.section}>
@@ -76,11 +103,11 @@ const Registrate = () => {
                             label={t("input.password.label")}
                             onChange={(e) => { setPassword(e.target.value) }}
                             placeholder={t("input.password.placeholder")}
-                            />
+                        />
                         <Text
                             text={t("registrate.password.description")}
                             type="description"
-                            />
+                        />
                     </section>
 
                     <section className={styles.section}>
@@ -97,7 +124,7 @@ const Registrate = () => {
                         <Button
                             text={t("registrate.button")}
                             color="black"
-                            onclick={() => { /* Handle login */ }}
+                            onclick={() => { sendFormular() }}
                         />
                     </section>
                 </Container>
