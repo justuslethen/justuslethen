@@ -11,7 +11,7 @@ import Container from '../../components/Container/Container.tsx';
 // import { useNavigate } from 'react-router-dom';
 
 const Registrate = () => {
-    // const navigate = useNavigate();
+    const navigate = useNavigate();
 
     // all form states to registrate
     const [email, setEmail] = useState("");
@@ -47,13 +47,34 @@ const Registrate = () => {
     const sendFormular = () => {
         // send the formular data to backend
         const data: any = getFormDataJSON();
-        fetchData(data);
+        const res: any = fetchData(data);
+
+        if (res.success) {
+            // handle success
+            navigate("/");
+        }
     }
 
 
+    const fetchData = async (data: any) => {
+        const url = API_URL;
 
-
-
+        fetch(url + "/api/register-new-user", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data)
+        }).then(response => response.json())
+            .then(data => {
+                // handleRegisterError(data);
+                return {"success": true, data: data};
+            })
+            .catch((error) => {
+                // handleRegisterSuccess(error);
+                return {"success": false, error: error};
+            });
+    }
 
 
     return (
