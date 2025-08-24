@@ -1,3 +1,4 @@
+import React, { useState } from 'react';
 import { t } from '../../i18n.ts';
 import Text from '../../components/Text/Text.tsx';
 import Spaceholder from '../../components/Spaceholder/Spaceholder.tsx';
@@ -9,7 +10,25 @@ import Container from '../../components/Container/Container.tsx';
 
 const Registrate = () => {
     // const navigate = useNavigate();
+    const [email, setEmail] = useState("");
+    const [name, setName] = useState("");
+    const [userName, setUserName] = useState("");
+    const [bio, setBio] = useState("");
+    const [password, setPassword] = useState("");
 
+
+    // adjust input to email pattern
+    const setEmailToPattern = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        // set lowercase
+        let lowercased = e.target.value.toLowerCase();
+
+        // delete chars that are not prat of email
+        lowercased = lowercased.replace(/[^a-z0-9@._-]/g, '');
+
+        setEmail(lowercased);
+    }
+
+    
     return (
         <>
             <div className="text-content">
@@ -20,30 +39,66 @@ const Registrate = () => {
             <div className={`content ${styles.content}`}>
                 <Container maxWidth={380}>
                     <section className={styles.section}>
-                        <Input label={t("input.email.label")} placeholder={t("input.email.placeholder")} />
+                        <Input
+                            value={email}
+                            label={t("input.email.label")}
+                            onChange={(e) => { setEmailToPattern(e) }}
+                            placeholder={t("input.email.placeholder")}
+                        />
                     </section>
 
                     <section className={styles.section}>
-                        <Input label={t("input.username.label")} placeholder={t("input.username.placeholder")} />
-                        <Text text={t("registrate.username.description")} type="description" />
+                        <Input
+                            value={name}
+                            label={t("input.name.label")}
+                            onChange={(e) => { setName(e.target.value) }}
+                            placeholder={t("input.name.placeholder")}
+                            />
                     </section>
 
                     <section className={styles.section}>
-                        <Input label={t("input.name.label")} placeholder={t("input.name.placeholder")} />
+                        <Input
+                            value={userName}
+                            label={t("input.username.label")}
+                            onChange={(e) => { setUserName(e.target.value) }}
+                            placeholder={t("input.username.placeholder")}
+                            />
+                        <Text
+                            text={t("registrate.username.description")}
+                            type="description"
+                            />
                     </section>
 
                     <section className={styles.section}>
-                        <Input label={t("input.password.label")} placeholder={t("input.password.placeholder")} />
-                        <Text text={t("registrate.password.description")} type="description" />
+                        <Input
+                            type="password"
+                            value={password}
+                            label={t("input.password.label")}
+                            onChange={(e) => { setPassword(e.target.value) }}
+                            placeholder={t("input.password.placeholder")}
+                            />
+                        <Text
+                            text={t("registrate.password.description")}
+                            type="description"
+                            />
                     </section>
 
                     <section className={styles.section}>
-                        <Input multiline={true} label={t("input.bio.label")} placeholder={t("input.bio.placeholder")} />
+                        <Input
+                            value={bio}
+                            multiline={true}
+                            label={t("input.bio.label")}
+                            onChange={(e) => { setBio(e.target.value) }}
+                            placeholder={t("input.bio.placeholder")} />
                         <Spaceholder size={1} />
                     </section>
 
                     <section className={styles.section}>
-                        <Button text={t("registrate.button")} color="black" onclick={() => { /* Handle login */ }} />
+                        <Button
+                            text={t("registrate.button")}
+                            color="black"
+                            onclick={() => { /* Handle login */ }}
+                        />
                     </section>
                 </Container>
             </div>
