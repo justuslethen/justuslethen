@@ -8,7 +8,7 @@ import Button from '../../components/Button/Button.tsx';
 import Input from '../../components/Input/Input.tsx';
 import styles from './Registrate.module.css';
 import Container from '../../components/Container/Container.tsx';
-// import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const Registrate = () => {
     const navigate = useNavigate();
@@ -67,13 +67,27 @@ const Registrate = () => {
             body: JSON.stringify(data)
         }).then(response => response.json())
             .then(data => {
-                // handleRegisterError(data);
-                return {"success": true, data: data};
+                handleRegisterSuccess(data);
+
+                return { "success": true, data: data };
             })
             .catch((error) => {
-                // handleRegisterSuccess(error);
-                return {"success": false, error: error};
+                handleRegisterError(error);
+
+                return { "success": false, error: error };
             });
+    }
+
+
+    const handleRegisterSuccess = (error: any) => {
+        // handle success that come from backend
+        console.log(error);
+    }
+
+
+    const handleRegisterError = (data: any) => {
+        // handle errors that come from backend
+        console.log(data);
     }
 
 
