@@ -28,8 +28,8 @@
 }
 
 .button:focus {
-    outline: 2px solid var(--background-1, #FFFFFF);
-    box-shadow: 0px 0px 0px 4px rgba(0, 0, 0, 0.5);
+    outline: 2px solid var(--main-background, #FFFFFF);
+    box-shadow: 0px 0px 0px 4px var(--grey-4, #808080);
 }
 
 .button-orange {

@@ -12,3 +12,9 @@
 
     gap: 8px;
 }
+
+@media (prefers-color-scheme: dark) {
+    .container {
+        border: 2px solid var(--background-4, #1C1C1C);
+    }
+}
