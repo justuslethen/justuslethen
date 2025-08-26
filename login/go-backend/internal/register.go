@@ -73,7 +73,7 @@ func checkRegisterFormPatterns(body *RegisterRequestForm) {
 	checkUsernamePattern(body.Username, &errors)
 	checkPasswordPattern(body.Password, &errors)
 	checkNamePattern(body.Name ,&errors)
-	// checkBioPattern(body.Bio ,&errors)
+	checkBioPattern(body.Bio ,&errors)
 }
 
 func checkEmailPattern(email string, errors *FormPatternErrors) {
@@ -162,6 +162,14 @@ func checkNamePattern(name string, errors *FormPatternErrors) {
 	// check if name is valid
 	if !nameRegex.MatchString(name) {
 		errors.NameError = "name_invalid"
+		return
+	}
+}
+
+func checkBioPattern(bio string, errors *FormPatternErrors) {
+	// check if bio is max 100 characters long
+	if len(bio) < 100 {
+		errors.BioError = "bio_too_long"
 		return
 	}
 }
