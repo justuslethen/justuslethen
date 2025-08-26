@@ -71,7 +71,7 @@ func checkRegisterFormPatterns(body *RegisterRequestForm) {
 	var errors FormPatternErrors
 
 	checkEmailPattern(body.Email ,&errors)
-	// checkUsernamePattern()
+	checkUsernamePattern(body.Username ,&errors)
 	// checkPasswordPattern()
 	// checkNamePattern()
 	// checkBioPattern()
@@ -80,7 +80,7 @@ func checkRegisterFormPatterns(body *RegisterRequestForm) {
 func checkEmailPattern(email string, errors *FormPatternErrors) {
 	// check if email is empty
 	if email == "" {
-		errors.EmailError = "email is required"
+		errors.EmailError = "email_required"
 		return
 	}
 
@@ -89,7 +89,24 @@ func checkEmailPattern(email string, errors *FormPatternErrors) {
 
 	// check if email is valid
 	if !emailRegex.MatchString(email) {
-		errors.EmailError = "invalid email format"
+		errors.EmailError = "email_invalid"
+		return
+	}
+}
+
+func checkUsernamePattern(username string, errors *FormPatternErrors) {
+	// check if username is empty
+	if username == "" {
+		errors.UsernameError = "username_required"
+		return
+	}
+
+	// regex pattern for username validation
+	var usernameRegex = regexp.MustCompile(`^[a-zA-Z0-9_.]{3,20}$`)
+
+	// check if username is valid
+	if !usernameRegex.MatchString(username) {
+		errors.UsernameError = "username_invalid"
 		return
 	}
 }
