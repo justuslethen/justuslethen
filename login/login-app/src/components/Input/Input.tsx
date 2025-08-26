@@ -44,16 +44,26 @@ const Input = (props: InputProps) => {
             ) : (
                 <div className={styles.inputContainer}>
                     <label className={styles.label}>{props.label}</label>
-                    <textarea
-                        className={`
+                    <div className={`
+                        ${styles.inputWrapper} 
+                        ${props.inputTip ? styles.inputWrapperWidthTip : ""}
+                        `}>
+                        <textarea
+                            className={`
                             ${styles.input} 
                             ${styles.textarea} 
                             ${props.inputTip ? styles.inputWithTip : ""}
                             `}
-                        onChange={props.onChange}
-                        placeholder={props.placeholder}
-                        value={props.value}
-                    />
+                            onChange={props.onChange}
+                            placeholder={props.placeholder}
+                            value={props.value}
+                        />
+                        {props.inputTip ? (
+                            <div className={styles.inputTip}>
+                                {props.inputTip}
+                            </div>
+                        ) : null}
+                    </div>
                 </div>
             )}
         </>
