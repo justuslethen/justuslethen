@@ -114,34 +114,45 @@ const Register = () => {
 
 
     const setInputTips = (data: any) => {
+        clearAllInputTips();
+
         if (!data.errors) return;
 
         const errors: any = data.errors;
 
+        // set email input tip
         if (errors.email_error) {
-            // set email input tip
             setEmailInputTip(t("input_tips." + errors.email_error));
-        } else setEmailInputTip("");
+        }
         
+        // set username input tip
         if (errors.username_error) {
-            // set username input tip
             setUserNameInputTip(t("input_tips." + errors.username_error));
-        } else setUserNameInputTip("");
+        }
 
+        // set name input tip
         if (errors.name_error) {
-            // set name input tip
             setNameInputTip(t("input_tips." + errors.name_error));
-        } else setNameInputTip("");
+        }
 
+        // set password input tip
         if (errors.password_error) {
-            // set password input tip
             setPasswordInputTip(t("input_tips." + errors.password_error));
-        } else setPasswordInputTip("");
+        }
 
+        // set bio input tip
         if (errors.bio_error) {
-            // set bio input tip
             setBioInputTip(t("input_tips." + errors.bio_error));
-        } else setBioInputTip("");
+        }
+    }
+
+
+    const clearAllInputTips = () => {
+        setEmailInputTip("");
+        setNameInputTip("");
+        setUserNameInputTip("");
+        setBioInputTip("");
+        setPasswordInputTip("");
     }
 
 
