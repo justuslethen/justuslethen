@@ -8,6 +8,7 @@ interface InputProps {
     multiline?: boolean
     value?: string
     type?: string
+    inputTip?: string
 }
 
 const Input = (props: InputProps) => {
@@ -18,19 +19,37 @@ const Input = (props: InputProps) => {
                     <label className={styles.label}>
                         {props.label}
                     </label>
-                    <input
-                        className={styles.input}
-                        type={props.type ? props.type : "text"}
-                        onChange={props.onChange}
-                        placeholder={props.placeholder}
-                        value={props.value}
-                    />
+                    <div className={`
+                        ${styles.inputWrapper} 
+                        ${props.inputTip ? styles.inputWrapperWidthTip : ""}
+                        `}>
+                        <input
+                            className={`
+                                ${styles.input} 
+                                ${props.inputTip ? styles.inputWithTip : ""}
+                                `}
+                            type={props.type ? props.type : "text"}
+                            onChange={props.onChange}
+                            placeholder={props.placeholder}
+                            value={props.value}
+                        />
+
+                        {props.inputTip ? (
+                            <div className={styles.inputTip}>
+                                {props.inputTip}
+                            </div>
+                        ) : null}
+                    </div>
                 </div>
             ) : (
                 <div className={styles.inputContainer}>
                     <label className={styles.label}>{props.label}</label>
                     <textarea
-                        className={`${styles.input} ${styles.textarea}`}
+                        className={`
+                            ${styles.input} 
+                            ${styles.textarea} 
+                            ${props.inputTip ? styles.inputWithTip : ""}
+                            `}
                         onChange={props.onChange}
                         placeholder={props.placeholder}
                         value={props.value}
