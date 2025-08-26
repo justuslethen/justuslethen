@@ -81,6 +81,8 @@ func sendRegisterBadResponse(w http.ResponseWriter, errors *FormPatternErrors) {
 		"status": "error",
 		"errors": errors,
 	})
+
+	fmt.Println("errors", errors)
 }
 
 func checkRegisterFormPatterns(body *RegisterRequestForm) FormPatternErrors {
@@ -127,7 +129,7 @@ func checkUsernamePattern(username string, errors *FormPatternErrors) {
 	}
 
 	// regex pattern for username validation
-	var usernameRegex = regexp.MustCompile(`^[a-zA-Z0-9_.]{3,20}$`)
+	var usernameRegex = regexp.MustCompile(`^[a-zA-Z0-9_.]$`)
 
 	// check if username is valid
 	if !usernameRegex.MatchString(username) {
@@ -187,7 +189,7 @@ func checkNamePattern(name string, errors *FormPatternErrors) {
 		return
 	}
 
-	// check if name is at least 2 characters long
+	// check if name is at least 4 characters long
 	if len(name) < 4 {
 		errors.NameError = "name_too_short"
 		return
