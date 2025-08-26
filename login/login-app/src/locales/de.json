@@ -60,5 +60,23 @@
             "label": "Bio",
             "placeholder": "Erzähle über dich"
         }
+    },
+    "input_tips": {
+        "email_required": "Bitte eine E-Mail eingeben",
+        "email_invalid": "Bitte richtige E-Mail eingeben",
+        
+        "name_required": "Bitte deinen Namen eingeben",
+        "name_invalid": "Name darf nur aus Buchstaben und Leerzeichen bestehen.",
+        "name_too_short": "Name muss mindestens 4 Zeichen lang sein.",
+
+        "username_required": "Bitte Nutzernamen eingeben",
+        "username_invalid": "Nutzername darf nur aus Buchstaben, Zahlen, Unterstrichen und Punkten bestehen.",
+        "username_taken": "Nutzername ist schon vergeben.",
+
+        "password_required": "Bitte Passwort eingeben",
+        "password_invalid": "Das Passwort muss Groß- und Kleinbuchstaben, Zahlen und Sonderzeichen enthalten.",
+        "password_too_short": "Das Passwort muss mindestens 8 Zeichen lang sein.",
+
+        "bio_too_long": "Bio darf max. 100 Zeichen lang sein."
     }
 }

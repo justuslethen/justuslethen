@@ -20,6 +20,12 @@ const Register = () => {
     const [bio, setBio] = useState("");
     const [password, setPassword] = useState("");
 
+    const [emailInputTip, setEmailInputTip] = useState("");
+    const [nameInputTip, setNameInputTip] = useState("");
+    const [userNameInputTip, setUserNameInputTip] = useState("");
+    const [bioInputTip, setBioInputTip] = useState("");
+    const [passwordInputTip, setPasswordInputTip] = useState("");
+
 
     // adjust input to email pattern
     const setEmailToPattern = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -81,27 +87,61 @@ const Register = () => {
             body: JSON.stringify(data)
         }).then(response => response.json())
             .then(data => {
-                handleRegisterSuccess(data);
+                handleResponse(data);
 
                 return { "success": true, data: data };
             })
             .catch((error) => {
-                handleRegisterError(error);
+                handleServerError(error);
 
                 return { "success": false, error: error };
             });
     }
 
 
-    const handleRegisterSuccess = (error: any) => {
+    const handleResponse = (data: any) => {
         // handle success that come from backend
+        setInputTips(data);
+
+        console.log(data);
+    }
+
+
+    const handleServerError = (error: any) => {
+        // handle errors that come from backend
         console.log(error);
     }
 
 
-    const handleRegisterError = (data: any) => {
-        // handle errors that come from backend
-        console.log(data);
+    const setInputTips = (data: any) => {
+        if (!data.errors) return;
+
+        const errors: any = data.errors;
+
+        if (errors.email_error) {
+            // set email input tip
+            setEmailInputTip(t("input_tips." + errors.email_error));
+        } else setEmailInputTip("");
+        
+        if (errors.username_error) {
+            // set username input tip
+            setUserNameInputTip(t("input_tips." + errors.username_error));
+        } else setUserNameInputTip("");
+
+        if (errors.name_error) {
+            // set name input tip
+            setNameInputTip(t("input_tips." + errors.name_error));
+        } else setNameInputTip("");
+
+        if (errors.password_error) {
+            // set password input tip
+            setPasswordInputTip(t("input_tips." + errors.password_error));
+        } else setPasswordInputTip("");
+
+        if (errors.bio_error) {
+            // set bio input tip
+            setBioInputTip(t("input_tips." + errors.bio_error));
+        } else setBioInputTip("");
     }
 
 
@@ -119,6 +159,7 @@ const Register = () => {
                             value={email}
                             label={t("input.email.label")}
                             onChange={(e) => { setEmailToPattern(e) }}
+                            inputTip={emailInputTip}
                             placeholder={t("input.email.placeholder")}
                         />
                     </section>
@@ -128,6 +169,7 @@ const Register = () => {
                             value={name}
                             label={t("input.name.label")}
                             onChange={(e) => { setName(e.target.value) }}
+                            inputTip={nameInputTip}
                             placeholder={t("input.name.placeholder")}
                         />
                     </section>
@@ -137,6 +179,7 @@ const Register = () => {
                             value={userName}
                             label={t("input.username.label")}
                             onChange={(e) => { setUsernameToPattern(e) }}
+                            inputTip={userNameInputTip}
                             placeholder={t("input.username.placeholder")}
                         />
                         <Text
@@ -151,6 +194,7 @@ const Register = () => {
                             value={password}
                             label={t("input.password.label")}
                             onChange={(e) => { setPassword(e.target.value) }}
+                            inputTip={passwordInputTip}
                             placeholder={t("input.password.placeholder")}
                         />
                         <Text
@@ -165,6 +209,7 @@ const Register = () => {
                             multiline={true}
                             label={t("input.bio.label")}
                             onChange={(e) => { setBio(e.target.value) }}
+                            inputTip={bioInputTip}
                             placeholder={t("input.bio.placeholder")} />
                         <Spaceholder size={1} />
                     </section>
