@@ -24,12 +24,26 @@ const Register = () => {
     // adjust input to email pattern
     const setEmailToPattern = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         // set lowercase
-        let lowercased = e.target.value.toLowerCase();
+        let email = e.target.value.toLowerCase();
 
         // delete chars that are not prat of email
-        lowercased = lowercased.replace(/[^a-z0-9@._-]/g, '');
+        email = email.replace(/[^a-z0-9@._-]/g, '');
 
-        setEmail(lowercased);
+        setEmail(email);
+    }
+
+
+    // adjust input to username pattern
+    const setUsernameToPattern = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        // set lowercase
+        let username = e.target.value.toLowerCase();
+
+        username = username.replace(" ", "_");
+
+        // remove not allowed chars in username
+        username = username.replace(/[^a-z0-9._]/g, '');
+
+        setUserName(username);
     }
 
 
@@ -122,7 +136,7 @@ const Register = () => {
                         <Input
                             value={userName}
                             label={t("input.username.label")}
-                            onChange={(e) => { setUserName(e.target.value) }}
+                            onChange={(e) => { setUsernameToPattern(e) }}
                             placeholder={t("input.username.placeholder")}
                         />
                         <Text
