@@ -72,7 +72,7 @@ func checkRegisterFormPatterns(body *RegisterRequestForm) {
 	checkEmailPattern(body.Email, &errors)
 	checkUsernamePattern(body.Username, &errors)
 	checkPasswordPattern(body.Password, &errors)
-	// checkNamePattern(body.Name ,&errors)
+	checkNamePattern(body.Name ,&errors)
 	// checkBioPattern(body.Bio ,&errors)
 }
 
@@ -126,7 +126,7 @@ func checkPasswordPattern(password string, errors *FormPatternErrors) {
 	// regex patterns for password validation
 	// separate regex checks to avoid complex patterns
 	// at least one lowercase letter, one uppercase letter, one number and one special character
-	
+
 	// special characters: @$!%*?&
 	lower := regexp.MustCompile(`[a-z]`)
 	upper := regexp.MustCompile(`[A-Z]`)
@@ -139,6 +139,29 @@ func checkPasswordPattern(password string, errors *FormPatternErrors) {
 		!number.MatchString(password) ||
 		!special.MatchString(password) {
 		errors.PasswordError = "password_invalid"
+		return
+	}
+}
+
+func checkNamePattern(name string, errors *FormPatternErrors) {
+	// check if name is empty
+	if name == "" {
+		errors.NameError = "name_required"
+		return
+	}
+
+	// check if name is at least 2 characters long
+	if len(name) < 4 {
+		errors.NameError = "name_too_short"
+		return
+	}
+
+	// regex pattern for name validation
+	var nameRegex = regexp.MustCompile(`^[a-zA-Z\s]{2,50}$`)
+
+	// check if name is valid
+	if !nameRegex.MatchString(name) {
+		errors.NameError = "name_invalid"
 		return
 	}
 }
