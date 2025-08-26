@@ -46,36 +46,60 @@ func RegisterUser(w http.ResponseWriter, r *http.Request) {
 	fmt.Printf("Received data: %+v\n", requestData)
 
 	// valdiate inputs with regex and other checks
-	checkRegisterFormPatterns(&requestData)
+	errors := checkRegisterFormPatterns(&requestData)
 
 	// send response with username or errors
-	sendregisterResponse(w, &requestData)
+	// check if errors struct is empty
+	if errors == (FormPatternErrors{}) {
+		fmt.Println("success")
+		sendRegisterGoodResponse(w, &requestData)
+		return
+	} else {
+		fmt.Println("failed", errors)
+		sendRegisterBadResponse(w, &errors)
+		return
+	}
 }
 
-func sendregisterResponse(w http.ResponseWriter, requestData *RegisterRequestForm) {
+func sendRegisterGoodResponse(w http.ResponseWriter, requestData *RegisterRequestForm) {
 	// send response back
 
-	// w.Header().Set("Content-Type", "application/json")
-	// w.WriteHeader(http.StatusOK)
-	// json.NewEncoder(w).Encode(map[string]string{
-	// 	"status": "success",
-	// 	"username":   requestData.Username,
-	// })
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(map[string]string{
+		"status":   "success",
+		"username": requestData.Username,
+	})
 }
 
-func checkRegisterFormPatterns(body *RegisterRequestForm) {
+func sendRegisterBadResponse(w http.ResponseWriter, errors *FormPatternErrors) {
+	// send response back with errors
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusBadRequest)
+	json.NewEncoder(w).Encode(map[string]any{
+		"status": "error",
+		"errors": errors,
+	})
+}
+
+func checkRegisterFormPatterns(body *RegisterRequestForm) FormPatternErrors {
 	fmt.Println(body)
 
+	// create new var according to struct
 	var errors FormPatternErrors
 
+	// check patterns and set errors
+	// give pointer to errors struct to set errors
 	checkEmailPattern(body.Email, &errors)
 	checkUsernamePattern(body.Username, &errors)
 	checkPasswordPattern(body.Password, &errors)
-	checkNamePattern(body.Name ,&errors)
-	checkBioPattern(body.Bio ,&errors)
-
+	checkNamePattern(body.Name, &errors)
+	checkBioPattern(body.Bio, &errors)
 
 	fmt.Println("erros", errors)
+
+	return errors
 }
 
 func checkEmailPattern(email string, errors *FormPatternErrors) {
