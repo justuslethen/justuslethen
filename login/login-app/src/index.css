@@ -35,6 +35,10 @@ body {
   --white-text: #707070;
   --white-soft: #FFFFFF;
 
+  --red-soft: #FFEEEE;
+  --red: #FF9292;
+  --red-text: #E82626;
+
   --user-blue-1: #00CCFF;
   --user-blue-2: #3B93FF;
   --user-purple: #9C5AFF;
@@ -70,6 +74,10 @@ body {
     --black-soft: #ffffff;
     --white-text: #ffffff;
     --white-soft: #000000;
+
+    --red-soft: #FFEEEE;
+    --red: #FF9292;
+    --red-text: #E82626;
   }
 }
 
