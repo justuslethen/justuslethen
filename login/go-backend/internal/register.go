@@ -110,6 +110,11 @@ func checkUsernamePattern(username string, errors *FormPatternErrors) {
 
 	userNameTaken, err := isUsernameTaken(username)
 	if err != nil {
+		errors.UsernameError = "username_check_failed"
+		return
+	}
+
+	if userNameTaken {
 		errors.UsernameError = "username_taken"
 		return
 	}
@@ -182,7 +187,7 @@ func checkBioPattern(bio string, errors *FormPatternErrors) {
 func isUsernameTaken(username string) (bool, error) {
 	// check if username is already taken in the database
 	// SELECT and retur boolean
-	
+
 	var exists bool
 	err := DB.QueryRow("SELECT EXISTS(SELECT 1 FROM users WHERE username=?)", username).Scan(&exists)
 	if err != nil {

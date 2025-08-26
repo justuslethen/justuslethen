@@ -6,14 +6,14 @@ import Text from '../../components/Text/Text.tsx';
 import Spaceholder from '../../components/Spaceholder/Spaceholder.tsx';
 import Button from '../../components/Button/Button.tsx';
 import Input from '../../components/Input/Input.tsx';
-import styles from './Registrate.module.css';
+import styles from './Register.module.css';
 import Container from '../../components/Container/Container.tsx';
 import { useNavigate } from 'react-router-dom';
 
-const Registrate = () => {
+const Register = () => {
     const navigate = useNavigate();
 
-    // all form states to registrate
+    // all form states to register
     const [email, setEmail] = useState("");
     const [name, setName] = useState("");
     const [userName, setUserName] = useState("");
@@ -168,4 +168,4 @@ const Registrate = () => {
     )
 }
 
-export default Registrate;
+export default Register;
