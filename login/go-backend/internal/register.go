@@ -5,7 +5,6 @@ import (
 	"net/http"
 	// "io/ioutil"
 	"encoding/json"
-	// "go-backend/internal/database"
 	// "log"
 	// "time"
 	"regexp"
@@ -108,6 +107,12 @@ func checkUsernamePattern(username string, errors *FormPatternErrors) {
 		errors.UsernameError = "username_invalid"
 		return
 	}
+
+	userNameTaken, err := isUsernameTaken(username)
+	if err != nil {
+		errors.UsernameError = "username_taken"
+		return
+	}
 }
 
 func checkPasswordPattern(password string, errors *FormPatternErrors) {
@@ -172,4 +177,16 @@ func checkBioPattern(bio string, errors *FormPatternErrors) {
 		errors.BioError = "bio_too_long"
 		return
 	}
+}
+
+func isUsernameTaken(username string) (bool, error) {
+	// check if username is already taken in the database
+	// SELECT and retur boolean
+	
+	var exists bool
+	err := DB.QueryRow("SELECT EXISTS(SELECT 1 FROM users WHERE username=?)", username).Scan(&exists)
+	if err != nil {
+		return false, err
+	}
+	return exists, nil
 }
