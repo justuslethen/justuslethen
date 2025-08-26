@@ -4,7 +4,7 @@
     align-items: center;
     justify-content: center;
 
-    width: calc(100% - 80px);
+    width: calc(100% - 32px);
     border-radius: 26px;
     padding: 18px;
     /* border: 1px solid var(--background-2, #F5F5F5); */
