@@ -212,14 +212,14 @@ const Register = () => {
                             inputTip={passwordInputTip}
                             placeholder={t("input.password.placeholder")}
                         />
+                            <Text text={t("login.use_password_generator")} type="h3" onclick={() => {showPassword ? setShowPassword(false) : setShowPassword(true)}} />
+                            {showPassword ? (
+                                <PasswordGenerator size="small" />
+                            ) : null}
                         <Text
                             text={t("registrate.password.description")}
                             type="description"
                         />
-                        <Text text={t("login.use_password_generator")} type="h3" onclick={() => {showPassword ? setShowPassword(false) : setShowPassword(true)}} />
-                        {showPassword ? (
-                            <PasswordGenerator size="small" />
-                        ) : null}
                     </section>
 
                     <section className={styles.section}>
