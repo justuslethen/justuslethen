@@ -187,13 +187,11 @@ func checkPasswordPattern(password string, errors *FormPatternErrors) {
 	lower := regexp.MustCompile(`[a-z]`)
 	upper := regexp.MustCompile(`[A-Z]`)
 	number := regexp.MustCompile(`[0-9]`)
-	special := regexp.MustCompile(`[!@#$%^&*()_:;'*+,-./<>?[\]{}|\\]`)
 
 	// do all checks
 	if !lower.MatchString(password) ||
 		!upper.MatchString(password) ||
-		!number.MatchString(password) ||
-		!special.MatchString(password) {
+		!number.MatchString(password) {
 		errors.PasswordError = "password_invalid"
 		return
 	}
