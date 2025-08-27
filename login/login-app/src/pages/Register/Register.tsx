@@ -2,12 +2,14 @@ import React, { useState } from 'react';
 import { t } from '../../i18n.ts';
 import { API_URL } from '../../config.ts';
 
+import styles from './Register.module.css';
+
 import Text from '../../components/Text/Text.tsx';
 import Spaceholder from '../../components/Spaceholder/Spaceholder.tsx';
 import Button from '../../components/Button/Button.tsx';
 import Input from '../../components/Input/Input.tsx';
-import styles from './Register.module.css';
 import Container from '../../components/Container/Container.tsx';
+import PasswordGenerator from '../../components/PasswordGenerator/PasswordGenerator.tsx';
 import { useNavigate } from 'react-router-dom';
 
 const Register = () => {
@@ -25,6 +27,8 @@ const Register = () => {
     const [userNameInputTip, setUserNameInputTip] = useState("");
     const [bioInputTip, setBioInputTip] = useState("");
     const [passwordInputTip, setPasswordInputTip] = useState("");
+
+    const [showPassword, setShowPassword] = useState(false)
 
 
     // adjust input to email pattern
@@ -212,6 +216,10 @@ const Register = () => {
                             text={t("registrate.password.description")}
                             type="description"
                         />
+                        <Text text={t("login.forgot_password")} type="h3" onclick={() => { }} />
+                        {showPassword ? (
+                            <PasswordGenerator size="small" />
+                        ) : null}
                     </section>
 
                     <section className={styles.section}>
