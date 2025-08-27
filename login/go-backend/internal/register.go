@@ -3,6 +3,7 @@ package internal
 import (
 	"fmt"
 	"net/http"
+
 	// "io/ioutil"
 	"encoding/json"
 	// "log"
@@ -34,14 +35,8 @@ func RegisterUser(w http.ResponseWriter, r *http.Request) {
 
 	// new struct variable
 	var requestData RegisterRequestForm
+	decodeJSONBodyToStruct(w, r, &requestData)
 
-	// decode JSON body into a struct
-	err := json.NewDecoder(r.Body).Decode(&requestData)
-	if err != nil {
-		http.Error(w, "Invalid JSON", http.StatusBadRequest)
-		return
-	}
-	defer r.Body.Close()
 
 	fmt.Printf("Received data: %+v\n", requestData)
 
@@ -51,15 +46,36 @@ func RegisterUser(w http.ResponseWriter, r *http.Request) {
 	// send response with username or errors
 	// check if errors struct is empty
 	if errors == (FormPatternErrors{}) {
-		fmt.Println("success")
-		createUser(&requestData, r)
-		sendRegisterGoodResponse(w, &requestData)
+		handleApprovedRegister(w, r, &requestData)
 		return
 	} else {
 		fmt.Println("failed", errors)
 		sendRegisterBadResponse(w, &errors)
 		return
 	}
+}
+
+func handleApprovedRegister(w http.ResponseWriter, r *http.Request, requestData *RegisterRequestForm) {
+	fmt.Println("approved register form")
+	err := createUser(requestData, r)
+
+	if err != nil {
+		checkUser()
+		sendRegisterGoodResponse(w, requestData)
+		fmt.Println("success")
+	}
+}
+
+func decodeJSONBodyToStruct(w http.ResponseWriter, r * http.Request, requestData *RegisterRequestForm) {
+	// decode JSON body into a struct
+	err := json.NewDecoder(r.Body).Decode(&requestData)
+	if err != nil {
+		http.Error(w, "Invalid JSON", http.StatusBadRequest)
+		return
+	}
+	defer r.Body.Close()
+
+	fmt.Println("decodet JSON to struct")
 }
 
 func sendRegisterGoodResponse(w http.ResponseWriter, requestData *RegisterRequestForm) {
@@ -230,13 +246,29 @@ func createUser(data *RegisterRequestForm, r *http.Request) error {
 	// create user in the database
 	// INSERT into users table
 
-	// ip := r.RemoteAddr
-	meta_data := r.Body
+	ip := r.RemoteAddr
+	userAgent := r.Header.Get("User-Agent")
 
-	fmt.Println("metadata", meta_data)
+	// fmt.Println("ip: ", ip)
+	// fmt.Println("userAgent: ", userAgent)
+	fmt.Println("creating user")
 
-	// DB.Exec("INSERT INTO users (name, username, email, ip_created, password, meta_data) VALUES (?, ?, ?, ?, ?, ?)",
-	// 	data.Name, data.Username, data.Email, )
+	_, err := DB.Exec("INSERT INTO users (name, username, email, ip_created, password, meta_data, bio) VALUES (?, ?, ?, ?, ?, ?, ?)",
+		data.Name, data.Username, data.Email, ip, data.Password, userAgent, data.Bio)
 
-	return nil
+	return err
+}
+
+func checkUser() {
+	row := DB.QueryRow("SELECT userid, name, username, email FROM users ORDER BY userid DESC LIMIT 1")
+
+	var userid int
+	var name, username, email string
+	err := row.Scan(&userid, &name, &username, &email)
+
+	if err != nil {
+		fmt.Println("error scanning user:", err)
+		return
+	}
+	fmt.Printf("checked user: id=%d, name=%s, username=%s, email=%s\n", userid, name, username, email)
 }
