@@ -52,6 +52,7 @@ func RegisterUser(w http.ResponseWriter, r *http.Request) {
 	// check if errors struct is empty
 	if errors == (FormPatternErrors{}) {
 		fmt.Println("success")
+		createUser(&requestData, r)
 		sendRegisterGoodResponse(w, &requestData)
 		return
 	} else {
@@ -129,7 +130,7 @@ func checkUsernamePattern(username string, errors *FormPatternErrors) {
 	}
 
 	// regex pattern for username validation
-	var usernameRegex = regexp.MustCompile(`^[a-zA-Z0-9_.]$`)
+	var usernameRegex = regexp.MustCompile(`^[a-zA-Z0-9._]+$`)
 
 	// check if username is valid
 	if !usernameRegex.MatchString(username) {
@@ -170,7 +171,7 @@ func checkPasswordPattern(password string, errors *FormPatternErrors) {
 	lower := regexp.MustCompile(`[a-z]`)
 	upper := regexp.MustCompile(`[A-Z]`)
 	number := regexp.MustCompile(`[0-9]`)
-	special := regexp.MustCompile(`[@$!%*?&]`)
+	special := regexp.MustCompile(`[!@#$%^&*()_:;'*+,-./<>?[\]{}|\\]`)
 
 	// do all checks
 	if !lower.MatchString(password) ||
@@ -223,4 +224,19 @@ func isUsernameTaken(username string) (bool, error) {
 		return false, err
 	}
 	return exists, nil
+}
+
+func createUser(data *RegisterRequestForm, r *http.Request) error {
+	// create user in the database
+	// INSERT into users table
+
+	// ip := r.RemoteAddr
+	meta_data := r.Body
+
+	fmt.Println("metadata", meta_data)
+
+	// DB.Exec("INSERT INTO users (name, username, email, ip_created, password, meta_data) VALUES (?, ?, ?, ?, ?, ?)",
+	// 	data.Name, data.Username, data.Email, )
+
+	return nil
 }
