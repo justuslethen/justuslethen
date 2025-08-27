@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { t } from '../../i18n.ts';
 
 import styles from "./PasswordGenerator.module.css"
 
@@ -22,7 +23,7 @@ const PasswordGenerator = (props: PasswordGeneratorProps) => {
     return (
         <>
             <div className={styles.mainContainer}>
-                <Text text="Header" center={true} type="h2" />
+                <Text text={t("password_generator.header")} center={true} type="h2" />
                 <div className={styles.passwordContainer}>
                     <>
                         {Array.from(generatedPassword).map(char => {
@@ -34,7 +35,9 @@ const PasswordGenerator = (props: PasswordGeneratorProps) => {
                         })}
                     </>
                 </div>
-                <Button color="blue" text="Button" onclick={() => { }} />
+                <Text text={t("password_generator.description")} center={true} type="description" />
+                <Button color="white" text={t("password_generator.buttons.generate_new")} onclick={() => { }} />
+                <Button color="grey" text={t("password_generator.buttons.insert")} onclick={() => { }} />
             </div>
         </>
     )
