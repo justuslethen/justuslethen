@@ -216,7 +216,7 @@ const Register = () => {
                             text={t("registrate.password.description")}
                             type="description"
                         />
-                        <Text text={t("login.forgot_password")} type="h3" onclick={() => { }} />
+                        <Text text={t("login.use_password_generator")} type="h3" onclick={() => setShowPassword(true)} />
                         {showPassword ? (
                             <PasswordGenerator size="small" />
                         ) : null}

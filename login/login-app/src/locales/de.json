@@ -16,7 +16,8 @@
     "login": {
         "title": "Anmelden",
         "button": "Anmelden",
-        "forgot_password": "Passwort vergessen?"
+        "forgot_password": "Passwort vergessen?",
+        "use_password_generator": "Mit Passwort Generator erstellen"
     },
     "registrate": {
         "title": "Konto erstellen",
