@@ -73,17 +73,13 @@
     color: var(--white-text);
 }
 
-.button-white:focus {
-    box-shadow: 0px 0px 0px 4px var(--white-soft);
+.button-green:focus {
+    box-shadow: 0px 0px 0px 4px var(--grey-4);
 }
 
 .button-grey {
     background-color: var(--grey-soft);
     color: var(--grey-text);
-}
-
-.button-grey:focus {
-    box-shadow: 0px 0px 0px 4px var(--grey-soft);
 }
 
 .button-black {
