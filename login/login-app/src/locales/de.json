@@ -17,12 +17,13 @@
         "title": "Anmelden",
         "button": "Anmelden",
         "forgot_password": "Passwort vergessen?",
-        "use_password_generator": "Mit Passwort Generator erstellen"
+        "use_password_generator": "Mit Passwort Generator erstellen",
+        "close_password_generator": "Passwort Generator schließen"
     },
     "registrate": {
         "title": "Konto erstellen",
         "password": {
-            "description": "Das Passwort muss mindestens 8 Zeichen lang sein, Groß- und Kleinbuchstaben, Zahlen und Sonderzeichen enthalten."
+            "description": "Das Passwort muss mindestens 8 Zeichen lang sein, Groß- und Kleinbuchstaben und Zahlen enthalten."
         },
         "username": {
             "description": "Der Nutzername muss zwischen 3 und 20 Zeichen lang sein und darf nur Buchstaben, Zahlen und Unterstriche enthalten."
@@ -75,7 +76,7 @@
         "username_taken": "Nutzername ist schon vergeben.",
 
         "password_required": "Bitte Passwort eingeben",
-        "password_invalid": "Das Passwort muss Groß- und Kleinbuchstaben, Zahlen und Sonderzeichen enthalten.",
+        "password_invalid": "Das Passwort muss Groß- und Kleinbuchstaben und Zahlen enthalten.",
         "password_too_short": "Das Passwort muss mindestens 8 Zeichen lang sein.",
 
         "bio_too_long": "Bio darf max. 100 Zeichen lang sein."

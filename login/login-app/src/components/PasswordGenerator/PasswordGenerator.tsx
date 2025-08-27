@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { t } from '../../i18n.ts';
 import { PASSWORD_LENGTH } from '../../config.ts';
 
@@ -9,10 +9,15 @@ import Text from "../Text/Text.tsx"
 
 interface PasswordGeneratorProps {
     size: string
+    onClick: (value: string) => void;
 }
 
 const PasswordGenerator = (props: PasswordGeneratorProps) => {
-    const [generatedPassword, changeGeneratedPassword] = useState("Passw-orT")
+    const [generatedPassword, changeGeneratedPassword] = useState("");
+
+    useEffect(() => {
+        createPassword();
+    }, []);
 
     const createPassword = () => {
         let password = "";
@@ -163,7 +168,7 @@ const PasswordGenerator = (props: PasswordGeneratorProps) => {
                 </div>
                 <Text text={t("password_generator.description")} center={true} type="description" />
                 <Button color="white" text={t("password_generator.buttons.generate_new")} onclick={() => { createPassword() }} />
-                <Button color="grey" text={t("password_generator.buttons.insert")} onclick={() => { }} />
+                <Button color="grey" text={t("password_generator.buttons.insert")} onclick={() => { props.onClick(generatedPassword) }} />
             </div>
         </>
     )

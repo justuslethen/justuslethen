@@ -128,7 +128,7 @@ const Register = () => {
         if (errors.email_error) {
             setEmailInputTip(t("input_tips." + errors.email_error));
         }
-        
+
         // set username input tip
         if (errors.username_error) {
             setUserNameInputTip(t("input_tips." + errors.username_error));
@@ -212,10 +212,10 @@ const Register = () => {
                             inputTip={passwordInputTip}
                             placeholder={t("input.password.placeholder")}
                         />
-                            <Text text={t("login.use_password_generator")} type="h3" onclick={() => {showPassword ? setShowPassword(false) : setShowPassword(true)}} />
-                            {showPassword ? (
-                                <PasswordGenerator size="small" />
-                            ) : null}
+                        <Text text={showPassword ? t("login.close_password_generator") : t("login.use_password_generator")} type="h3" onclick={() => { showPassword ? setShowPassword(false) : setShowPassword(true) }} />
+                        {showPassword ? (
+                            <PasswordGenerator size="small" onClick={setPassword} />
+                        ) : null}
                         <Text
                             text={t("registrate.password.description")}
                             type="description"
