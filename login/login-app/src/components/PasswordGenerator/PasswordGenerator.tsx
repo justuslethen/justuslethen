@@ -19,7 +19,8 @@ const PasswordGenerator = (props: PasswordGeneratorProps) => {
 
         const charsCount = getDifferentCharsCount()
 
-
+        password = getCharsForCount(password, charsCount);
+        password = mixPassword(password);
 
         changeGeneratedPassword(password);
     }
@@ -42,6 +43,10 @@ const PasswordGenerator = (props: PasswordGeneratorProps) => {
         } else {
             charsCount = calcCharsCountV3(charsCount, random);
         }
+
+        console.log("charsCount: ", charsCount)
+
+        return charsCount;
     }
 
 
@@ -50,7 +55,7 @@ const PasswordGenerator = (props: PasswordGeneratorProps) => {
         charsCount.upperChars = 1;
 
         charsCount.lowerChars = getRandomIntCrypto(1, PASSWORD_LENGTH - 3);
-        charsCount.specialChars = charsCount.numbers + charsCount.upperChars + charsCount.lowerChars - PASSWORD_LENGTH;
+        charsCount.specialChars = PASSWORD_LENGTH - charsCount.numbers - charsCount.upperChars - charsCount.lowerChars;
 
         return charsCount;
     }
@@ -61,7 +66,7 @@ const PasswordGenerator = (props: PasswordGeneratorProps) => {
         charsCount.specialChars = 1;
 
         charsCount.numbers = getRandomIntCrypto(1, PASSWORD_LENGTH - 3);
-        charsCount.upperChars = charsCount.numbers + charsCount.specialChars + charsCount.lowerChars - PASSWORD_LENGTH;
+        charsCount.upperChars = PASSWORD_LENGTH - charsCount.numbers - charsCount.specialChars - charsCount.lowerChars;
 
         return charsCount;
     }
@@ -77,7 +82,22 @@ const PasswordGenerator = (props: PasswordGeneratorProps) => {
         return charsCount;
     }
 
-    
+
+    const getCharsForCount = (password: string, charsCount: any) => {
+        const uperChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        const lowerChars = "abcdefghijklmnopqrstuvwxyz";
+        const numbers = "0123456789";
+        const specialChars = "!$%&/()=?*+-_:;,.'{}[]";
+
+        password += getRandomCharsFromArray(uperChars, charsCount.upperChars);
+        password += getRandomCharsFromArray(lowerChars, charsCount.lowerChars);
+        password += getRandomCharsFromArray(numbers, charsCount.numbers);
+        password += getRandomCharsFromArray(specialChars, charsCount.specialChars);
+
+        return password;
+    }
+
+
     const getRandomIntCrypto = (min: number, max: number): number => {
         // nclude max in min
         const range = max + 1 - min;
@@ -91,7 +111,35 @@ const PasswordGenerator = (props: PasswordGeneratorProps) => {
 
         // calc number with range and add min
         return min + (randomArray[0] % range);
-    };
+    }
+
+
+    const getRandomCharsFromArray = (chars: string, count: number) => {
+        let result = "";
+        for (let i = 0; i < count; i++) {
+            // secure random index
+            const randomArray = new Uint32Array(1);
+            crypto.getRandomValues(randomArray);
+            const index = randomArray[0] % chars.length;
+
+            result += chars.charAt(index);
+        }
+        return result;
+    }
+
+
+    const mixPassword = (password: string) => {
+        // Convert string to array
+        let chars = password.split("");
+
+        // Fisher-Yates shuffle
+        for (let i = chars.length - 1; i > 0; i--) {
+            const j = getRandomIntCrypto(0, i);
+            [chars[i], chars[j]] = [chars[j], chars[i]];
+        }
+
+        return chars.join("");
+    }
 
 
     // 
@@ -114,7 +162,7 @@ const PasswordGenerator = (props: PasswordGeneratorProps) => {
                     </>
                 </div>
                 <Text text={t("password_generator.description")} center={true} type="description" />
-                <Button color="white" text={t("password_generator.buttons.generate_new")} onclick={() => { }} />
+                <Button color="white" text={t("password_generator.buttons.generate_new")} onclick={() => { createPassword() }} />
                 <Button color="grey" text={t("password_generator.buttons.insert")} onclick={() => { }} />
             </div>
         </>
