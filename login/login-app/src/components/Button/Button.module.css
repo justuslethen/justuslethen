@@ -5,13 +5,13 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    
+
     gap: 10px;
     width: 100%;
-    
+
     font-family: manrope;
     font-weight: 700;
-    
+
     box-sizing: border-box;
     border-radius: 12px;
     animation: button-in 1s;
@@ -37,9 +37,17 @@
     color: var(--orange-text);
 }
 
+.button-orange:focus {
+    box-shadow: 0px 0px 0px 4px var(--orange-soft);
+}
+
 .button-purple {
     background-color: var(--purple-soft);
     color: var(--purple-text);
+}
+
+.button-orange:focus {
+    box-shadow: 0px 0px 0px 4px var(--pruple-soft);
 }
 
 .button-blue {
@@ -47,9 +55,17 @@
     color: var(--blue-text);
 }
 
+.button-blue:focus {
+    box-shadow: 0px 0px 0px 4px var(--blue-soft);
+}
+
 .button-green {
     background-color: var(--green-soft);
     color: var(--green-text);
+}
+
+.button-green:focus {
+    box-shadow: 0px 0px 0px 4px var(--green-soft);
 }
 
 .button-white {
@@ -57,9 +73,17 @@
     color: var(--white-text);
 }
 
+.button-white:focus {
+    box-shadow: 0px 0px 0px 4px var(--white-soft);
+}
+
 .button-grey {
     background-color: var(--grey-soft);
     color: var(--grey-text);
+}
+
+.button-grey:focus {
+    box-shadow: 0px 0px 0px 4px var(--grey-soft);
 }
 
 .button-black {
@@ -69,9 +93,9 @@
 
 @keyframes button-in {
     0% {
-        opacity: 0;    
+        opacity: 0;
     }
-    
+
     100% {
         opacity: 1;
     }
