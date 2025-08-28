@@ -3,12 +3,10 @@ package internal
 import (
 	"fmt"
 	"net/http"
-
-	// "io/ioutil"
 	"encoding/json"
-	// "log"
-	// "time"
 	"regexp"
+	"go-backend/database"
+	"go-backend/pkg"
 )
 
 type RegisterRequestForm struct {
@@ -60,7 +58,6 @@ func handleApprovedRegister(w http.ResponseWriter, r *http.Request, requestData 
 	err := createUser(requestData, r)
 
 	if err != nil {
-		checkUser()
 		sendRegisterGoodResponse(w, requestData)
 		fmt.Println("success")
 	}
@@ -154,7 +151,7 @@ func checkUsernamePattern(username string, errors *FormPatternErrors) {
 		return
 	}
 
-	userNameTaken, err := isUsernameTaken(username)
+	userNameTaken, err := pkg.IsUsernameTaken(username)
 	if err != nil {
 		errors.UsernameError = "username_check_failed"
 		return
@@ -228,18 +225,6 @@ func checkBioPattern(bio string, errors *FormPatternErrors) {
 	}
 }
 
-func isUsernameTaken(username string) (bool, error) {
-	// check if username is already taken in the database
-	// SELECT and retur boolean
-
-	var exists bool
-	err := DB.QueryRow("SELECT EXISTS(SELECT 1 FROM users WHERE username=?)", username).Scan(&exists)
-	if err != nil {
-		return false, err
-	}
-	return exists, nil
-}
-
 func createUser(data *RegisterRequestForm, r *http.Request) error {
 	// create user in the database
 	// INSERT into users table
@@ -251,22 +236,8 @@ func createUser(data *RegisterRequestForm, r *http.Request) error {
 	// fmt.Println("userAgent: ", userAgent)
 	fmt.Println("creating user")
 
-	_, err := DB.Exec("INSERT INTO users (name, username, email, ip_created, password, meta_data, bio) VALUES (?, ?, ?, ?, ?, ?, ?)",
+	_, err := database.DB.Exec("INSERT INTO users (name, username, email, ip_created, password, meta_data, bio) VALUES (?, ?, ?, ?, ?, ?, ?)",
 		data.Name, data.Username, data.Email, ip, data.Password, userAgent, data.Bio)
 
 	return err
-}
-
-func checkUser() {
-	row := DB.QueryRow("SELECT userid, name, username, email FROM users ORDER BY userid DESC LIMIT 1")
-
-	var userid int
-	var name, username, email string
-	err := row.Scan(&userid, &name, &username, &email)
-
-	if err != nil {
-		fmt.Println("error scanning user:", err)
-		return
-	}
-	fmt.Printf("checked user: id=%d, name=%s, username=%s, email=%s\n", userid, name, username, email)
 }
