@@ -9,17 +9,18 @@ import (
 )
 
 type Config struct {
-    DBUser          string
-    DBPassword      string
-    DBName          string
-    DBPort          string
-    DBHost          string
-    ServerPort      string
-    JWTKey          string
-    JWTExpiration   string
-    TimeoutDuration string
-    LoginAttempts   string
-    PasswordMinLen  string
+    DBUser             string
+    DBPassword         string
+    DBName             string
+    DBPort             string
+    DBHost             string
+    ServerPort         string
+    JWTKey             string
+    JWTExpiration      string
+    RefreshJWTDuration string
+    TimeoutDuration    string
+    LoginAttempts      string
+    PasswordMinLen     string
 }
 
 // global var
@@ -46,6 +47,7 @@ func LoadConfig() error {
         // app config
         JWTKey:             os.Getenv("JWT_SECRET"),
         JWTExpiration:      os.Getenv("JWT_EXPIRATION"),
+        RefreshJWTDuration: os.Getenv("REFRESH_TOKEN_EXPIRATION"),
         TimeoutDuration:    os.Getenv("MAX_WRONG_ATTEMPTS"),
         LoginAttempts:      os.Getenv("TIMEOUT_DURATION"),
         PasswordMinLen:     os.Getenv("PASSWORD_MIN_LENGTH"),
