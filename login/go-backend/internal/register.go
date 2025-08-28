@@ -235,9 +235,14 @@ func createUser(data *RegisterRequestForm, r *http.Request) error {
 	// fmt.Println("ip: ", ip)
 	// fmt.Println("userAgent: ", userAgent)
 	fmt.Println("creating user")
+	password, error := pkg.HashPassword(data.Password)
+
+	if error != nil {
+		return error
+	}
 
 	_, err := database.DB.Exec("INSERT INTO users (name, username, email, ip_created, password, meta_data, bio) VALUES (?, ?, ?, ?, ?, ?, ?)",
-		data.Name, data.Username, data.Email, ip, data.Password, userAgent, data.Bio)
+		data.Name, data.Username, data.Email, ip, password, userAgent, data.Bio)
 
 	return err
 }
