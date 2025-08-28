@@ -5,7 +5,7 @@ import { API_URL } from '../../config.ts';
 import styles from './Register.module.css';
 
 import Text from '../../components/Text/Text.tsx';
-import Spaceholder from '../../components/Spaceholder/Spaceholder.tsx';
+// import Spaceholder from '../../components/Spaceholder/Spaceholder.tsx';
 import Button from '../../components/Button/Button.tsx';
 import Input from '../../components/Input/Input.tsx';
 import Container from '../../components/Container/Container.tsx';
@@ -172,7 +172,7 @@ const Register = () => {
                     <section className={styles.section}>
                         <Input
                             value={email}
-                            label={t("input.email.label")}
+                            label={`${t("input.email.label")} *`}
                             onChange={(e) => { setEmailToPattern(e) }}
                             inputTip={emailInputTip}
                             placeholder={t("input.email.placeholder")}
@@ -182,7 +182,7 @@ const Register = () => {
                     <section className={styles.section}>
                         <Input
                             value={name}
-                            label={t("input.name.label")}
+                            label={`${t("input.name.label")} *`}
                             onChange={(e) => { setName(e.target.value) }}
                             inputTip={nameInputTip}
                             placeholder={t("input.name.placeholder")}
@@ -192,7 +192,7 @@ const Register = () => {
                     <section className={styles.section}>
                         <Input
                             value={userName}
-                            label={t("input.username.label")}
+                            label={`${t("input.username.label")} *`}
                             onChange={(e) => { setUsernameToPattern(e) }}
                             inputTip={userNameInputTip}
                             placeholder={t("input.username.placeholder")}
@@ -207,7 +207,7 @@ const Register = () => {
                         <Input
                             type="password"
                             value={password}
-                            label={t("input.password.label")}
+                            label={`${t("input.password.label")} *`}
                             onChange={(e) => { setPassword(e.target.value) }}
                             inputTip={passwordInputTip}
                             placeholder={t("input.password.placeholder")}
@@ -230,7 +230,6 @@ const Register = () => {
                             onChange={(e) => { setBio(e.target.value) }}
                             inputTip={bioInputTip}
                             placeholder={t("input.bio.placeholder")} />
-                        <Spaceholder size={1} />
                     </section>
 
                     <section className={styles.section}>
