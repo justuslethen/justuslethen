@@ -3,7 +3,7 @@ package main
 import (
 	"go-backend/config"
 	"go-backend/server"
-	"go-backend/internal"
+	"go-backend/database"
     // "database/sql"
     "log"
     // "net/http"
@@ -17,7 +17,7 @@ func main() {
 		log.Fatalf("Error loading config: %v", err)
 	}
 
-	if err := internal.ConnectDB(); err!= nil {
+	if err := database.ConnectDB(); err!= nil {
 		log.Fatalf("Error loading DB: %v", err)
 	}
 
