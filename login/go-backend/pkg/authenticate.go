@@ -17,6 +17,11 @@ type JWTClaims struct {
 	jwt.RegisteredClaims
 }
 
+type RefreshClaims struct {
+	Userid int `json:"userid"`
+	jwt.RegisteredClaims
+}
+
 
 func HashPassword(password string) (string, error) {
 	// hash password to store securely
@@ -35,11 +40,11 @@ func CheckPassword(hashedPassword, password string) bool {
 	return err == nil
 }
 
-func GenerateJWT(username string, userid int) (string, error) {
-	expirationTime := calcJWTExpirationTime()
+func GenerateJWT( userid int, username string) (string, error) {
+	expirationTime := calcAccessJWTExpirationTime()
 	
 	// get pointer to claims
-	claims := createJWTClaims(username, userid, expirationTime)
+	claims := createJWTClaims(userid, username, expirationTime)
 
 	// create new jwt token with claims
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
@@ -54,7 +59,7 @@ func GenerateJWT(username string, userid int) (string, error) {
 	return tokenString, nil
 }
 
-func createJWTClaims(username string, userid int, expirationTime time.Time) *JWTClaims {
+func createJWTClaims(userid int, username string, expirationTime time.Time) *JWTClaims {
 	// create JWT claims
 	// with username and userid
 	claims := &JWTClaims{
@@ -69,7 +74,7 @@ func createJWTClaims(username string, userid int, expirationTime time.Time) *JWT
 	return claims
 }
 
-func calcJWTExpirationTime() time.Time {
+func calcAccessJWTExpirationTime() time.Time {
 	// convert .env config to int
 	duration, err := strconv.Atoi(config.ServerConfig.JWTExpiration)
 	if err != nil {
@@ -93,4 +98,38 @@ func ValidateJWT(tokenString string) (*JWTClaims, error) {
 	}
 
 	return claims, nil
+}
+
+func LoginNewDevice(userid int, username string) {
+	// refreshToken, err := GenerateRefreshToken(userid, username)
+	// accessToken, err := GenerateJWT(userid, username)
+}
+
+func GenerateRefreshToken( userid int, usernmae string) (string, error) {
+	expirationTime := calcRefreshJWTExpirationTime()
+
+	claims := createJWTClaims(userid, usernmae, expirationTime)
+
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+
+	// signiere mit dem gleichen Secret wie Session-Token
+	tokenString, err := token.SignedString(config.ServerConfig.JWTKey)
+	if err != nil {
+		return "", err
+	}
+
+	return tokenString, nil
+}
+
+func calcRefreshJWTExpirationTime() time.Time {
+	// convert .env config to int
+	duration, err := strconv.Atoi(config.ServerConfig.RefreshJWTDuration)
+	if err != nil {
+		fmt.Println("failed to convert config to int!")
+	}
+
+	// duration in days
+	expirationTime := time.Now().Add(time.Duration(duration) * 24 * time.Hour)
+
+	return expirationTime
 }
