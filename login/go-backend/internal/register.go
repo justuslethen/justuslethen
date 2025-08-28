@@ -1,12 +1,12 @@
 package internal
 
 import (
-	"fmt"
-	"net/http"
 	"encoding/json"
-	"regexp"
+	"fmt"
 	"go-backend/database"
 	"go-backend/pkg"
+	"net/http"
+	"regexp"
 )
 
 type RegisterRequestForm struct {
@@ -55,9 +55,11 @@ func RegisterUser(w http.ResponseWriter, r *http.Request) {
 
 func handleApprovedRegister(w http.ResponseWriter, r *http.Request, requestData *RegisterRequestForm) {
 	fmt.Println("approved register form")
-	err := createUser(requestData, r)
+	userid, err := createUser(requestData, r)
 
 	if err != nil {
+		// create and set refresh- and session-token
+		pkg.LoginNewDevice(userid, requestData.Username)
 		sendRegisterGoodResponse(w, requestData)
 		fmt.Println("success")
 	}
@@ -225,7 +227,7 @@ func checkBioPattern(bio string, errors *FormPatternErrors) {
 	}
 }
 
-func createUser(data *RegisterRequestForm, r *http.Request) error {
+func createUser(data *RegisterRequestForm, r *http.Request) (int, error) {
 	// create user in the database
 	// INSERT into users table
 
@@ -235,14 +237,24 @@ func createUser(data *RegisterRequestForm, r *http.Request) error {
 	// fmt.Println("ip: ", ip)
 	// fmt.Println("userAgent: ", userAgent)
 	fmt.Println("creating user")
-	password, error := pkg.HashPassword(data.Password)
+	password, err := pkg.HashPassword(data.Password)
 
-	if error != nil {
-		return error
+	if err != nil {
+		return 0, err
 	}
 
-	_, err := database.DB.Exec("INSERT INTO users (name, username, email, ip_created, password, meta_data, bio) VALUES (?, ?, ?, ?, ?, ?, ?)",
+	result, err := database.DB.Exec("INSERT INTO users (name, username, email, ip_created, password, meta_data, bio) VALUES (?, ?, ?, ?, ?, ?, ?)",
 		data.Name, data.Username, data.Email, ip, password, userAgent, data.Bio)
 
-	return err
+	if err != nil {
+		return 0, err
+	}
+
+	// get userid from row
+	userid, err := result.LastInsertId()
+	if err != nil {
+		return 0, err
+	}
+
+	return int(userid), err
 }
