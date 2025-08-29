@@ -1,9 +1,9 @@
-// import styles from "./LogInCheck.module.css"
+// import styles from "./LoginCheck.module.css"
 
 import { useEffect, useState } from "react";
 import { API_URL } from "../../config";
 
-const Test = () => {
+const LoginCheck = () => {
     const [amILoggedIn, setAmILoggedIn] = useState(false);
     const [data, setData] = useState({});
 
@@ -23,17 +23,17 @@ const Test = () => {
         <>
             {amILoggedIn ? (
                 <>
-                    <p>i am logged in"</p>
-                    {data}
+                    <p>i am logged in</p>
+                    <p>{JSON.stringify(data)}</p>
                 </>
             ) : (
                 <>
                     <p>i am not logged in</p>
-                    {data}
+                    <p>{JSON.stringify(data)}</p>
                 </>
             )}
         </>
     )
 }
 
-export default Test;
+export default LoginCheck;
