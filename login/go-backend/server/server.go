@@ -22,5 +22,7 @@ func Start(addr string) error {
 
     mux.HandleFunc("/api/register-new-user", internal.RegisterUser)
 
+    mux.HandleFunc("/api/amiloggedin", internal.SendLogInCheck)
+
     return http.ListenAndServe(addr, mux)
 }
