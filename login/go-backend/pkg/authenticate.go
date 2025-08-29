@@ -208,10 +208,10 @@ func CheckRefreshToken(r *http.Request, token string) (bool, int, error) {
 	}
 
 	if agent == r.Header.Get("User-Agent") {
-		return true, 0, nil
+		return true, userid, nil
 	}
 
-	return false, userid, nil
+	return false, 0, nil
 }
 
 func doesRefreshToeknExist(token string) (bool, error) {

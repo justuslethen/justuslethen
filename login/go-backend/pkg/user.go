@@ -37,9 +37,15 @@ func GetAllUserData(userid int) AllUserData {
 
 func getAllUserDataFromDB(userid int) AllUserData {
 	var username, agent, ip, name, email, bio string
-	err := database.DB.QueryRow("SELECT username, agent, ip_created, name, email, bio FROM users WHERE userid = ?", userid).Scan(&username, &agent, &ip, &name, &email, &bio)
+
+	fmt.Println("userid: ", userid)
+
+	err := database.DB.QueryRow("SELECT username, agent, ip_created, name, email, bio FROM users WHERE userid = ?",
+		userid,
+	).Scan(&username, &agent, &ip, &name, &email, &bio)
 
 	if err != nil {
+		fmt.Println("allUserData err: ", err)
 		return AllUserData{}
 	}
 
