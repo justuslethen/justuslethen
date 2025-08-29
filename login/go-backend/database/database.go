@@ -69,7 +69,7 @@ func createTokensTable() {
     CREATE TABLE IF NOT EXISTS tokens (
         tokenid INT AUTO_INCREMENT PRIMARY KEY,
         userid INT NOT NULL,
-        token VARCHAR(100) NOT NULL,
+        token VARCHAR(255) NOT NULL,
         ip_last_used VARCHAR(20) NOT NULL,
 		ip_created VARCHAR(20) NOT NULL,
 		number_used INT NOT NULL,
