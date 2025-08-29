@@ -59,7 +59,7 @@ func handleApprovedRegister(w http.ResponseWriter, r *http.Request, requestData 
 
 	if err != nil {
 		// create and set refresh- and session-token
-		pkg.LoginNewDevice(userid, requestData.Username)
+		pkg.LoginNewDevice(w, userid, requestData.Username)
 		sendRegisterGoodResponse(w, requestData)
 		fmt.Println("success")
 	}

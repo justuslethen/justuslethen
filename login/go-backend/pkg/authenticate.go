@@ -1,11 +1,15 @@
 package pkg
 
 import (
+	"crypto/rand"
+	"encoding/hex"
 	"fmt"
 	"strconv"
 	"time"
+	"net/http"
 
 	"go-backend/config"
+	"go-backend/database"
 
 	"github.com/golang-jwt/jwt/v5"
 	"golang.org/x/crypto/bcrypt"
@@ -100,9 +104,20 @@ func ValidateJWT(tokenString string) (*JWTClaims, error) {
 	return claims, nil
 }
 
-func LoginNewDevice(userid int, username string) {
-	// refreshToken, err := GenerateRefreshToken(userid, username)
-	// accessToken, err := GenerateJWT(userid, username)
+func LoginNewDevice(w http.ResponseWriter, userid int, username string) {
+	refreshToken, err := GenerateRefreshToken(userid, username)
+	if err != nil {
+		fmt.Println("error", err)
+		return
+	}
+	
+	accessToken, err := GenerateJWT(userid, username)
+	if err != nil {
+		fmt.Println("error", err)
+		return
+	}
+
+	setTokens(w, accessToken, refreshToken)
 }
 
 func GenerateRefreshToken( userid int, usernmae string) (string, error) {
@@ -132,4 +147,33 @@ func calcRefreshJWTExpirationTime() time.Time {
 	expirationTime := time.Now().Add(time.Duration(duration) * 24 * time.Hour)
 
 	return expirationTime
+}
+
+func setTokens(w http.ResponseWriter, accessToken, refreshToken string) {
+	setAccessToken(w, accessToken)
+	setRefreshToken(w, refreshToken)
+}
+
+func setAccessToken(w http.ResponseWriter, accessToken string) {
+	http.SetCookie(w, &http.Cookie{
+		Name:     "access_token",
+		Value:    accessToken,
+		Path:     "/",
+		HttpOnly: true,
+		Secure:   true, // only https
+		MaxAge:   15 * 60, 
+		SameSite: http.SameSiteStrictMode,
+	})
+}
+
+func setRefreshToken(w http.ResponseWriter, refreshToken string) {
+	http.SetCookie(w, &http.Cookie{
+		Name:     "refresh_token",
+		Value:    refreshToken,
+		Path:     "/",
+		HttpOnly: true,
+		Secure:   true, // only https
+		MaxAge:   30 * 24 * 60 * 60,
+		SameSite: http.SameSiteStrictMode,
+	})
 }
