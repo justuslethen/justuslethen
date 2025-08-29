@@ -1,4 +1,4 @@
-// import styles from "./Test.module.css"
+// import styles from "./LogInCheck.module.css"
 
 import { useEffect, useState } from "react";
 import { API_URL } from "../../config";
