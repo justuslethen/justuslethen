@@ -4,9 +4,9 @@ import (
 	// "crypto/rand"
 	// "encoding/hex"
 	"fmt"
+	"net/http"
 	"strconv"
 	"time"
-	"net/http"
 
 	"go-backend/config"
 	"go-backend/database"
@@ -17,7 +17,7 @@ import (
 
 type JWTClaims struct {
 	Username string `json:"useranme"`
-	Userid int `json:"useride"`
+	Userid   int    `json:"useride"`
 	jwt.RegisteredClaims
 }
 
@@ -25,7 +25,6 @@ type RefreshClaims struct {
 	Userid int `json:"userid"`
 	jwt.RegisteredClaims
 }
-
 
 func HashPassword(password string) (string, error) {
 	// hash password to store securely
@@ -44,9 +43,9 @@ func CheckPassword(hashedPassword, password string) bool {
 	return err == nil
 }
 
-func GenerateJWT( userid int, username string) (string, error) {
+func GenerateJWT(userid int, username string) (string, error) {
 	expirationTime := calcAccessJWTExpirationTime()
-	
+
 	// get pointer to claims
 	claims := createJWTClaims(userid, username, expirationTime)
 
@@ -68,7 +67,7 @@ func createJWTClaims(userid int, username string, expirationTime time.Time) *JWT
 	// with username and userid
 	claims := &JWTClaims{
 		Username: username,
-		Userid: userid,
+		Userid:   userid,
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(expirationTime),
 			IssuedAt:  jwt.NewNumericDate(time.Now()),
@@ -116,7 +115,7 @@ func LoginNewDevice(w http.ResponseWriter, r *http.Request, userid int, username
 		fmt.Println("error", err)
 		return
 	}
-	
+
 	accessToken, err := GenerateJWT(userid, username)
 	if err != nil {
 		fmt.Println("error", err)
@@ -126,7 +125,7 @@ func LoginNewDevice(w http.ResponseWriter, r *http.Request, userid int, username
 	setTokens(w, accessToken, refreshToken)
 }
 
-func GenerateRefreshToken( userid int, usernmae string) (string, error) {
+func GenerateRefreshToken(userid int, usernmae string) (string, error) {
 	expirationTime := calcRefreshJWTExpirationTime()
 
 	claims := createJWTClaims(userid, usernmae, expirationTime)
@@ -167,7 +166,7 @@ func setAccessToken(w http.ResponseWriter, accessToken string) {
 		Path:     "/",
 		HttpOnly: true,
 		Secure:   true, // only https
-		MaxAge:   15 * 60, 
+		MaxAge:   15 * 60,
 		SameSite: http.SameSiteStrictMode,
 	})
 }
@@ -187,11 +186,38 @@ func setRefreshToken(w http.ResponseWriter, refreshToken string) {
 func saveRefreshToken(r *http.Request, userid int, token string) error {
 	// insert token, userdata, useragent, ip in database
 	_, err := database.DB.Exec("INSERT INTO tokens (userid, token, ip_last_used, ip_created, number_used, device_name, agent, app_name) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-	userid, token, r.RemoteAddr, r.RemoteAddr, 0, "unnamed device", r.Header.Get("User-Agent"), config.ServerConfig.AppName)
+		userid, token, r.RemoteAddr, r.RemoteAddr, 0, "unnamed device", r.Header.Get("User-Agent"), config.ServerConfig.AppName)
 
 	if err != nil {
 		return err
 	}
 
 	return nil
+}
+
+func checkRefreshToken(r *http.Request, token string) (bool, error) {
+	// var userid int
+	var agent string
+
+	err := database.DB.QueryRow("SELECT agent FROM tokens WHERE token = ?", token).Scan(&agent)
+	if err != nil {
+		return false, err
+	}
+
+	if agent == r.Header.Get("User-Agent") {
+		return true, nil
+	}
+
+	return false, nil
+}
+
+func doesRefreshToeknExist(token string) (bool, error) {
+	var exists bool
+
+	// check in database if the token exists
+	err := database.DB.QueryRow("SELECT EXISTS(SELECT 1 FROM tokens WHERE token = ?)", token).Scan(&exists)
+	if err != nil {
+		return false, err
+	}
+	return exists, nil
 }
