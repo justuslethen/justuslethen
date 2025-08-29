@@ -1,8 +1,8 @@
 package pkg
 
 import (
-	"crypto/rand"
-	"encoding/hex"
+	// "crypto/rand"
+	// "encoding/hex"
 	"fmt"
 	"strconv"
 	"time"
@@ -104,8 +104,14 @@ func ValidateJWT(tokenString string) (*JWTClaims, error) {
 	return claims, nil
 }
 
-func LoginNewDevice(w http.ResponseWriter, userid int, username string) {
+func LoginNewDevice(w http.ResponseWriter, r *http.Request, userid int, username string) {
 	refreshToken, err := GenerateRefreshToken(userid, username)
+	if err != nil {
+		fmt.Println("error", err)
+		return
+	}
+
+	err = saveRefreshToken(r, userid, refreshToken)
 	if err != nil {
 		fmt.Println("error", err)
 		return
@@ -176,4 +182,17 @@ func setRefreshToken(w http.ResponseWriter, refreshToken string) {
 		MaxAge:   30 * 24 * 60 * 60,
 		SameSite: http.SameSiteStrictMode,
 	})
+}
+
+func saveRefreshToken(r *http.Request, userid int, username string, token string) error {
+
+	// insert token, userdata, useragent, ip in database
+	_, err := database.DB.Exec("INSERT INTO tokens (userid, token, username, ip_last_used, ip_created, number_used, agent, app_name) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+	userid, token, userid, r.RemoteAddr, r.RemoteAddr, 0, r.Header.Get("User-Agent"), config.ServerConfig.AppName)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

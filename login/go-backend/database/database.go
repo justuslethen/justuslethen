@@ -74,6 +74,8 @@ func createTokensTable() {
         ip_last_used VARCHAR(20) NOT NULL,
 		ip_created VARCHAR(20) NOT NULL,
 		number_used INT NOT NULL,
+		agent VARCHAR(255) NOT NULL,
+		app_name VARCHAR(20) NOT NULL,
         last_used TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )

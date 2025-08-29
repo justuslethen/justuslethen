@@ -21,6 +21,7 @@ type Config struct {
     TimeoutDuration    string
     LoginAttempts      string
     PasswordMinLen     string
+    AppName            string
 }
 
 // global var
@@ -51,6 +52,8 @@ func LoadConfig() error {
         TimeoutDuration:    os.Getenv("MAX_WRONG_ATTEMPTS"),
         LoginAttempts:      os.Getenv("TIMEOUT_DURATION"),
         PasswordMinLen:     os.Getenv("PASSWORD_MIN_LENGTH"),
+
+        AppName:            os.Getenv("login"),
     }
 
     // no err
