@@ -55,7 +55,7 @@ func GenerateJWT(userid int, username string) (string, error) {
 	JWTKey := config.ServerConfig.JWTKey
 
 	// add sign with JWT secret
-	tokenString, err := token.SignedString(JWTKey)
+	tokenString, err := token.SignedString([]byte(JWTKey))
 	if err != nil {
 		return "", err
 	}
@@ -106,19 +106,19 @@ func ValidateJWT(tokenString string) (*JWTClaims, error) {
 func LoginNewDevice(w http.ResponseWriter, r *http.Request, userid int, username string) {
 	refreshToken, err := GenerateRefreshToken(userid, username)
 	if err != nil {
-		fmt.Println("error", err)
+		fmt.Println("JWT error", err)
 		return
 	}
 
 	err = saveRefreshToken(r, userid, refreshToken)
 	if err != nil {
-		fmt.Println("error", err)
+		fmt.Println("JWT error", err)
 		return
 	}
 
 	accessToken, err := GenerateJWT(userid, username)
 	if err != nil {
-		fmt.Println("error", err)
+		fmt.Println("JWT error", err)
 		return
 	}
 
@@ -133,7 +133,7 @@ func GenerateRefreshToken(userid int, usernmae string) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
 	// signiere mit dem gleichen Secret wie Session-Token
-	tokenString, err := token.SignedString(config.ServerConfig.JWTKey)
+	tokenString, err := token.SignedString([]byte(config.ServerConfig.JWTKey))
 	if err != nil {
 		return "", err
 	}
@@ -157,6 +157,8 @@ func calcRefreshJWTExpirationTime() time.Time {
 func setTokens(w http.ResponseWriter, accessToken, refreshToken string) {
 	setAccessToken(w, accessToken)
 	setRefreshToken(w, refreshToken)
+
+	fmt.Println("setAccessToken and setRefreshToken")
 }
 
 func setAccessToken(w http.ResponseWriter, accessToken string) {
