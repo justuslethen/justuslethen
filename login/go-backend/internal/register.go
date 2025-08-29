@@ -246,7 +246,7 @@ func createUser(data *RegisterRequestForm, r *http.Request) (int, error) {
 		return 0, err
 	}
 
-	result, err := database.DB.Exec("INSERT INTO users (name, username, email, ip_created, password, meta_data, bio) VALUES (?, ?, ?, ?, ?, ?, ?)",
+	result, err := database.DB.Exec("INSERT INTO users (name, username, email, ip_created, password, agent, bio) VALUES (?, ?, ?, ?, ?, ?, ?)",
 		data.Name, data.Username, data.Email, ip, password, userAgent, data.Bio)
 
 	if err != nil {

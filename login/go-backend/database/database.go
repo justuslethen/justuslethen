@@ -53,7 +53,7 @@ func createUserTable() {
         email VARCHAR(100) NOT NULL,
 		ip_created VARCHAR(20) NOT NULL,
 		password VARCHAR(255) NOT NULL,
-		meta_data VARCHAR(255) NOT NULL,
+		agent VARCHAR(255) NOT NULL,
 		bio VARCHAR(100) NOT NULL,
         last_used TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
