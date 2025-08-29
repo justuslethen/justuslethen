@@ -8,7 +8,7 @@ const Test = () => {
     const [data, setData] = useState({});
 
     useEffect(() => {
-        fetch(`${API_URL}/amiloggedin`)
+        fetch(`${API_URL}/api/amiloggedin`)
             .then((res) => res.json())
             .then((data: any) => {
                 setAmILoggedIn(data.amILoggedIn);
