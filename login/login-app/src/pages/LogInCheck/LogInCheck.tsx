@@ -1,4 +1,4 @@
-// import styles from "./LoginCheck.module.css"
+import styles from "./LoginCheck.module.css"
 
 import { useEffect, useState } from "react";
 import { API_URL } from "../../config";
@@ -11,11 +11,12 @@ const LoginCheck = () => {
         fetch(`${API_URL}/api/amiloggedin`)
             .then((res) => res.json())
             .then((data: any) => {
-                setAmILoggedIn(data.amILoggedIn);
+                console.log(data);
+                setAmILoggedIn(data.loggedIn);
                 setData(data.data);
             })
             .catch((err) => {
-                console.error("Error fetching login status:", err);
+                console.error("error fetching login status:", err);
             });
     }, []);
 
@@ -23,13 +24,13 @@ const LoginCheck = () => {
         <>
             {amILoggedIn ? (
                 <>
-                    <p>i am logged in</p>
-                    <p>{JSON.stringify(data)}</p>
+                    <p className={styles.text}>I am logged in</p>
+                    <p className={styles.text}>{JSON.stringify(data)}</p>
                 </>
             ) : (
                 <>
-                    <p>i am not logged in</p>
-                    <p>{JSON.stringify(data)}</p>
+                    <p className={styles.text}>I am not logged in</p>
+                    <p className={styles.text}>{JSON.stringify(data)}</p>
                 </>
             )}
         </>
