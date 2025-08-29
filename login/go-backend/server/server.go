@@ -13,9 +13,6 @@ func Start(addr string) error {
     fmt.Println("server started at", addr)
 
     // APIs
-    // mux.HandleFunc("/", pkg.RootHandler)
-    
-    // mux.HandleFunc("/api/hello", internal.HelloHandler)
     
     // server dist files for frontend
     mux.HandleFunc("/", internal.ServeFrontend)

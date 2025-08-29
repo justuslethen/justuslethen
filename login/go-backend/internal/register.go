@@ -45,6 +45,7 @@ func RegisterUser(w http.ResponseWriter, r *http.Request) {
 	// check if errors struct is empty
 	if errors == (FormPatternErrors{}) {
 		handleApprovedRegister(w, r, &requestData)
+		fmt.Println("handleApprovedRegister")
 		return
 	} else {
 		fmt.Println("failed", errors)
@@ -58,11 +59,13 @@ func handleApprovedRegister(w http.ResponseWriter, r *http.Request, requestData 
 	userid, err := createUser(requestData, r)
 
 	if err != nil {
-		// create and set refresh- and session-token
-		pkg.LoginNewDevice(w, r, userid, requestData.Username)
-		sendRegisterGoodResponse(w, requestData)
-		fmt.Println("success")
+		return
 	}
+
+	// create and set refresh- and session-token
+	pkg.LoginNewDevice(w, r, userid, requestData.Username)
+	sendRegisterGoodResponse(w, requestData)
+	fmt.Println("success")
 }
 
 func decodeJSONBodyToStruct(w http.ResponseWriter, r * http.Request, requestData *RegisterRequestForm) {
@@ -256,5 +259,5 @@ func createUser(data *RegisterRequestForm, r *http.Request) (int, error) {
 		return 0, err
 	}
 
-	return int(userid), err
+	return int(userid), nil
 }
