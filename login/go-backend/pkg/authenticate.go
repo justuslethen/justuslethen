@@ -184,11 +184,10 @@ func setRefreshToken(w http.ResponseWriter, refreshToken string) {
 	})
 }
 
-func saveRefreshToken(r *http.Request, userid int, username string, token string) error {
-
+func saveRefreshToken(r *http.Request, userid int, token string) error {
 	// insert token, userdata, useragent, ip in database
-	_, err := database.DB.Exec("INSERT INTO tokens (userid, token, username, ip_last_used, ip_created, number_used, agent, app_name) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-	userid, token, userid, r.RemoteAddr, r.RemoteAddr, 0, r.Header.Get("User-Agent"), config.ServerConfig.AppName)
+	_, err := database.DB.Exec("INSERT INTO tokens (userid, token, ip_last_used, ip_created, number_used, device_name, agent, app_name) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+	userid, token, r.RemoteAddr, r.RemoteAddr, 0, "unnamed device", r.Header.Get("User-Agent"), config.ServerConfig.AppName)
 
 	if err != nil {
 		return err
