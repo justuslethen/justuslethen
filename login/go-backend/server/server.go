@@ -21,5 +21,7 @@ func Start(addr string) error {
 
     mux.HandleFunc("/api/amiloggedin", internal.SendLogInCheck)
 
+    mux.HandleFunc("/api/email/send-verification-code", )
+
     return http.ListenAndServe(addr, mux)
 }

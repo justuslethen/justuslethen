@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"go-backend/database"
 	"go-backend/pkg"
+	"go-backend/auth"
 	"net/http"
 	"regexp"
 )
@@ -63,7 +64,7 @@ func handleApprovedRegister(w http.ResponseWriter, r *http.Request, requestData 
 	}
 
 	// create and set refresh- and session-token
-	pkg.LoginNewDevice(w, r, userid, requestData.Username)
+	auth.LoginNewDevice(w, r, userid, requestData.Username)
 	sendRegisterGoodResponse(w, requestData)
 	fmt.Println("success")
 }
@@ -240,7 +241,7 @@ func createUser(data *RegisterRequestForm, r *http.Request) (int, error) {
 	// fmt.Println("ip: ", ip)
 	// fmt.Println("userAgent: ", userAgent)
 	fmt.Println("creating user")
-	password, err := pkg.HashPassword(data.Password)
+	password, err := auth.HashPassword(data.Password)
 
 	if err != nil {
 		return 0, err

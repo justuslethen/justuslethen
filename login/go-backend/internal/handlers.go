@@ -5,14 +5,15 @@ import (
 	"net/http"
 	"encoding/json"
 
+	"go-backend/auth"
 	"go-backend/pkg"
 )
 
 func SendLogInCheck(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("login-check")
 
-	token, _ := pkg.GetRefreshTokenCockie(w, r)
-	loggedIn, userid, _ := pkg.CheckRefreshToken(r, token)
+	token, _ := auth.GetRefreshTokenCockie(w, r)
+	loggedIn, userid, _ := auth.CheckRefreshToken(r, token)
 
 	if !loggedIn {
 		return
