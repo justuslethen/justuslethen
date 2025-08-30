@@ -43,8 +43,8 @@ func CheckPassword(hashedPassword, password string) bool {
 	return err == nil
 }
 
-func GenerateJWT(userid int, username string) (string, error) {
-	expirationTime := calcAccessJWTExpirationTime()
+func GenerateAccessToken(userid int, username string) (string, error) {
+	expirationTime := calcAccessTokenExpirationTime()
 
 	// get pointer to claims
 	claims := createJWTClaims(userid, username, expirationTime)
@@ -77,9 +77,9 @@ func createJWTClaims(userid int, username string, expirationTime time.Time) *JWT
 	return claims
 }
 
-func calcAccessJWTExpirationTime() time.Time {
+func calcAccessTokenExpirationTime() time.Time {
 	// convert .env config to int
-	duration, err := strconv.Atoi(config.ServerConfig.JWTExpiration)
+	duration, err := strconv.Atoi(config.ServerConfig.AccessExpiration)
 	if err != nil {
 		fmt.Println("failed to convert config to int!")
 	}
@@ -89,7 +89,7 @@ func calcAccessJWTExpirationTime() time.Time {
 	return expirationTime
 }
 
-func ValidateJWT(tokenString string) (*JWTClaims, error) {
+func ValidateAccessToken(tokenString string) (*JWTClaims, error) {
 	claims := &JWTClaims{}
 
 	token, err := jwt.ParseWithClaims(tokenString, claims, func(t *jwt.Token) (interface{}, error) {
@@ -106,19 +106,19 @@ func ValidateJWT(tokenString string) (*JWTClaims, error) {
 func LoginNewDevice(w http.ResponseWriter, r *http.Request, userid int, username string) {
 	refreshToken, err := GenerateRefreshToken(userid, username)
 	if err != nil {
-		fmt.Println("JWT error", err)
+		fmt.Println("generate refresh token error", err)
 		return
 	}
 
 	err = saveRefreshToken(r, userid, refreshToken)
 	if err != nil {
-		fmt.Println("JWT error", err)
+		fmt.Println("save refresh token error", err)
 		return
 	}
 
-	accessToken, err := GenerateJWT(userid, username)
+	accessToken, err := GenerateAccessToken(userid, username)
 	if err != nil {
-		fmt.Println("JWT error", err)
+		fmt.Println("generate access token error", err)
 		return
 	}
 
@@ -126,7 +126,7 @@ func LoginNewDevice(w http.ResponseWriter, r *http.Request, userid int, username
 }
 
 func GenerateRefreshToken(userid int, usernmae string) (string, error) {
-	expirationTime := calcRefreshJWTExpirationTime()
+	expirationTime := calcRefreshTokenExpirationTime()
 
 	claims := createJWTClaims(userid, usernmae, expirationTime)
 
@@ -141,9 +141,9 @@ func GenerateRefreshToken(userid int, usernmae string) (string, error) {
 	return tokenString, nil
 }
 
-func calcRefreshJWTExpirationTime() time.Time {
+func calcRefreshTokenExpirationTime() time.Time {
 	// convert .env config to int
-	duration, err := strconv.Atoi(config.ServerConfig.RefreshJWTDuration)
+	duration, err := strconv.Atoi(config.ServerConfig.RefreshDuration)
 	if err != nil {
 		fmt.Println("failed to convert config to int!")
 	}
@@ -162,6 +162,7 @@ func setTokens(w http.ResponseWriter, accessToken, refreshToken string) {
 }
 
 func setAccessToken(w http.ResponseWriter, accessToken string) {
+	// duartion := calcAccessTokenDuration()
 	http.SetCookie(w, &http.Cookie{
 		Name:     "access_token",
 		Value:    accessToken,
@@ -174,13 +175,14 @@ func setAccessToken(w http.ResponseWriter, accessToken string) {
 }
 
 func setRefreshToken(w http.ResponseWriter, refreshToken string) {
+	// duartion := calcRefreshTokenDuration()
 	http.SetCookie(w, &http.Cookie{
 		Name:     "refresh_token",
 		Value:    refreshToken,
 		Path:     "/",
 		HttpOnly: true,
 		Secure:   true, // only https
-		MaxAge:   30 * 24 * 60 * 60,
+		MaxAge:   30 * 60 * 24,
 		SameSite: http.SameSiteStrictMode,
 	})
 }
