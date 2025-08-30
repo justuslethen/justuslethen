@@ -24,12 +24,12 @@ const LoginCheck = () => {
         <>
             {amILoggedIn ? (
                 <>
-                    <p className={styles.text}>I am logged in</p>
+                    <p className={styles.text}>You are logged in</p>
                     <p className={styles.text}>{JSON.stringify(data)}</p>
                 </>
             ) : (
                 <>
-                    <p className={styles.text}>I am not logged in</p>
+                    <p className={styles.text}>You are not loged in</p>
                     <p className={styles.text}>{JSON.stringify(data)}</p>
                 </>
             )}
