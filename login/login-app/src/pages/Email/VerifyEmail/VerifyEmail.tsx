@@ -5,11 +5,53 @@ import Container from "../../../components/Container/Container.tsx"
 import Input from "../../../components/Input/Input.tsx"
 import Button from "../../../components/Button/Button.tsx"
 import { t } from "../../../i18n.ts"
+import { API_URL } from "../../../config.ts"
+import { useEffect, useState } from "react"
+import { useNavigate } from "react-router-dom"
 
 
 const VerifyEmail = () => {
-    const user = {
-        email: "email"
+    const navigate = useNavigate();
+
+    const [wasEmailSend, setWasEmailSend] = useState(false);
+    const [email, setEmail] = useState("");
+    const [code, setCode] = useState("");
+
+    useEffect(() => {
+        requestAuthMail();
+    }, [])
+
+    const requestAuthMail = () => {
+        const url = API_URL;
+
+        fetch(url + "/api/email/send-verification-code")
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    setEmail(data.email);
+                    setWasEmailSend(true);
+                }
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }
+
+    const checkVerificationCode = () => {
+        const url = API_URL;
+
+        fetch(url + "/api/email/check-verification-code", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ code: code })
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
     }
 
     return (
@@ -18,16 +60,19 @@ const VerifyEmail = () => {
 
             <div className="content">
                 <Container maxWidth={380}>
-                    <Text text={`${t("email.verify.text")} ${user.email}`} type="p2" center={true} />
+                    <Text text={
+                        wasEmailSend ? t("email.verify.text") + email : t("email.verify.wait-text")
+                    } type="p2" center={true} />
                     <Input
                         label={t("input.verification.label")}
                         placeholder={t("input.verification.placeholder")}
+                        onChange={(e) => { setCode(e.target.value) }}
                     />
                     <Text text={t("email.verify.button.send-again")} type="h3" center={false} onclick={() => { }} />
 
 
-                    <Button text={t("email.verify.button.skip")} color="grey" onclick={() => { }} />
-                    <Button text={t("email.verify.button.verify")} color="black" onclick={() => { }} />
+                    <Button text={t("email.verify.button.skip")} color="grey" onclick={() => { navigate("/") }} />
+                    <Button text={t("email.verify.button.verify")} color="black" onclick={() => { checkVerificationCode() }} />
                 </Container>
             </div>
         </>

@@ -97,7 +97,8 @@
                 "skip": "Überspringen",
                 "send-again": "Code erneut senden"
             },
-            "text": "Der Bestätigungscode wurde an deine E-Mail geschickt: "
+            "text": "Der Bestätigungscode wurde an deine E-Mail geschickt: ",
+            "wait-text": "Warte bis die Bestätigungsmail verschickt wurde..."
         }
     }
 }
