@@ -16,7 +16,7 @@ type Config struct {
     DBHost              string
     ServerPort          string
     JWTKey              string
-    AccessExpiration    string
+    AccessDuration      string
     RefreshDuration     string
     TimeoutDuration     string
     LoginAttempts       string
@@ -47,7 +47,7 @@ func LoadConfig() error {
         
         // app config
         JWTKey:             os.Getenv("JWT_SECRET"),
-        AccessExpiration:   os.Getenv("ACCESS_EXPIRATION"),
+        AccessDuration:     os.Getenv("ACCESS_EXPIRATION"),
         RefreshDuration:    os.Getenv("REFRESH_EXPIRATION"),
         TimeoutDuration:    os.Getenv("MAX_WRONG_ATTEMPTS"),
         LoginAttempts:      os.Getenv("TIMEOUT_DURATION"),

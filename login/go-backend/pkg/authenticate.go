@@ -78,14 +78,16 @@ func createJWTClaims(userid int, username string, expirationTime time.Time) *JWT
 }
 
 func calcAccessTokenExpirationTime() time.Time {
-	// convert .env config to int
-	duration, err := strconv.Atoi(config.ServerConfig.AccessExpiration)
-	if err != nil {
-		fmt.Println("failed to convert config to int!")
-	}
+	duration := calcAccessTokenDuration()
 
-	expirationTime := time.Now().Add(time.Duration(duration) * time.Hour)
+	expirationTime := time.Now().Add(time.Duration(duration))
+	return expirationTime
+}
 
+func calcRefreshTokenExpirationTime() time.Time {
+	duration := calcRefreshTokenDuration()
+
+	expirationTime := time.Now().Add(time.Duration(duration))
 	return expirationTime
 }
 
@@ -141,19 +143,6 @@ func GenerateRefreshToken(userid int, usernmae string) (string, error) {
 	return tokenString, nil
 }
 
-func calcRefreshTokenExpirationTime() time.Time {
-	// convert .env config to int
-	duration, err := strconv.Atoi(config.ServerConfig.RefreshDuration)
-	if err != nil {
-		fmt.Println("failed to convert config to int!")
-	}
-
-	// duration in days
-	expirationTime := time.Now().Add(time.Duration(duration) * 24 * time.Hour)
-
-	return expirationTime
-}
-
 func setTokens(w http.ResponseWriter, accessToken, refreshToken string) {
 	setAccessToken(w, accessToken)
 	setRefreshToken(w, refreshToken)
@@ -162,29 +151,49 @@ func setTokens(w http.ResponseWriter, accessToken, refreshToken string) {
 }
 
 func setAccessToken(w http.ResponseWriter, accessToken string) {
-	// duartion := calcAccessTokenDuration()
+	duartion := calcAccessTokenDuration()
 	http.SetCookie(w, &http.Cookie{
 		Name:     "access_token",
 		Value:    accessToken,
 		Path:     "/",
 		HttpOnly: true,
 		Secure:   true, // only https
-		MaxAge:   15 * 60,
+		MaxAge:   duartion,
 		SameSite: http.SameSiteStrictMode,
 	})
 }
 
 func setRefreshToken(w http.ResponseWriter, refreshToken string) {
-	// duartion := calcRefreshTokenDuration()
+	duartion := calcRefreshTokenDuration()
 	http.SetCookie(w, &http.Cookie{
 		Name:     "refresh_token",
 		Value:    refreshToken,
 		Path:     "/",
 		HttpOnly: true,
 		Secure:   true, // only https
-		MaxAge:   30 * 60 * 24,
+		MaxAge:   duartion,
 		SameSite: http.SameSiteStrictMode,
 	})
+}
+
+func calcAccessTokenDuration() int {
+	// convert .env config to int
+	duration, err := strconv.Atoi(config.ServerConfig.AccessDuration)
+	if err != nil {
+		fmt.Println("failed to convert config to int!")
+	}
+
+	return duration
+}
+
+func calcRefreshTokenDuration() int {
+	// convert .env config to int
+	duration, err := strconv.Atoi(config.ServerConfig.RefreshDuration)
+	if err != nil {
+		fmt.Println("failed to convert config to int!")
+	}
+
+	return duration
 }
 
 func saveRefreshToken(r *http.Request, userid int, token string) error {
