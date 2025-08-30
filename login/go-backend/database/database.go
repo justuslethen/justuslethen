@@ -51,6 +51,7 @@ func createUserTable() {
         name VARCHAR(100) NOT NULL,
         username VARCHAR(100) NOT NULL,
         email VARCHAR(100) NOT NULL,
+		email_verified BOOLEAN NOT NULL DEFAULT FALSE,
 		ip_created VARCHAR(20) NOT NULL,
 		password VARCHAR(255) NOT NULL,
 		agent VARCHAR(255) NOT NULL,
