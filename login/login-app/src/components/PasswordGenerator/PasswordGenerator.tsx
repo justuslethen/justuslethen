@@ -81,7 +81,7 @@ const PasswordGenerator = (props: PasswordGeneratorProps) => {
         charsCount.lowerChars = getRandomIntCrypto(1, random - 1);
         charsCount.numbers = random - charsCount.lowerChars;
 
-        charsCount.specialChars = getRandomIntCrypto(1, PASSWORD_LENGTH - random);
+        charsCount.specialChars = getRandomIntCrypto(1, PASSWORD_LENGTH - random - 1);
         charsCount.upperChars = PASSWORD_LENGTH - random - charsCount.specialChars;
 
         return charsCount;
