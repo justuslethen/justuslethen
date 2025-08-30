@@ -71,12 +71,7 @@ const Register = () => {
     const sendFormular = () => {
         // send the formular data to backend
         const data: any = getFormDataJSON();
-        const res: any = fetchData(data);
-
-        if (res.success) {
-            // handle success
-            navigate("/");
-        }
+        fetchData(data);
     }
 
 
@@ -92,21 +87,20 @@ const Register = () => {
         }).then(response => response.json())
             .then(data => {
                 handleResponse(data);
-
-                return { "success": true, data: data };
             })
             .catch((error) => {
                 handleServerError(error);
-
-                return { "success": false, error: error };
             });
     }
 
 
     const handleResponse = (data: any) => {
         // handle success that come from backend
-        setInputTips(data);
-
+        if (data.status == "success") {
+            navigate("/email/verify-email")
+        } else {
+            setInputTips(data);
+        }
         console.log(data);
     }
 
