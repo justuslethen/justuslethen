@@ -88,5 +88,16 @@
             "insert": "Einsetzen",
             "generate_new": "Neu erstellen"
         }
+    },
+    "email": {
+        "verify": {
+            "title": "E-Mail Verifizieren",
+            "button": {
+                "verify": "Bestätigen",
+                "skip": "Überspringen",
+                "send-again": "Code erneut senden"
+            },
+            "text": "Der Bestätigungscode wurde an deine E-Mail geschickt: "
+        }
     }
 }
