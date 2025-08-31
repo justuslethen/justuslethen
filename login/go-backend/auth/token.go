@@ -258,7 +258,7 @@ func AuthUser(w http.ResponseWriter, r *http.Request) (int, error) {
 	userid, err := authWithAccessToken(w, r)
 
 	if err != nil {
-		// userid, success, err := authWithRefreshToken(w, r);
+		userid, success, err := authWithRefreshToken(w, r);
 	}
 
 	return userid, err
@@ -279,4 +279,19 @@ func authWithAccessToken(w http.ResponseWriter, r *http.Request) (int, error) {
 	}
 
 	return claims.Userid, nil
+}
+
+func authWithRefreshToken(w http.ResponseWriter, r *http.Request) (int, bool, error) {
+	token, found := GetRefreshTokenCockie(w, r)
+
+	// when cockie is not found return no success
+	if !found {
+		http.Redirect(w, r, "/login", http.StatusFound)
+		return 0, false, nil
+	}
+
+	// when cockie was found check validity
+	userid, success, err := CheckRefreshToken(r, token);
+
+	return userid, success, err
 }
