@@ -5,7 +5,6 @@ import (
 	// "encoding/hex"
 	"fmt"
 	"net/http"
-	"strconv"
 	"time"
 
 	"go-backend/config"
@@ -77,14 +76,14 @@ func createJWTClaims(userid int, expirationTime time.Time) *JWTClaims {
 }
 
 func calcAccessTokenExpirationTime() time.Time {
-	duration := calcAccessTokenDuration()
+	duration := config.AuthConfig.AccessDuration
 
 	expirationTime := time.Now().Add(time.Duration(duration))
 	return expirationTime
 }
 
 func calcRefreshTokenExpirationTime() time.Time {
-	duration := calcRefreshTokenDuration()
+	duration := config.AuthConfig.RefreshDuration
 
 	expirationTime := time.Now().Add(time.Duration(duration))
 	return expirationTime
@@ -117,7 +116,7 @@ func LoginNewDevice(w http.ResponseWriter, r *http.Request, userid int, username
 		return
 	}
 
-	accessToken, err := GenerateAccessToken(userid, username)
+	accessToken, err := GenerateAccessToken(userid)
 	if err != nil {
 		fmt.Println("generate access token error", err)
 		return
@@ -150,7 +149,7 @@ func setTokens(w http.ResponseWriter, accessToken, refreshToken string) {
 }
 
 func setAccessToken(w http.ResponseWriter, accessToken string) {
-	duartion := calcAccessTokenDuration()
+	duartion := config.AuthConfig.AccessDuration
 	http.SetCookie(w, &http.Cookie{
 		Name:     "access_token",
 		Value:    accessToken,
@@ -163,7 +162,7 @@ func setAccessToken(w http.ResponseWriter, accessToken string) {
 }
 
 func setRefreshToken(w http.ResponseWriter, refreshToken string) {
-	duartion := calcRefreshTokenDuration()
+	duartion := config.AuthConfig.RefreshDuration
 	http.SetCookie(w, &http.Cookie{
 		Name:     "refresh_token",
 		Value:    refreshToken,
@@ -173,26 +172,6 @@ func setRefreshToken(w http.ResponseWriter, refreshToken string) {
 		MaxAge:   duartion,
 		SameSite: http.SameSiteStrictMode,
 	})
-}
-
-func calcAccessTokenDuration() int {
-	// convert .env config to int
-	duration, err := strconv.Atoi(config.AuthConfig.AccessDuration)
-	if err != nil {
-		fmt.Println("failed to convert config to int!")
-	}
-
-	return duration
-}
-
-func calcRefreshTokenDuration() int {
-	// convert .env config to int
-	duration, err := strconv.Atoi(config.AuthConfig.RefreshDuration)
-	if err != nil {
-		fmt.Println("failed to convert config to int!")
-	}
-
-	return duration
 }
 
 func saveRefreshToken(r *http.Request, userid int, token string) error {

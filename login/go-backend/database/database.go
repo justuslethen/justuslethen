@@ -16,7 +16,7 @@ func ConnectDB() error {
 	config := config.DBConfig
 
 	// login data
-	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", config.DBUser, config.DBPassword, config.DBHost, config.DBPort, config.DBName)
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%v)/%s", config.DBUser, config.DBPassword, config.DBHost, config.DBPort, config.DBName)
 
 	// get connection to sql database
 	database, err := sql.Open("mysql", dsn)

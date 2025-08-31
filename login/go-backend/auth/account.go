@@ -16,7 +16,7 @@ func SendVerificationEmail(w http.ResponseWriter, r *http.Request) {
 	}
 
 	code, err := createEmailVerificationCode(userid)
-	
+	fmt.Println("code", code, err)
 }
 
 func createEmailVerificationCode(userid int) (string, error) {

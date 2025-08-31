@@ -1,13 +1,15 @@
 package main
 
 import (
+	"fmt"
 	"go-backend/config"
-	"go-backend/server"
 	"go-backend/database"
-    // "database/sql"
-    "log"
-    // "net/http"
-    // _ "github.com/go-sql-driver/mysql"
+	"go-backend/server"
+
+	// "database/sql"
+	"log"
+	// "net/http"
+	// _ "github.com/go-sql-driver/mysql"
 )
 
 func main() {
@@ -22,7 +24,9 @@ func main() {
 	}
 
 	// try starting the server with configs
-	addr := ":" + config.ServerConfig.ServerPort
+	portStr := fmt.Sprint(config.ServerConfig.ServerPort)
+	
+	addr := ":" + portStr
     if err := server.Start(addr); err != nil {
 		log.Fatal(err)
     }

@@ -9,11 +9,11 @@ import (
 
 type AuthConfigStruct struct {
     JWTKey         	string
-    AccessDuration 	string
-    RefreshDuration	string
-    TimeoutDuration	string
-    LoginAttempts  	string
-    PasswordMinLen 	string
+    AccessDuration 	int
+    RefreshDuration	int
+    TimeoutDuration	int
+    LoginAttempts  	int
+    PasswordMinLen 	int
 }
 
 // global var
@@ -30,11 +30,11 @@ func loadAuthConfig() error {
 
     AuthConfig = AuthConfigStruct{
         JWTKey:         	os.Getenv("JWT_SECRET"),
-        AccessDuration: 	os.Getenv("ACCESS_EXPIRATION"),
-        RefreshDuration:	os.Getenv("REFRESH_EXPIRATION"),
-        TimeoutDuration:	os.Getenv("MAX_WRONG_ATTEMPTS"),
-        LoginAttempts:  	os.Getenv("TIMEOUT_DURATION"),
-        PasswordMinLen: 	os.Getenv("PASSWORD_MIN_LENGTH"),
+        AccessDuration: 	GetEnvAsInt("ACCESS_EXPIRATION"),
+        RefreshDuration:	GetEnvAsInt("REFRESH_EXPIRATION"),
+        TimeoutDuration:	GetEnvAsInt("MAX_WRONG_ATTEMPTS"),
+        LoginAttempts:  	GetEnvAsInt("TIMEOUT_DURATION"),
+        PasswordMinLen: 	GetEnvAsInt("PASSWORD_MIN_LENGTH"),
     }
 
     // no err
