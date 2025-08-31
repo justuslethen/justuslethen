@@ -67,3 +67,13 @@ func setAllUserDataStruct(username, userid, agent, ip, name, email, bio string) 
 		Bio:       bio,
 	}
 }
+
+func GetUsernameAndEmail(userid int) (string, string, error) {
+	var username, email string
+
+	err := database.DB.QueryRow("SELECT username, email FROM users WHERE userid = ?",
+		userid,
+	).Scan(&username, &email)
+
+	return username, email, err
+}
