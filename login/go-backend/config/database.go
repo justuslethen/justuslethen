@@ -11,7 +11,7 @@ type DBConfigStruct struct {
     DBUser    	string
     DBPassword	string
     DBName    	string
-    DBPort    	string
+    DBPort    	int
     DBHost    	string
 }
 
@@ -30,7 +30,7 @@ func loadDBConfig() error {
     DBConfig = DBConfigStruct{
         DBUser:    	os.Getenv("DB_USER"),
         DBPassword:	os.Getenv("DB_PASSWORD"),
-        DBPort:    	os.Getenv("DB_PORT"),
+        DBPort:    	GetEnvAsInt("DB_PORT"),
         DBName:    	os.Getenv("DB_NAME"),
         DBHost:    	os.Getenv("DB_HOST"),
     }

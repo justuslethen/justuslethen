@@ -8,10 +8,10 @@ import (
 )
 
 type MailerConfigStruct struct {
-    Host		string
-    Port		string
-    Username	string
-    Password	string
+    Host     string
+    Port     int
+    Username string
+    Password string
 }
 
 // global var
@@ -26,11 +26,12 @@ func loadMailerConfig() error {
         return err
     }
 
+
     MailerConfig = MailerConfigStruct{
-        Host:		os.Getenv("EMAIL_HOST"),
-        Port:		os.Getenv("EMAIL_PORT"),
-        Username:	os.Getenv("EMAIL_USERNAME"),
-        Password:	os.Getenv("EMAIL_PASSOWORD"),
+        Host:     os.Getenv("EMAIL_HOST"),
+        Port:     GetEnvAsInt("EMAIL_PORT"),
+        Username: os.Getenv("EMAIL_USERNAME"),
+        Password: os.Getenv("EMAIL_PASSOWORD"),
     }
 
     // no err
