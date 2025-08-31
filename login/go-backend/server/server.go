@@ -4,6 +4,7 @@ import (
     "fmt"
     "net/http"
     "go-backend/internal"
+    "go-backend/auth"
     // "go-backend/pkg"
 )
 
@@ -21,7 +22,7 @@ func Start(addr string) error {
 
     mux.HandleFunc("/api/amiloggedin", internal.SendLogInCheck)
 
-    mux.HandleFunc("/api/email/send-verification-code", )
+    mux.HandleFunc("/api/email/send-verification-code", auth.SendVerificationEmail)
 
     return http.ListenAndServe(addr, mux)
 }
