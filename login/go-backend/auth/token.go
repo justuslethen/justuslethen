@@ -43,11 +43,11 @@ func CheckPassword(hashedPassword, password string) bool {
 	return err == nil
 }
 
-func GenerateAccessToken(userid int, username string) (string, error) {
+func GenerateAccessToken(userid int) (string, error) {
 	expirationTime := calcAccessTokenExpirationTime()
 
 	// get pointer to claims
-	claims := createJWTClaims(userid, username, expirationTime)
+	claims := createJWTClaims(userid, expirationTime)
 
 	// create new jwt token with claims
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
@@ -62,12 +62,11 @@ func GenerateAccessToken(userid int, username string) (string, error) {
 	return tokenString, nil
 }
 
-func createJWTClaims(userid int, username string, expirationTime time.Time) *JWTClaims {
+func createJWTClaims(userid int, expirationTime time.Time) *JWTClaims {
 	// create JWT claims
-	// with username and userid
+	// with userid
 	claims := &JWTClaims{
-		Username: username,
-		Userid:   userid,
+		Userid: userid,
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(expirationTime),
 			IssuedAt:  jwt.NewNumericDate(time.Now()),
@@ -130,7 +129,7 @@ func LoginNewDevice(w http.ResponseWriter, r *http.Request, userid int, username
 func GenerateRefreshToken(userid int, usernmae string) (string, error) {
 	expirationTime := calcRefreshTokenExpirationTime()
 
-	claims := createJWTClaims(userid, usernmae, expirationTime)
+	claims := createJWTClaims(userid, expirationTime)
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
@@ -254,14 +253,22 @@ func GetAccessTokenCockie(w http.ResponseWriter, r *http.Request) (string, error
 	return cookie.Value, nil
 }
 
-func AuthUser(w http.ResponseWriter, r *http.Request) (int, error) {
+func AuthUser(w http.ResponseWriter, r *http.Request) (int, bool, error) {
 	userid, err := authWithAccessToken(w, r)
 
 	if err != nil {
-		userid, success, err := authWithRefreshToken(w, r);
+		userid, success, err := authWithRefreshToken(w, r)
+
+		if !success || err != nil {
+			http.Redirect(w, r, "/login", http.StatusFound)
+			return 0, success, err
+		} else {
+			// err := refreshAccessToken(userid)
+		}
+
 	}
 
-	return userid, err
+	return userid, success, err
 }
 
 func authWithAccessToken(w http.ResponseWriter, r *http.Request) (int, error) {
@@ -286,12 +293,25 @@ func authWithRefreshToken(w http.ResponseWriter, r *http.Request) (int, bool, er
 
 	// when cockie is not found return no success
 	if !found {
-		http.Redirect(w, r, "/login", http.StatusFound)
 		return 0, false, nil
 	}
 
 	// when cockie was found check validity
-	userid, success, err := CheckRefreshToken(r, token);
+	userid, success, err := CheckRefreshToken(r, token)
 
 	return userid, success, err
+}
+
+func refreshAccessToken(w http.ResponseWriter, userid int) error {
+	// generate new accesstoken and set it as cockie
+
+	token, err := GenerateAccessToken(userid)
+
+	if err != nil {
+		return err
+	}
+
+	setAccessToken(w, token)
+
+	return nil
 }
