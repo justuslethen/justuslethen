@@ -40,6 +40,7 @@ func setupDatabase() {
 	createTokensTable()
 	createLoginAttempts()
 	createAPIKeysTable()
+	create2FACodesTable()
 
 	fmt.Println("created tables")
 }
@@ -114,5 +115,20 @@ func createAPIKeysTable() {
 	`)
 	if err != nil {
 		log.Fatal("Failed creating API_keys table:", err)
+	}
+}
+
+func create2FACodesTable() {
+	_, err := DB.Exec(`
+    CREATE TABLE IF NOT EXISTS 2_fa_codes (
+        codeid INT AUTO_INCREMENT PRIMARY KEY,
+		code VARCHAR(4) NOT NULL,
+		userid INT NOT NULL,
+		was_used BOOLEAN DEFAULT FALSE,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+	`)
+	if err != nil {
+		log.Fatal("Failed creating 2FACodes table:", err)
 	}
 }
