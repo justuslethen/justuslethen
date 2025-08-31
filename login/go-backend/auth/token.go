@@ -208,24 +208,24 @@ func saveRefreshToken(r *http.Request, userid int, token string) error {
 	return nil
 }
 
-func CheckRefreshToken(r *http.Request, token string) (bool, int, error) {
+func CheckRefreshToken(r *http.Request, token string) (int, bool, error) {
 	// var userid int
 	var userid int
 	var agent string
 
 	err := database.DB.QueryRow("SELECT agent, userid FROM tokens WHERE token = ?", token).Scan(&agent, &userid)
 	if err != nil {
-		return false, 0, err
+		return 0, false, err
 	}
 
 	if agent == r.Header.Get("User-Agent") {
-		return true, userid, nil
+		return userid, true, nil
 	}
 
-	return false, 0, nil
+	return 0, false, nil
 }
 
-func doesRefreshToeknExist(token string) (bool, error) {
+func doesRefreshTokenExist(token string) (bool, error) {
 	var exists bool
 
 	// check in database if the token exists
@@ -245,11 +245,22 @@ func GetRefreshTokenCockie(w http.ResponseWriter, r *http.Request) (string, bool
 	return cookie.Value, true
 }
 
-func GetAccessTokenCockie(w http.ResponseWriter, r *http.Request) (string, bool) {
+func GetAccessTokenCockie(w http.ResponseWriter, r *http.Request) (string, error) {
 	cookie, err := r.Cookie("access_token")
 	if err != nil {
 		// http.Error(w, "No access token found", http.StatusUnauthorized)
-		return "", false
+		return "", err
 	}
-	return cookie.Value, true
+	return cookie.Value, nil
 }
+
+func AuthUser(w http.ResponseWriter, r *http.Request) (int, error) {
+	// userid, err := authWithAccessToken(w, r)
+
+	if err != nil {
+		// userid, success, err := authWithRefreshToken(w, r);
+	}
+
+	return userid, err
+}
+
