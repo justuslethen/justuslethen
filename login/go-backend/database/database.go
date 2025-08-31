@@ -13,7 +13,7 @@ var DB *sql.DB
 
 func ConnectDB() error {
 	// get server config with db config
-	config := config.ServerConfig
+	config := config.DBConfig
 
 	// login data
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", config.DBUser, config.DBPassword, config.DBHost, config.DBPort, config.DBName)

@@ -52,7 +52,7 @@ func GenerateAccessToken(userid int) (string, error) {
 	// create new jwt token with claims
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
-	JWTKey := config.ServerConfig.JWTKey
+	JWTKey := config.AuthConfig.JWTKey
 
 	// add sign with JWT secret
 	tokenString, err := token.SignedString([]byte(JWTKey))
@@ -94,7 +94,7 @@ func ValidateAccessToken(tokenString string) (*JWTClaims, error) {
 	claims := &JWTClaims{}
 
 	token, err := jwt.ParseWithClaims(tokenString, claims, func(t *jwt.Token) (interface{}, error) {
-		return config.ServerConfig.JWTKey, nil
+		return config.AuthConfig.JWTKey, nil
 	})
 
 	if err != nil || !token.Valid {
@@ -134,7 +134,7 @@ func GenerateRefreshToken(userid int, usernmae string) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
 	// signiere mit dem gleichen Secret wie Session-Token
-	tokenString, err := token.SignedString([]byte(config.ServerConfig.JWTKey))
+	tokenString, err := token.SignedString([]byte(config.AuthConfig.JWTKey))
 	if err != nil {
 		return "", err
 	}
@@ -177,7 +177,7 @@ func setRefreshToken(w http.ResponseWriter, refreshToken string) {
 
 func calcAccessTokenDuration() int {
 	// convert .env config to int
-	duration, err := strconv.Atoi(config.ServerConfig.AccessDuration)
+	duration, err := strconv.Atoi(config.AuthConfig.AccessDuration)
 	if err != nil {
 		fmt.Println("failed to convert config to int!")
 	}
@@ -187,7 +187,7 @@ func calcAccessTokenDuration() int {
 
 func calcRefreshTokenDuration() int {
 	// convert .env config to int
-	duration, err := strconv.Atoi(config.ServerConfig.RefreshDuration)
+	duration, err := strconv.Atoi(config.AuthConfig.RefreshDuration)
 	if err != nil {
 		fmt.Println("failed to convert config to int!")
 	}
