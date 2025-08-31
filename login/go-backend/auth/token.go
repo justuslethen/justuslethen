@@ -255,17 +255,29 @@ func GetAccessTokenCockie(w http.ResponseWriter, r *http.Request) (string, error
 
 func AuthUser(w http.ResponseWriter, r *http.Request) (int, bool, error) {
 	userid, err := authWithAccessToken(w, r)
+	success := err == nil
 
 	if err != nil {
+		// if access-token is not valid
+		// check refresh-token
+
 		userid, success, err := authWithRefreshToken(w, r)
 
+		// if refresh-token is valid create new access-token
+
 		if !success || err != nil {
+			// redirect to login page
 			http.Redirect(w, r, "/login", http.StatusFound)
-			return 0, success, err
-		} else {
-			// err := refreshAccessToken(userid)
+
+			return 0, false, err
 		}
 
+		err = refreshAccessToken(w, userid)
+		if err != nil {
+			return 0, false, err
+		}
+
+		return userid, true, err
 	}
 
 	return userid, success, err
