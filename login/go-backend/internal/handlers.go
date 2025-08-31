@@ -13,7 +13,7 @@ func SendLogInCheck(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("login-check")
 
 	token, _ := auth.GetRefreshTokenCockie(w, r)
-	loggedIn, userid, _ := auth.CheckRefreshToken(r, token)
+	userid, loggedIn, _ := auth.CheckRefreshToken(r, token)
 
 	if !loggedIn {
 		return
