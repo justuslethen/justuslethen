@@ -10,9 +10,13 @@ import (
 )
 
 func SendVerificationEmail(w http.ResponseWriter, r *http.Request) {
-	userid, err := AuthUser(w, r)
+	userid, success, err := AuthUser(w, r)
+	if !success || err != nil {
+		return
+	}
 
 	code, err := createEmailVerificationCode(userid)
+	
 }
 
 func createEmailVerificationCode(userid int) (string, error) {
