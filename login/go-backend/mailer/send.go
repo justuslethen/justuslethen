@@ -5,14 +5,22 @@ import (
 	"gopkg.in/gomail.v2"
 )
 
-func SendHTMLEmail(to, subject, htmlBody string) error {
-	m := gomail.NewMessage()
-	m.SetHeader("From", "deine-email@example.com")
-	m.SetHeader("To", to)
-	m.SetHeader("Subject", subject)
-	m.SetBody("text/html", htmlBody)
+type Email struct {
+	RecieverAddr 	string
+	Subject			string
+	HtmlBody 		string
+}
 
+
+func SendHTMLEmail(email Email) error {
 	c := config.MailerConfig
+
+	// build email
+	m := gomail.NewMessage()
+	m.SetHeader("From", c.Username)
+	m.SetHeader("To", email.RecieverAddr)
+	m.SetHeader("Subject", email.Subject)
+	m.SetBody("text/html", email.HtmlBody)
 
 	d := gomail.NewDialer(c.Host, c.Port, c.Username, c.Password)
 
