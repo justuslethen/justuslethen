@@ -12,7 +12,7 @@ import (
 
 func main() {
 	// load configs into global var "ServerConfig" in pkg "configs"
-	err := config.LoadConfig()
+	err := config.LoadAllConfigs()
 	if err != nil {
 		log.Fatalf("Error loading config: %v", err)
 	}
