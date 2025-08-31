@@ -255,7 +255,7 @@ func GetAccessTokenCockie(w http.ResponseWriter, r *http.Request) (string, error
 }
 
 func AuthUser(w http.ResponseWriter, r *http.Request) (int, error) {
-	// userid, err := authWithAccessToken(w, r)
+	userid, err := authWithAccessToken(w, r)
 
 	if err != nil {
 		// userid, success, err := authWithRefreshToken(w, r);
@@ -264,3 +264,19 @@ func AuthUser(w http.ResponseWriter, r *http.Request) (int, error) {
 	return userid, err
 }
 
+func authWithAccessToken(w http.ResponseWriter, r *http.Request) (int, error) {
+	token, err := GetAccessTokenCockie(w, r)
+
+	if err != nil {
+		return 0, err
+	}
+
+	// returns JWT claims with userid in it
+	claims, err := ValidateAccessToken(token)
+
+	if err != nil {
+		return 0, err
+	}
+
+	return claims.Userid, nil
+}
