@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"math/big"
 	"go-backend/database"
+	"go-backend/mailer"
 
 	"net/http"
 )
@@ -27,6 +28,8 @@ func createEmailVerificationCode(userid int) (string, error) {
 		return "", err
 	}
 
+	mailer.SendVerificationEmail(userid, code)
+
 	return code, nil
 }
 
@@ -41,7 +44,7 @@ func create2FACode() string {
 }
 
 func saveEmailVerificationCode(code string, userid int) error {
-	_, err := database.DB.Exec("INSERT INTO tokens (code, userid) VALUES (?, ?, ?)",
+	_, err := database.DB.Exec("INSERT INTO 2_fa_codes (code, userid) VALUES (?, ?)",
 		code, userid)
 
 	if err != nil {
