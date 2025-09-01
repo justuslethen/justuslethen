@@ -1,5 +1,19 @@
 {{ define "content" }}
-  <h1>Hello, {{ .Username }}</h1>
-  <p>Your verification code is: <strong>{{ .Code }}</strong></p>
-  <!-- <a href="#" class="btn">Verify</a> -->
+<div class="header">
+    <div class="content">
+        <h2>Account Center</h2>
+    </div>
+</div>
+
+<div class="content">
+    <h1>Hello, {{ .Username }}</h1>
+    <p>Your verification code is:</p>
+    <div class="code">
+        <strong>
+            {{ .Code }}
+        </strong>
+    </div>
+    <p>To finish setting up your account </p>
+    <!-- <a href="#" class="btn">Verify</a> -->
+</div>
 {{ end }}
