@@ -30,7 +30,6 @@ const VerifyEmail = () => {
                 if (data.success) {
                     setEmail(data.email);
                     setWasEmailSend(true);
-
                 }
                 setIsLoading(false);
             })
@@ -66,9 +65,9 @@ const VerifyEmail = () => {
 
             <div className="content">
                 <Container maxWidth={380}>
-                    <Text text={
-                        wasEmailSend ? t("email.verify.text") + email : t("email.verify.wait-text")
-                    } type="p1" center={true} />
+                    {wasEmailSend ? (
+                        <Text text={t("email.verify.text") + email} type="p1" center={true} />
+                    ) : null}
                     <Input
                         label={t("input.verification.label")}
                         placeholder={t("input.verification.placeholder")}
