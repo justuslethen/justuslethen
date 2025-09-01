@@ -51,7 +51,7 @@ body {
 @media (prefers-color-scheme: dark) {
   :root {
     --main-background: #000000;
-    --container-shadow: #00000039;
+    --container-shadow: #dfdfdf39;
     --text-1: #ffffff;
     --text-2: #d8d8d8;
     --text-3: #bfbfbf;
