@@ -4,6 +4,7 @@ import Text from "../../../components/Text/Text.tsx"
 import Container from "../../../components/Container/Container.tsx"
 import Input from "../../../components/Input/Input.tsx"
 import Button from "../../../components/Button/Button.tsx"
+import LoadingScreen from "../../../components/LoadingScreen/LoadingScreen.tsx"
 import { t } from "../../../i18n.ts"
 import { API_URL } from "../../../config.ts"
 import { useState } from "react"
@@ -16,10 +17,12 @@ const VerifyEmail = () => {
     const [wasEmailSend, setWasEmailSend] = useState(false);
     const [email, setEmail] = useState("");
     const [code, setCode] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
 
 
     const requestAuthMail = () => {
         const url = API_URL;
+        setIsLoading(true);
 
         fetch(url + "/api/email/send-verification-code")
             .then(response => response.json())
@@ -27,7 +30,9 @@ const VerifyEmail = () => {
                 if (data.success) {
                     setEmail(data.email);
                     setWasEmailSend(true);
+
                 }
+                setIsLoading(false);
             })
             .catch((error) => {
                 console.log(error);
@@ -53,13 +58,17 @@ const VerifyEmail = () => {
 
     return (
         <>
+            {isLoading ? (
+                <LoadingScreen />
+            ) : null}
+
             <Text text={t("email.verify.title")} type="h2" center={true} />
 
             <div className="content">
                 <Container maxWidth={380}>
                     <Text text={
                         wasEmailSend ? t("email.verify.text") + email : t("email.verify.wait-text")
-                    } type="p2" center={true} />
+                    } type="p1" center={true} />
                     <Input
                         label={t("input.verification.label")}
                         placeholder={t("input.verification.placeholder")}
