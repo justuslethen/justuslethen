@@ -7,7 +7,7 @@ import Button from "../../../components/Button/Button.tsx"
 import LoadingScreen from "../../../components/LoadingScreen/LoadingScreen.tsx"
 import { t } from "../../../i18n.ts"
 import { API_URL } from "../../../config.ts"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 
 
@@ -19,6 +19,10 @@ const VerifyEmail = () => {
     const [code, setCode] = useState("");
     const [isLoading, setIsLoading] = useState(false);
 
+
+    useEffect(()=> {
+        requestAuthMail();
+    }, []);
 
     const requestAuthMail = () => {
         const url = API_URL;
