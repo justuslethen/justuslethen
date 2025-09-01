@@ -78,14 +78,14 @@ func createJWTClaims(userid int, expirationTime time.Time) *JWTClaims {
 func calcAccessTokenExpirationTime() time.Time {
 	duration := config.AuthConfig.AccessDuration
 
-	expirationTime := time.Now().Add(time.Duration(duration))
+	expirationTime := time.Now().Add(time.Duration(duration) * time.Second)
 	return expirationTime
 }
 
 func calcRefreshTokenExpirationTime() time.Time {
 	duration := config.AuthConfig.RefreshDuration
 
-	expirationTime := time.Now().Add(time.Duration(duration))
+	expirationTime := time.Now().Add(time.Duration(duration) * time.Second)
 	return expirationTime
 }
 
