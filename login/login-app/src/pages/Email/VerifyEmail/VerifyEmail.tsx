@@ -6,7 +6,7 @@ import Input from "../../../components/Input/Input.tsx"
 import Button from "../../../components/Button/Button.tsx"
 import { t } from "../../../i18n.ts"
 import { API_URL } from "../../../config.ts"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 
 
@@ -17,9 +17,6 @@ const VerifyEmail = () => {
     const [email, setEmail] = useState("");
     const [code, setCode] = useState("");
 
-    useEffect(() => {
-        requestAuthMail();
-    }, [])
 
     const requestAuthMail = () => {
         const url = API_URL;
@@ -68,8 +65,7 @@ const VerifyEmail = () => {
                         placeholder={t("input.verification.placeholder")}
                         onChange={(e) => { setCode(e.target.value) }}
                     />
-                    <Text text={t("email.verify.button.send-again")} type="h3" center={false} onclick={() => { }} />
-
+                    <Text text={t("email.verify.button.send-again")} type="h3" center={false} onclick={() => { requestAuthMail() }} />
 
                     <Button text={t("email.verify.button.skip")} color="grey" onclick={() => { navigate("/") }} />
                     <Button text={t("email.verify.button.verify")} color="black" onclick={() => { checkVerificationCode() }} />
