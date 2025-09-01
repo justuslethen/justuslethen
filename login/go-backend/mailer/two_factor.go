@@ -12,11 +12,11 @@ type VerificationEmailData struct {
 }
 
 
-func SendVerificationEmail(userid int, code string) {
+func SendVerificationEmail(userid int, code string) (string, error) {
     username, emailAddress, err := pkg.GetUsernameAndEmail(userid)
     if err != nil {
         log.Println("error while loading userdata", err)
-        return
+        return "", err
     }
 
     data := VerificationEmailData{
@@ -27,7 +27,7 @@ func SendVerificationEmail(userid int, code string) {
     body, err := parseHtmlAndStyle("verification_email.html", data)
     if err != nil {
         log.Println("error while loading templates:", err)
-        return
+        return "", err
     }
 
 
@@ -38,4 +38,6 @@ func SendVerificationEmail(userid int, code string) {
     }
 
     SendHTMLEmail(email)
+
+    return emailAddress, nil
 }
