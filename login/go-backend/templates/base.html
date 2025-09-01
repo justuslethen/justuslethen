@@ -1,15 +1,124 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-  <meta charset="UTF-8">
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      color: #333;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <style>
+        :root {
+            --main-background: #FFFFFF;
+            --container-shadow: #00000039;
+            --text-1: #000000;
+            --text-2: #323232;
+            --text-3: #4F4F4F;
+            --text-4: #727272;
+            --grey-1: #DEDEDE;
+            --grey-4: #797979;
+            --grey-soft-1: #f0f0f0;
+
+            --orange-text: #FF951B;
+            --orange-soft: #FFF4D7;
+            --blue-text: #4F8CFF;
+            --blue-soft: #E3F3FF;
+            --purple-text: #AB1BFF;
+            --purple-soft: #F2E7FF;
+            --green-text: #1ADB13;
+            --green-soft: #E1FFD7;
+            --grey-text: #373737;
+            --grey-soft: #F9F9F9;
+            --black-text: #FFFFFF;
+            --black-soft: #000000;
+            --white-text: #707070;
+            --white-soft: #FFFFFF;
+
+            --red-soft: #FFEEEE;
+            --red: #FF9292;
+            --red-text: #E82626;
+
+            --user-blue-1: #00CCFF;
+            --user-blue-2: #3B93FF;
+            --user-purple: #9C5AFF;
+            --user-pink: #EC19FF;
+            --user-red: #FF1B1B;
+            --user-orange: #FFA600;
+            --user-green: #21F019;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --main-background: #000000;
+                --container-shadow: #00000039;
+                --text-1: #ffffff;
+                --text-2: #d8d8d8;
+                --text-3: #bfbfbf;
+                --text-4: #bdbdbd;
+                --grey-1: #3d3d3d;
+                --grey-4: #9a9a9a;
+                --grey-soft-1: #252525;
+
+                --orange-text: #FF951B;
+                --orange-soft: #362701;
+                --blue-text: #4F8CFF;
+                --blue-soft: #0f283b;
+                --purple-text: #AB1BFF;
+                --purple-soft: #271142;
+                --green-text: #1ADB13;
+                --green-soft: #102b07;
+                --grey-text: #e8e8e8;
+                --grey-soft: #232323;
+                --black-text: #000000;
+                --black-soft: #ffffff;
+                --white-text: #ffffff;
+                --white-soft: #000000;
+
+                --red-soft: #532121;
+                --red: #af3c3c;
+                --red-text: #ff8a8a;
+            }
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: var(--main-background);
+            color: var(--text-1);
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            gap: 32px;
+        }
+
+        .code {
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 14px;
+
+            background-color: var(--grey-soft);
+            font-size: 20px;
+        }
+
+        .content {
+            max-width: 1000px;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            
+            width: 100%;
+            box-sizing: border-box;
+            background-color: var(--grey-soft-1);
+            display: flex;
+            padding: 24px;
+        }
+    </style>
 </head>
+
 <body>
-  {{ block "content" . }}{{ end }}
+    {{ block "content" . }}{{ end }}
 </body>
+
 </html>
