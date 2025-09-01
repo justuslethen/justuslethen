@@ -1,8 +1,7 @@
 package mailer
 
 import (
-    "bytes"
-    "html/template"
+    // "bytes"
     "log"
     "go-backend/pkg"
 )
@@ -25,22 +24,17 @@ func SendVerificationEmail(userid int, code string) {
         Code:     code,
     }
 
-    tmpl, err := template.ParseFiles("templates/verification_email.html")
+    body, err := parseHtmlAndStyle("verification_email.html", data)
     if err != nil {
         log.Println("error while loading templates:", err)
         return
     }
 
-    var body bytes.Buffer
-    if err := tmpl.Execute(&body, data); err != nil {
-        log.Println("error while rendering templates:", err)
-        return
-    }
 
     email := Email{
         RecieverAddr: emailAddress,
         Subject:      "Your verification code",
-        HtmlBody:     body.String(),
+        HtmlBody:     body,
     }
 
     SendHTMLEmail(email)
