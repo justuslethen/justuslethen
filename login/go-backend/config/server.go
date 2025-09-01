@@ -10,6 +10,7 @@ import (
 type ServerConfigStruct struct {
     ServerPort  int
     AppName     string
+    ServerUrl   string
 }
 
 // global var
@@ -26,7 +27,8 @@ func loadServerConfig() error {
 
     ServerConfig = ServerConfigStruct{
         ServerPort: GetEnvAsInt("SERVER_PORT"),
-        AppName:    os.Getenv("login"),
+        AppName:    os.Getenv("APP_NAME"),
+        ServerUrl:  os.Getenv("SERVER_URL"),
     }
 
     // no err
