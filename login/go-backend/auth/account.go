@@ -2,11 +2,11 @@ package auth
 
 import (
 	"crypto/rand"
+	"encoding/json"
 	"fmt"
-	"math/big"
 	"go-backend/database"
 	"go-backend/mailer"
-	"encoding/json"
+	"math/big"
 
 	"net/http"
 )
@@ -29,7 +29,7 @@ func SendVerificationEmail(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(map[string]any{
 		"success": true,
-		"email": email,
+		"email":   email,
 	})
 }
 
@@ -69,3 +69,86 @@ func saveEmailVerificationCode(code string, userid int) error {
 
 	return nil
 }
+
+func VerifyEmailWithCode(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("chack email verification code")
+	userid, success, err := AuthUser(w, r)
+	if !success || err != nil {
+		fmt.Println("not authenticated", err)
+		return
+	}
+
+	code, err := getCodeFromBody(w, r)
+	if err != nil {
+		fmt.Println("error get code from body", err)
+		return
+	}
+
+	valid, err := validateVerificationCode(userid, code)
+	if err != nil {
+		fmt.Println("not valid", err)
+		return
+	}
+
+	if valid {
+		err := setEmailVerifiedInDB(userid)
+		if err != nil {
+			return
+		}
+
+		fmt.Println("email verified")
+	}
+
+	// verifyEmailSendGoodResponse(w)
+}
+
+func getCodeFromBody(w http.ResponseWriter, r *http.Request) (string, error) {
+	var body struct {
+		Code string `json:"code"`
+	}
+	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return "", err
+	}
+	return body.Code, nil
+}
+
+func validateVerificationCode(userid int, code string) (bool, error) {
+    var valid bool
+    err := database.DB.QueryRow(`
+        SELECT EXISTS(
+            SELECT 1 FROM 2_fa_codes
+            WHERE userid = ? AND code = ? AND created_at > NOW() - INTERVAL 15 MINUTE
+        )`, userid, code).Scan(&valid)
+    if err != nil {
+        return false, err
+    }
+
+    return valid, nil
+}
+
+func setEmailVerifiedInDB(userid int) error {
+	_, err := database.DB.Exec("UPDATE users SET email_verified = ? WHERE userid = ?", true, userid)
+	if err != nil {
+		fmt.Println("error updating email_verified:", err)
+		return err
+	}
+
+	return nil
+}
+
+// func verifyEmailSendGoodResponse(w http.ResponseWriter) {
+// 	w.Header().Set("Content-Type", "application/json")
+// 	w.WriteHeader(http.StatusOK)
+// 	json.NewEncoder(w).Encode(map[string]any{
+// 		"success": true,
+// 	})
+// }
+
+// func verifyEmailSendBadResponse(w http.ResponseWriter) {
+// 	w.Header().Set("Content-Type", "application/json")
+// 	w.WriteHeader(http.StatusOK)
+// 	json.NewEncoder(w).Encode(map[string]any{
+// 		"success": true,
+// 	})
+// }
