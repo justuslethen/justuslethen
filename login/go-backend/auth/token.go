@@ -246,7 +246,7 @@ func AuthUser(w http.ResponseWriter, r *http.Request) (int, bool, error) {
 
 		if !success || err != nil {
 			// redirect to login page
-			http.Redirect(w, r, "/login", http.StatusFound)
+			http.Error(w, "Unauthorized", http.StatusUnauthorized)
 
 			return 0, false, err
 		}
