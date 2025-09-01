@@ -6,6 +6,7 @@ import (
 	"math/big"
 	"go-backend/database"
 	"go-backend/mailer"
+	"encoding/json"
 
 	"net/http"
 )
@@ -16,11 +17,23 @@ func SendVerificationEmail(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	code, err := createEmailVerificationCode(userid)
-	fmt.Println("code", code, err)
+	email, err := createEmailVerificationEmail(userid)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		fmt.Println("error sending email-verification email")
+	}
+
+	fmt.Println("email-verification email was send")
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(map[string]any{
+		"success": true,
+		"email": email,
+	})
 }
 
-func createEmailVerificationCode(userid int) (string, error) {
+func createEmailVerificationEmail(userid int) (string, error) {
 	code := create2FACode()
 
 	err := saveEmailVerificationCode(code, userid)
@@ -28,9 +41,12 @@ func createEmailVerificationCode(userid int) (string, error) {
 		return "", err
 	}
 
-	mailer.SendVerificationEmail(userid, code)
+	email, err := mailer.SendVerificationEmail(userid, code)
+	if err != nil {
+		return "", err
+	}
 
-	return code, nil
+	return email, nil
 }
 
 func create2FACode() string {
