@@ -6,7 +6,7 @@ app = Flask(__name__)
 
 @app.route("/", methods=["GET"])
 def redirect_to_card_list():
-    return redirect("/card-list")
+    return redirect("/folder/1")
 
 
 @app.route("/login", methods=["GET"])
