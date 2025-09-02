@@ -1,4 +1,4 @@
-const server_address = "http://127.0.0.1:4211";
+const server_address = "http://192.168.178.144:4211";
 let message_id = 0;
 
 function create_message(message) {
