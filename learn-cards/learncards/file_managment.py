@@ -97,7 +97,7 @@ def create_card_table(cur):
         CREATE TABLE IF NOT EXISTS cards (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT NOT NULL,
-        path TEXT NOT NULL,
+        folder_id INT NOT NULL,
         user_id INTEGER NOT NULL,
         front TEXT NOT NULL,
         back TEXT NOT NULL
@@ -183,7 +183,7 @@ def create_finished_sessions_table(cur):
 def create_folders_table(cur):
     query = """
         CREATE TABLE IF NOT EXISTS folders (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            folder_id INTEGER PRIMARY KEY AUTOINCREMENT,
             path TEXT NOT NULL,
             name TEXT NOT NULL
         );
@@ -191,3 +191,12 @@ def create_folders_table(cur):
 
     response = cur.execute(query)
     response.fetchall()
+
+
+def create_route_folder(cur):
+    cur.execute("SELECT * FROM folders WHERE path = '/'")
+    res = cur.fetchall()
+    if len(res) > 0:
+        return
+    
+    cur.execute("INSERT INTO folders (path, name) VALUES ('/', 'route')")
