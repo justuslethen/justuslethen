@@ -22,3 +22,13 @@ def get_inner_folder_path_by_id(cur, folder_id):
     res = cur.fetchall()
     
     return res[0][0] + "/" + res[0][1]
+
+
+def create_new_folder(cur, name, folder_id):
+    path = get_inner_folder_path_by_id(cur, folder_id)
+    
+    query = """
+    INSERT INTO folders (name, path) VALUES (?, ?)
+    """
+    
+    cur.execute(query, (name, path))
