@@ -4,14 +4,15 @@ import math
 from learncards import learn_session
 
 
-def get_card_list(cur, userid):
+def get_card_list(cur, userid, folder_id):
     query = """
     SELECT COALESCE(u.username, 'deleted_user') as username, c.user_id, c.id, c.front, c.back, c.name
     FROM cards c
     LEFT JOIN users u ON c.user_id = u.user_id
+    WHERE folder_id = ?
     """
 
-    cur.execute(query)
+    cur.execute(query, (folder_id,))
     res = cur.fetchall()
 
     cards = []
@@ -28,24 +29,23 @@ def get_card_list(cur, userid):
         }
         cards.append(card)
 
-    print(f"cards: {cards}")
     return cards
 
 
-def add_card(cur, user_id, card_name, front, back):
+def add_card(cur, user_id, card_name, front, back, folder_id):
     if does_card_name_exist(cur, card_name):
         return "name does already exist"
 
     query = """
-    INSERT INTO cards (user_id, name, front, back) 
-    VALUES (?, ?, ?, ?)
+    INSERT INTO cards (user_id, name, front, back, folder_id) 
+    VALUES (?, ?, ?, ?, ?)
     """
 
     card_name = html.escape(card_name)
     front = html.escape(front)
     back = html.escape(back)
 
-    cur.execute(query, (user_id, card_name, front, back))
+    cur.execute(query, (user_id, card_name, front, back, folder_id))
 
 
 def does_card_name_exist(cur, card_name):

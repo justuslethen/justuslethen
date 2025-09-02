@@ -2,7 +2,8 @@ async function add_new_card() {
     const data = {
         card_name: document.querySelector("#card_name").value,
         front: document.querySelector("#front").value,
-        back: document.querySelector("#back").value
+        back: document.querySelector("#back").value,
+        folder_id: get_id_from_url()
     };
 
     fetch(`${server_address}/add-card`, {
@@ -31,4 +32,13 @@ function evaluate_response(message) {
     } else if (message === "successfull created new card") {
         create_message("Die Karte wurde erfolgreich erstellt");
     }
+}
+
+
+function get_id_from_url() {
+    const url = window.location.href;
+    const splitet_url = url.split("/");
+    const id = splitet_url[splitet_url.length - 2];
+
+    return id
 }

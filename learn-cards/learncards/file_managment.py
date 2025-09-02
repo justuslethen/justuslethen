@@ -129,7 +129,7 @@ def create_session_keys_table(cur):
         user_id INTEGER NOT NULL,
         card_id INTEGER NOT NULL,
         value INTEGER NOT NULL,
-        path TEXT NOT NULL,
+        folder_id TEXT NOT NULL,
         key TEXT NOT NULL
         );
     """
