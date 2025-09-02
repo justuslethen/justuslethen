@@ -17,7 +17,9 @@ def get_card_list(cur, userid):
     cards = []
 
     for i in res:
-        next_time_to_learn = get_time_until_next_learning(cur, userid, i[2]) if True else "Heute"
+        next_time_to_learn = (
+            get_time_until_next_learning(cur, userid, i[2]) if True else "Heute"
+        )
         card = {
             "username": i[0],
             "id": i[2],
@@ -33,23 +35,23 @@ def get_card_list(cur, userid):
 def add_card(cur, user_id, card_name, front, back):
     if does_card_name_exist(cur, card_name):
         return "name does already exist"
-    
+
     query = """
     INSERT INTO cards (user_id, name, front, back) 
     VALUES (?, ?, ?, ?)
     """
-    
+
     card_name = html.escape(card_name)
     front = html.escape(front)
     back = html.escape(back)
-    
+
     cur.execute(query, (user_id, card_name, front, back))
 
 
 def does_card_name_exist(cur, card_name):
     cur.execute("SELECT * FROM cards WHERE LOWER(name) = ?", (card_name.lower(),))
     res = cur.fetchall()
-    
+
     if len(res) > 0:
         return True
     else:
@@ -63,10 +65,10 @@ def get_card(cur, card_id):
     FROM cards
     WHERE id = ?
     """
-    
+
     cur.execute(query, (card_id,))
     res = cur.fetchone()
-    
+
     if res:
         data = {
             "name": res[0],
@@ -85,54 +87,59 @@ def get_next_and_last_card_id(cur, card_id):
     index = 0
     last_card_id = 0
     next_card_id = 0
-    
+
     for i in range(len(card_ids)):
         if int(card_ids[i]) == int(card_id):
             index = i
             break
-    
+
     if not index == 0:
         last_card_id = card_ids[index - 1]
     else:
         last_card_id = card_ids[len(card_ids) - 1]
-        
+
     if not index == len(card_ids) - 1:
         next_card_id = card_ids[index + 1]
     else:
         next_card_id = card_ids[0]
-    
-    return next_card_id, last_card_id
 
+    return next_card_id, last_card_id
 
 
 def get_all_card_ids(cur):
     cur.execute("SELECT id FROM cards")
     res = cur.fetchall()
     ids = []
-    
+
     for i in res:
         ids.append(i[0])
-    
+
     return ids
 
 
 def get_time_until_next_learning(cur, user_id, card_id):
     next_time_to_learn = 0
     now = int(time.time() * 1000)
-    
+
     query = """
     SELECT next_time_to_learn 
     FROM learning_level 
     WHERE user_id = ? AND card_id = ?
     """
-    cur.execute(query, (user_id, card_id,))
+    cur.execute(
+        query,
+        (
+            user_id,
+            card_id,
+        ),
+    )
     res = cur.fetchone()
-    
+
     if res:
         next_time_to_learn = res[0]
     else:
         next_time_to_learn = now
-    
+
     amount_of_time = next_time_to_learn - now
     return milliseconds_to_days(amount_of_time)
 
@@ -140,11 +147,11 @@ def get_time_until_next_learning(cur, user_id, card_id):
 def milliseconds_to_days(milliseconds):
     if milliseconds <= 0:
         return "Heute"
-    
+
     milliseconds_per_day = 24 * 60 * 60 * 1000
     days = milliseconds / milliseconds_per_day
     days_rounded = math.ceil(days)
-    
+
     if days_rounded == 1:
         return f"{days_rounded} Tag"
     else:
@@ -154,6 +161,20 @@ def milliseconds_to_days(milliseconds):
 def delete_card(cur, card_id):
     cur.execute("DELETE FROM cards WHERE id = ?", (card_id,))
     cur.fetchall()
-    
+
     cur.execute("DELETE FROM learning_level WHERE card_id = ?", (card_id,))
     cur.fetchall()
+
+
+def get_folder_list(cur, folder_path):
+    list = []
+    query = """
+    SELECT name, folder_id FROM folders WHERE path = ?
+    """
+    cur.execute(query, (folder_path,))
+    res = cur.fetchall()
+
+    for i in res:
+        list.append({"name": i[0], "path": i[1], "id": i[2]})
+
+    return list
