@@ -83,21 +83,6 @@ def registrate_user():
         conn.commit()
         conn.close()
         return jsonify({"message": "successfull created new account"})
-
-
-@app.route("/<folder_id>/card-list", methods=["GET"])
-def send_card_list_page(folder_id):
-    cur, conn = file_managment.open_db()
-    token = request.cookies.get("token")
-    user_id = token_managment.does_token_exist(cur, token)
-
-    if user_id:
-        file = render.render_card_list(cur, folder_id, user_id)
-        conn.close()
-        return file
-    else:
-        conn.close()
-        return redirect("/login")
     
     
 @app.route("/create-new-folder", methods=["POST"])
@@ -127,7 +112,7 @@ def send_folder_list_page(folder_id):
     user_id = token_managment.does_token_exist(cur, token)
 
     if user_id:
-        file = render.render_folder_list(cur, folder_id)
+        file = render.render_folder_list(cur, folder_id, user_id)
         conn.close()
         return file
     else:
@@ -249,7 +234,7 @@ def add_new_card():
     
     if user_id:
         # returning False means that no error was found in the data
-        res = card_data.add_card(cur, user_id, data["card_name"], data["front"], data["back"])
+        res = card_data.add_card(cur, user_id, data["card_name"], data["front"], data["back"], data["folder_id"])
         conn.commit()
         conn.close()
         if res:
@@ -261,24 +246,24 @@ def add_new_card():
         return jsonify({"message": "pleace log in"})
 
 
-@app.route("/learn-session", methods=["GET"])
-def start_learn_session():
+@app.route("/learn-session/start/<folder_id>", methods=["GET"])
+def start_learn_session(folder_id):
     cur, conn = file_managment.open_db()
     token = request.cookies.get("token")
     user_id = token_managment.does_token_exist(cur, token)
     print(f"user_id: {user_id}")
 
     if user_id:
-        key = learn_session.create_new_session(cur, user_id)
+        key = learn_session.create_new_session(cur, user_id, folder_id)
         conn.commit()
         conn.close()
-        return redirect(f"/learn-session/{key}")
+        return redirect(f"/learn-session/key/{key}")
     else:
         conn.close()
         return redirect("/")
 
 
-@app.route("/learn-session/<session_key>", methods=["GET"])
+@app.route("/learn-session/key/<session_key>", methods=["GET"])
 def get_card_learn_session(session_key):
     cur, conn = file_managment.open_db()
     token = request.cookies.get("token")
