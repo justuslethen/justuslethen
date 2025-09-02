@@ -226,8 +226,8 @@ def send_create_folder_page(folder_id):
         return redirect("/login")
     
     
-@app.route("/create-card", methods=["GET"])
-def send_create_card_page():
+@app.route("/folder/<folder_id>/create-card", methods=["GET"])
+def send_create_card_page(folder_id):
     cur, conn = file_managment.open_db()
     token = request.cookies.get("token")
     user_id = token_managment.does_token_exist(cur, token)
