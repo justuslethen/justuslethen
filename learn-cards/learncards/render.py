@@ -3,14 +3,11 @@ from flask import render_template_string
 from datetime import datetime
 
 def render_card_list(cur, folder_id, user_id):
-    path = file_managment.get_file("card_list.html")
-    file = file_managment.open_file(path)
-    list = card_data.get_card_list(cur, user_id)
+    list = card_data.get_card_list(cur, user_id, folder_id)
     
     content = ""
     
     for item in list:
-        print(f"item: {item}")
         content += f"""
         <a class="item" href="/card/{item["id"]}">
             <div class="card_name">
@@ -25,8 +22,7 @@ def render_card_list(cur, folder_id, user_id):
         </a>
         """
     
-    file = file.replace("<!--dynamic rendering space-->", f"{content}")
-    return render_template_string(file)
+    return content
 
 
 def render_edit_card_list(cur):
@@ -112,8 +108,8 @@ def render_learn_card_view(cur, card_id, key1, key2):
     front = card['front'].replace("\n", "<br>")
     back = card['back'].replace("\n", "<br>")
     
-    button_left = f"""<a class="button button_red" href="/learn-session/{key1}">Wusste ich nicht</a>"""
-    button_right = f"""<a class="button button_green" href="/learn-session/{key2}">Wusste ich</a>"""
+    button_left = f"""<a class="button button_red" href="/learn-session/key/{key1}">Wusste ich nicht</a>"""
+    button_right = f"""<a class="button button_green" href="/learn-session/key/{key2}">Wusste ich</a>"""
     
     file = file.replace("<!--dynamic render front-->", front)
     file = file.replace("<!--dynamic render back-->", back)
@@ -164,11 +160,11 @@ def render_learn_data_table(cur, target_id):
     return render_template_string(file)
 
 
-def render_folder_list(cur, folder_id):
+def render_folder_list(cur, folder_id, user_id):
     path = file_managment.get_file("folder_list.html")
     file = file_managment.open_file(path)
     list = folders.get_folder_list(cur, folder_id)
-    cards_in_folder = folders.are_cards_in_folder(cur, folder_id)
+    are_cards_in_folder = folders.are_cards_in_folder(cur, folder_id)
     
     content = ""
     
@@ -184,8 +180,11 @@ def render_folder_list(cur, folder_id):
     
     file = file.replace("<!--dynamic rendering space-->", content)
     file = file.replace("<!--folder id-->", folder_id)
-    if cards_in_folder:
-        btn = """<a class="button button_red" href="/learn-session/<!--folder id-->">Stapel lernen</a>"""
+    if are_cards_in_folder:
+        btn = f"""<a class="button button_red" href="/learn-session/start/{folder_id}">Stapel lernen</a>"""
         file = file.replace("<!--learn cards btn-->", btn)
+        
+        card_list = render_card_list(cur, folder_id, user_id)
+        file = file.replace("<!--dynamic cards rendering space-->", card_list)
         
     return render_template_string(file)
