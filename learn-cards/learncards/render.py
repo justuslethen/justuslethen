@@ -28,7 +28,7 @@ def render_card_list(cur, folder_id, user_id):
 def render_edit_card_list(cur):
     path = file_managment.get_file("edit_card_list.html")
     file = file_managment.open_file(path)
-    list = card_data.get_card_list(cur, 0)
+    list = card_data.get_card_list_of_all(cur)
     
     content = ""
     
@@ -40,7 +40,7 @@ def render_edit_card_list(cur):
                 <p>{item['name']}</p>
             </div>
             <div class="card_creator">
-                <p>{ item['username'] if item['username'] else "" }</p>
+                <p>{item['folder_id']}</p>
             </div>
             <a class="button button_red" href="/delete-card/{item["id"]}">
                 Löschen
