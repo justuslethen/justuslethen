@@ -1,6 +1,7 @@
 import os
 import sqlite3
 
+
 # returns the path based on the file type
 def get_file_path(filename):
     path = ""
@@ -14,10 +15,10 @@ def get_file_path(filename):
         path = f"frontend-files/svg/{filename}"
     elif filename.endswith(".html"):
         path = f"frontend-files/html/{filename}"
-    
+
     if os.path.exists(path):
         return path
-    
+
     return False
 
 
@@ -27,12 +28,12 @@ def get_file(filename):
         return path
     else:
         return "frontend-files/html/file_not_found.html"
-    
+
 
 def open_file(path):
     # return the file as a variable
     print(path)
-    with open(path, 'r') as f:
+    with open(path, "r") as f:
         return f.read()
 
 
@@ -43,13 +44,14 @@ def open_db():
     create_user_table(cur)
     create_token_table(cur)
     create_card_table(cur)
-    
+
     create_learning_level_table(cur)
     create_session_keys_table(cur)
     create_score_table(cur)
     create_learn_data_table(cur)
     create_finished_sessions_table(cur)
     create_admin_table(cur)
+    create_folders_table(cur)
 
     return cur, conn
 
@@ -62,7 +64,7 @@ def create_user_table(cur):
         password TEXT NOT NULL
         );
     """
-    
+
     response = cur.execute(query)
     response.fetchall()
 
@@ -73,7 +75,7 @@ def create_admin_table(cur):
         user_id INTEGER PRIMARY KEY AUTOINCREMENT
         );
     """
-    
+
     response = cur.execute(query)
     response.fetchall()
 
@@ -85,7 +87,7 @@ def create_token_table(cur):
         token TEXT NOT NULL
         );
     """
-    
+
     response = cur.execute(query)
     response.fetchall()
 
@@ -95,12 +97,13 @@ def create_card_table(cur):
         CREATE TABLE IF NOT EXISTS cards (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT NOT NULL,
+        path TEXT NOT NULL,
         user_id INTEGER NOT NULL,
         front TEXT NOT NULL,
         back TEXT NOT NULL
         );
     """
-    
+
     response = cur.execute(query)
     response.fetchall()
 
@@ -115,7 +118,7 @@ def create_learning_level_table(cur):
         next_time_to_learn INTEGER NOT NULL
         );
     """
-    
+
     response = cur.execute(query)
     response.fetchall()
 
@@ -126,10 +129,11 @@ def create_session_keys_table(cur):
         user_id INTEGER NOT NULL,
         card_id INTEGER NOT NULL,
         value INTEGER NOT NULL,
+        path TEXT NOT NULL,
         key TEXT NOT NULL
         );
     """
-    
+
     response = cur.execute(query)
     response.fetchall()
 
@@ -143,7 +147,7 @@ def create_score_table(cur):
         sessions INTEGER NOT NULL
         );
     """
-    
+
     response = cur.execute(query)
     response.fetchall()
 
@@ -159,7 +163,7 @@ def create_learn_data_table(cur):
         level INTEGER NOT NULL
         );
     """
-    
+
     response = cur.execute(query)
     response.fetchall()
 
@@ -171,6 +175,19 @@ def create_finished_sessions_table(cur):
         day INTEGER NOT NULL
         );
     """
-    
+
+    response = cur.execute(query)
+    response.fetchall()
+
+
+def create_folders_table(cur):
+    query = """
+        CREATE TABLE IF NOT EXISTS folders (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            path TEXT NOT NULL,
+            name TEXT NOT NULL
+        );
+    """
+
     response = cur.execute(query)
     response.fetchall()
