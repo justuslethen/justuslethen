@@ -85,14 +85,29 @@ def registrate_user():
         return jsonify({"message": "successfull created new account"})
 
 
-@app.route("/card-list", methods=["GET"])
-def send_card_list_page():
+@app.route("/<folder_id>/card-list", methods=["GET"])
+def send_card_list_page(folder_id):
     cur, conn = file_managment.open_db()
     token = request.cookies.get("token")
     user_id = token_managment.does_token_exist(cur, token)
 
     if user_id:
-        file = render.render_card_list(cur, user_id)
+        file = render.render_card_list(cur, folder_id, user_id)
+        conn.close()
+        return file
+    else:
+        conn.close()
+        return redirect("/login")
+    
+0
+@app.route("/folder/<folder_path>", methods=["GET"])
+def send_folder_list_page(folder_path):
+    cur, conn = file_managment.open_db()
+    token = request.cookies.get("token")
+    user_id = token_managment.does_token_exist(cur, token)
+
+    if user_id:
+        file = render.render_folder_list(cur, folder_path)
         conn.close()
         return file
     else:
@@ -292,4 +307,7 @@ def send_learn_data(target_id):
 
 
 if __name__ == "__main__":
+    cur, _ = file_managment.open_db()
+    file_managment.create_route_folder(cur)
+    
     app.run(host="0.0.0.0", port=4211, debug=True)
