@@ -17,6 +17,9 @@ async function create_new_folder() {
         .then(data => {
             console.log(data);
             evaluate_response(data.message);
+            // if (data.message == "successfull created new folder") {
+            // }
+            window.location.href = "../" + get_id_from_url();
         })
         .catch(error => {
             console.error('error while sending request:', error);
@@ -25,10 +28,8 @@ async function create_new_folder() {
 
 
 function evaluate_response(message) {
-    if (message === "name does already exist") {
-        create_message("Es existiert bereits eine Karte mit diesem Namen");
-    } else if (message === "successfull created new card") {
-        create_message("Die Karte wurde erfolgreich erstellt");
+    if (message === "successfull created new folder") {
+        create_message("Der Ordner wurde erfolgreich erstellt");
     }
 }
 

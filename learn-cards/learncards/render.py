@@ -168,6 +168,7 @@ def render_folder_list(cur, folder_id):
     path = file_managment.get_file("folder_list.html")
     file = file_managment.open_file(path)
     list = folders.get_folder_list(cur, folder_id)
+    cards_in_folder = folders.are_cards_in_folder(cur, folder_id)
     
     content = ""
     
@@ -183,4 +184,8 @@ def render_folder_list(cur, folder_id):
     
     file = file.replace("<!--dynamic rendering space-->", content)
     file = file.replace("<!--folder id-->", folder_id)
+    if cards_in_folder:
+        btn = """<a class="button button_red" href="/learn-session/<!--folder id-->">Stapel lernen</a>"""
+        file = file.replace("<!--learn cards btn-->", btn)
+        
     return render_template_string(file)

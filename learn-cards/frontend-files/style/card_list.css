@@ -35,6 +35,10 @@ body {
     border-radius: 2px;
 }
 
+.header {
+    font-weight: 550;
+}
+
 .item:first-child {
     border-top-left-radius: 6px;
     border-top-right-radius: 6px;
