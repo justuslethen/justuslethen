@@ -2,7 +2,7 @@ from learncards import card_data, file_managment, user_data, admin
 from flask import render_template_string
 from datetime import datetime
 
-def render_card_list(cur, user_id):
+def render_card_list(cur, folder_id, user_id):
     path = file_managment.get_file("card_list.html")
     file = file_managment.open_file(path)
     list = card_data.get_card_list(cur, user_id)
@@ -161,4 +161,27 @@ def render_learn_data_table(cur, target_id):
 
     file = file.replace("<!--dynamic render-->", content)
     
+    return render_template_string(file)
+
+
+def render_folder_list(cur, folder_path):
+    path = file_managment.get_file("folder_list.html")
+    file = file_managment.open_file(path)
+    list = card_data.get_folder_list(cur, folder_path)
+    folder_id = card_data.get_folder_id_by_path()
+    
+    content = ""
+    
+    for item in list:
+        print(f"item: {item}")
+        content += f"""
+        <a class="item" href="/folder/{item["id"]}">
+            <div class="card_name">
+                <p>{item['name']}</p>
+            </div>
+        </a>
+        """
+    
+    file = file.replace("<!--dynamic rendering space-->", f"{content}")
+    file = file.replace("<!--folder_id-->", f"{folder_id}")
     return render_template_string(file)
