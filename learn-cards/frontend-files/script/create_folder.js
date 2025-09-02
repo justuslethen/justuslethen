@@ -2,7 +2,7 @@ async function create_new_folder() {
     const data = {
         folder_name: document.querySelector("#folder_name").value,
         folder_id : get_id_from_url()
-    };
+    }
 
     fetch(`${server_address}/create-new-folder`, {
         method: 'POST',

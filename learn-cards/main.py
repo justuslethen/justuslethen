@@ -1,5 +1,5 @@
 from flask import Flask, request, send_file, jsonify, make_response, redirect
-from learncards import registrate, login, file_managment, token_managment, user_data, render, card_data, learn_session, admin
+from learncards import registrate, login, file_managment, token_managment, user_data, render, card_data, learn_session, admin, folders
 
 app = Flask(__name__)
 
@@ -99,7 +99,27 @@ def send_card_list_page(folder_id):
         conn.close()
         return redirect("/login")
     
-0
+    
+@app.route("/create-new-folder", methods=["POST"])
+def create_folder_page():
+    cur, conn = file_managment.open_db()
+    token = request.cookies.get("token")
+    user_id = token_managment.does_token_exist(cur, token)
+
+    if user_id:
+        data = request.json.get("data", {})
+        name = data.get("folder_name")
+        folder_id = data.get("folder_id")
+
+        folders.create_new_folder(cur, name, folder_id)
+        conn.commit()
+        conn.close()
+        return jsonify({"message": "folder created successfully"})
+    else:
+        conn.close()
+        return redirect("/login")
+    
+    
 @app.route("/folder/<folder_id>", methods=["GET"])
 def send_folder_list_page(folder_id):
     cur, conn = file_managment.open_db()
@@ -192,6 +212,20 @@ def send_card_view_page(card_id):
         return redirect("/login")
 
 
+@app.route("/folder/<folder_id>/create-folder", methods=["GET"])
+def send_create_folder_page(folder_id):
+    cur, conn = file_managment.open_db()
+    token = request.cookies.get("token")
+    user_id = token_managment.does_token_exist(cur, token)
+
+    if user_id:
+        path = file_managment.get_file("create_folder.html")
+        return send_file(path)
+    else:
+        conn.close()
+        return redirect("/login")
+    
+    
 @app.route("/create-card", methods=["GET"])
 def send_create_card_page():
     cur, conn = file_managment.open_db()
