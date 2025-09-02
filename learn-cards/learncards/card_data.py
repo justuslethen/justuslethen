@@ -164,17 +164,3 @@ def delete_card(cur, card_id):
 
     cur.execute("DELETE FROM learning_level WHERE card_id = ?", (card_id,))
     cur.fetchall()
-
-
-def get_folder_list(cur, folder_path):
-    list = []
-    query = """
-    SELECT name, folder_id FROM folders WHERE path = ?
-    """
-    cur.execute(query, (folder_path,))
-    res = cur.fetchall()
-
-    for i in res:
-        list.append({"name": i[0], "path": i[1], "id": i[2]})
-
-    return list
