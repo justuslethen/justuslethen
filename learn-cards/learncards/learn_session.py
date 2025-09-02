@@ -13,22 +13,22 @@ time_periods = [day, day, day * 2, day * 3, day * 4, week * 2, week * 6, week * 
 # time_periods = [minute / 12, minute / 5, minute, minute, minute, minute, minute, minute]
 
 
-def create_new_session(cur, user_id):
-    key = create_new_key(cur, user_id, 0, False)
+def create_new_session(cur, user_id, folder_id):
+    key = create_new_key(cur, user_id, 0, False, folder_id)
     user_data.update_session_score(cur, user_id, 1)
     return key
 
 
-def create_new_session_keys(cur, user_id):
-    card_id = next_card_to_learn_id(cur, user_id)
+def create_new_session_keys(cur, user_id, folder_id):
+    card_id = next_card_to_learn_id(cur, user_id, folder_id)
     create_learning_level(cur, user_id, card_id)
-    incorrect_guess_key = create_new_key(cur, user_id, card_id, False)
-    correct_guess_key = create_new_key(cur, user_id, card_id, True)
+    incorrect_guess_key = create_new_key(cur, user_id, card_id, False, folder_id)
+    correct_guess_key = create_new_key(cur, user_id, card_id, True, folder_id)
     return incorrect_guess_key, correct_guess_key
 
 
-def next_card_to_learn_id(cur, user_id):
-    cur.execute("SELECT id FROM cards")
+def next_card_to_learn_id(cur, user_id, folder_id):
+    cur.execute("SELECT id FROM cards WHERE folder_id = ?", (folder_id,))
     res = cur.fetchall()
 
     cards = make_cards_array_from_res(cur, user_id, res)
@@ -80,42 +80,45 @@ def make_cards_array_from_res(cur, user_id, res):
     return cards
 
 
-def create_new_key(cur, user_id, card_id, value):
+def create_new_key(cur, user_id, card_id, value, folder_id):
     key = token_managment.create_random_string(10)
-    while does_session_key_exist(cur, key):
+    exists = True
+    while exists:
         key = token_managment.create_random_string(10)
+        exists, _ = does_session_key_exist(cur, key)
     
     query = """
-    INSERT INTO session_keys (user_id, card_id, value, key) 
-    VALUES (?, ?, ?, ?)
+    INSERT INTO session_keys (user_id, card_id, value, key, folder_id) 
+    VALUES (?, ?, ?, ?, ?)
     """
 
-    cur.execute(query, (user_id, card_id, value, key))
+    print("create new session")
+    cur.execute(query, (user_id, card_id, value, key, folder_id))
     return key
 
 
 def does_session_key_exist(cur, key):
-    cur.execute("SELECT user_id FROM session_keys WHERE key = ?;", (key,))
+    cur.execute("SELECT user_id, folder_id FROM session_keys WHERE key = ?;", (key,))
     res = cur.fetchone()
     
     if res:
-        return res[0]
+        return res[0], res[1]
     else:
-        return False
+        return False, False
 
 
 def next_card(cur, user_id, key):
-    key_user_id = does_session_key_exist(cur, key)
+    key_user_id, folder_id = does_session_key_exist(cur, key)
     
     if not user_id == key_user_id:
-        key = create_new_session(cur, user_id)
+        key = create_new_session(cur, user_id, folder_id)
         return redirect(f"/learn-session/{key}")
 
     update_learning_level(cur, user_id, key)
-    card_id = next_card_to_learn_id(cur, user_id)
+    card_id = next_card_to_learn_id(cur, user_id, folder_id)
     delete_old_session_keys(cur, user_id, card_id)
     if card_id:
-        incorrect_guess_key, correct_guess_key = create_new_session_keys(cur, user_id)
+        incorrect_guess_key, correct_guess_key = create_new_session_keys(cur, user_id, folder_id)
         return render.render_learn_card_view(cur, card_id, incorrect_guess_key, correct_guess_key)
     else:
         return redirect("/learn-session-finished")
