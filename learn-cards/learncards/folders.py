@@ -32,3 +32,13 @@ def create_new_folder(cur, name, folder_id):
     """
     
     cur.execute(query, (name, path))
+    
+
+def are_cards_in_folder(cur, folder_id):
+    query = """
+    SELECT * FROM cards WHERE folder_id = ?
+    """
+    cur.execute(query, (folder_id,))
+    res = cur.fetchall()
+    
+    return len(res) > 0
