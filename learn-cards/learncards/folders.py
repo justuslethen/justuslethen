@@ -16,12 +16,12 @@ def get_folder_list(cur, folder_id):
 
 def get_inner_folder_path_by_id(cur, folder_id):
     query = """
-    SELECT name, path FROM folders WHERE folder_id = ?
+    SELECT path, name FROM folders WHERE folder_id = ?
     """
     cur.execute(query, (folder_id,))
     res = cur.fetchall()
     
-    return res[0][0] + "/" + res[0][1]
+    return res[0][0] + res[0][1] + "/"
 
 
 def create_new_folder(cur, name, folder_id):
