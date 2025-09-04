@@ -38,7 +38,7 @@ def search_cards(cur, option):
     value = input("Type in your search:")
 
     if option == 0:
-        return get_card_by_id(cur, int(value))
+        return get_card_by_id(cur, value)
     else:
         return get_cards_by_column(cur, column, value)
 
@@ -46,6 +46,9 @@ def search_cards(cur, option):
 def get_card_by_id(cur, id):
     cur.execute("SELECT id, name, back, front FROM cards WHERE id = ?", (id,))
     res = cur.fetchone()
+    if res is None:
+        print(f"No card found with id {id}")
+        return []
     return [{
         "id": res[0],
         "name": res[1],
@@ -55,7 +58,7 @@ def get_card_by_id(cur, id):
 
 
 def get_cards_by_column(cur, column, value):
-    cur.execute(f"SELECT id, name, back, front FROM cards WHERE {column} = ?", (value,))
+    cur.execute(f"SELECT id, name, back, front FROM cards WHERE {column} LIKE ?", (f"%{value}%",))
     res = cur.fetchall()
     cards = []
     for i in res:
@@ -126,9 +129,11 @@ while True:
 
     way_to_find_card = get_way_to_find_card()
     found_cards = search_cards(cur, way_to_find_card)
-    card_id = pick_from_found_cards(found_cards)
-    action = get_action()
-    edit_card(cur, card_id, action)
+    
+    if len(found_cards) > 0:
+        card_id = pick_from_found_cards(found_cards)
+        action = get_action()
+        edit_card(cur, card_id, action)
 
     conn.commit()
     conn.close()
