@@ -1,4 +1,4 @@
-## Learn Cards  
+## Learn Cards V1.2
 
 [Visit Learn Cards](https://learn-cards.justuslethen.de)  
 
@@ -47,3 +47,10 @@ Every admin can access the **admin page**, which contains links to **admin-only*
 
 This data will be used for an algorithm I will build in the future that can pick the most relevant card to learn at any given moment.
 By replacing "all" with a specific user_id, you can access only their learning data.
+
+
+### Versions
+
+V1: First version
+V1.1: new styles and admin page
+V1.2: add folders
