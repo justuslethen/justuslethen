@@ -190,13 +190,8 @@ def get_card_list_of_all(cur):
 
 def add_cards_list(cur, user_id, split_at, cards_list, folder_id):
     cards_elements = cards_list.split("\n")
-    cards = []
     
     for element in cards_elements:
         card = element.split(split_at)
-        cards.append({
-            "name": card[0],
-            "front": card[1],
-            "back": card[2],
-        })
+        print("create cards from list")
         add_card(cur, user_id, card[0], card[1], card[2], folder_id)
