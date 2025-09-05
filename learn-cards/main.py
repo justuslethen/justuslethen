@@ -209,9 +209,23 @@ def send_create_folder_page(folder_id):
     else:
         conn.close()
         return redirect("/login")
+
+
+@app.route("/folder/<folder_id>/add-cards-list", methods=["GET"])
+def send_add_cards_list(folder_id):
+    cur, conn = file_managment.open_db()
+    token = request.cookies.get("token")
+    user_id = token_managment.does_token_exist(cur, token)
+
+    if user_id:
+        path = file_managment.get_file("add_cards_list.html")
+        return send_file(path)
+    else:
+        conn.close()
+        return redirect("/login")
     
     
-@app.route("/folder/<folder_id>/create-card", methods=["GET"])
+@app.route("/folder/<folder_id>/create-card", methods=["POST"])
 def send_create_card_page(folder_id):
     cur, conn = file_managment.open_db()
     token = request.cookies.get("token")
@@ -223,6 +237,27 @@ def send_create_card_page(folder_id):
     else:
         conn.close()
         return redirect("/login")
+    
+    
+@app.route("/add-cards-list", methods=["POST"])
+def create_cards_list():
+    data = request.json["data"]
+    cur, conn = file_managment.open_db()
+    token = request.cookies.get("token")
+    user_id = token_managment.does_token_exist(cur, token)
+
+    if user_id:
+        # returning False means that no error was found in the data
+        res = card_data.add_cards_list(cur, user_id, data["split_at"], data["cards_list"], data["folder_id"])
+        conn.commit()
+        conn.close()
+        if res:
+            return jsonify({"message": res})
+        else:
+            return jsonify({"message": "successfull created new card"})
+    else:
+        conn.close()
+        return jsonify({"message": "pleace log in"})
 
 
 @app.route("/add-card", methods=["POST"])
