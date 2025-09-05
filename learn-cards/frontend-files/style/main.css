@@ -189,6 +189,9 @@ textarea::-webkit-input-placeholder {
     line-height: normal;
 }
 
+h3 {
+    color: var(--text);
+}
 
 .header {
     width: 100%;
