@@ -1,4 +1,4 @@
-async function create_cards_by_list() {
+async function create_cards_list() {
     const data = {
         cards_list: document.querySelector("#cards_list").value,
         split_at: document.querySelector("#split_at").value,
