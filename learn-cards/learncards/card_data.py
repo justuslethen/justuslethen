@@ -82,7 +82,7 @@ def get_card(cur, card_id):
 
 
 def get_next_and_last_card_id(cur, card_id):
-    card_ids = get_all_card_ids(cur)
+    card_ids = get_all_card_ids_in_folder(cur, card_id)
     print(f"card_ids: {card_ids}, card_id: {card_id}")
     index = 0
     last_card_id = 0
@@ -106,8 +106,9 @@ def get_next_and_last_card_id(cur, card_id):
     return next_card_id, last_card_id
 
 
-def get_all_card_ids(cur):
-    cur.execute("SELECT id FROM cards")
+def get_all_card_ids_in_folder(cur, card_id):
+    folder_id = get_folder_id_from_card(cur, card_id)
+    cur.execute("SELECT id FROM cards WHERE folder_id = ?", (folder_id,))
     res = cur.fetchall()
     ids = []
 
@@ -115,6 +116,11 @@ def get_all_card_ids(cur):
         ids.append(i[0])
 
     return ids
+
+
+def get_folder_id_from_card(cur, card_id):
+    cur.execute("SELECT folder_id FROM cards WHERE id = ?", (card_id,))
+    return cur.fetchone()[0]
 
 
 def get_time_until_next_learning(cur, user_id, card_id):
