@@ -85,7 +85,7 @@ def registrate_user():
         return jsonify({"message": "successfull created new account"})
     
     
-@app.route("/create-new-folder", methods=["POST"])
+@app.route("/create-new-folder", methods=["GET"])
 def create_folder_page():
     cur, conn = file_managment.open_db()
     token = request.cookies.get("token")
