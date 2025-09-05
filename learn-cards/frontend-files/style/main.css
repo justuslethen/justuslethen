@@ -190,6 +190,17 @@ textarea::-webkit-input-placeholder {
 }
 
 
+.header {
+    width: 100%;
+    max-width: 700px;
+    display: flex;
+    align-items: center;
+}
+
+.header>h2 {
+    width: 100%;
+}
+
 .message {
     position: fixed;
     top: 20px;
