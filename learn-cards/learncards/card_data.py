@@ -193,5 +193,6 @@ def add_cards_list(cur, user_id, split_at, cards_list, folder_id):
     
     for element in cards_elements:
         card = element.split(split_at)
-        print("create cards from list")
-        add_card(cur, user_id, card[0], card[1], card[2], folder_id)
+        print(card)
+        if len(card) >= 3:
+            add_card(cur, user_id, card[0], card[1], card[2], folder_id)
