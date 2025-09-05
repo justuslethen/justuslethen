@@ -97,7 +97,7 @@ p {
 }
 
 .button_red {
-    color: var(--white);
+    color: white;
     background-color: var(--red);
 }
 
