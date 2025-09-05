@@ -54,3 +54,4 @@ By replacing "all" with a specific user_id, you can access only their learning d
 V1: First version
 V1.1: new styles and admin page
 V1.2: add folders
+V1.3: add create-cards-from-list for admins
