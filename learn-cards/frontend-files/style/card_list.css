@@ -51,6 +51,15 @@ body {
 
 .item .card_name {
     width: calc(100% - 260px);
+    padding-right: 10px;
+    box-sizing: border-box;
+}
+
+.item .card_name>p{
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .item .next_learn {

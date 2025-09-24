@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from modules import database, check_for_swear_words, users
 import random
 
@@ -8,20 +8,21 @@ swear_words = check_for_swear_words.load_swear_words()
 # return the name and code for every room that is public and not expired yet
 def get_all_public_rooms():
     cur, conn = database.connect_db()
-    res = cur.execute("SELECT roomname, code, expiring_at FROM rooms WHERE private = 0")
+    res = cur.execute("SELECT roomname, code, created_at, duration FROM rooms WHERE private = 0")
     
     publ_rooms = []
     for row in res:
-        if not is_expiring_date_reached(row[2]):
+        if not is_expiring_date_reached(row[2], row[3]):
             publ_rooms.append({"roomname": row[0], "code": row[1]})
     
     conn.close()
     return publ_rooms
 
 
-def is_expiring_date_reached(expiring_date):
+def is_expiring_date_reached(created_at, duration):
     # convert string in usable format
-    expiring_at = datetime.strptime(expiring_date, "%Y-%m-%d")
+    created = datetime.strptime(created_at, "%Y-%m-%d %H:%M:%S")
+    expiring_at = created + timedelta(days=duration)
 
     # compare it with the current date
     return expiring_at.date() <= datetime.now().date() # comparing only the date part

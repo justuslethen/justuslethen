@@ -49,6 +49,10 @@ h2 {
 .header h2 {
     width: 100%;
     height: min-content;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 20px;
 }
 
 .nav_container {
