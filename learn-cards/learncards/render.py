@@ -120,12 +120,11 @@ def render_learn_card_view(cur, card_id, key1, key2):
     return render_template_string(file)
 
 
-def render_finished_session(cur, user_id):
+def render_finished_session(cur, user_id, folder_id):
     path = file_managment.get_file("finished_learn_session.html")
     file = file_managment.open_file(path)
-    # score = user_data.get_cards_learned_today(cur, user_id)
     
-    # file = file.replace("<!--dynamic render-->", score)
+    file = file.replace("<!--dynamic-rendering-link-->", f"/learn-session/start/{folder_id}")
     
     return render_template_string(file)
 

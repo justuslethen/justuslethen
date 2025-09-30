@@ -121,7 +121,7 @@ def next_card(cur, user_id, key):
         incorrect_guess_key, correct_guess_key = create_new_session_keys(cur, user_id, folder_id)
         return render.render_learn_card_view(cur, card_id, incorrect_guess_key, correct_guess_key)
     else:
-        return redirect("/learn-session-finished")
+        return redirect(f"/learn-session-finished/{folder_id}")
 
 
 def update_learning_level(cur, user_id, key):

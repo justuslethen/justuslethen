@@ -225,7 +225,7 @@ def send_add_cards_list(folder_id):
         return redirect("/")
     
     
-@app.route("/folder/<folder_id>/create-card", methods=["POST"])
+@app.route("/folder/<folder_id>/create-card", methods=["GET"])
 def send_create_card_page(folder_id):
     cur, conn = file_managment.open_db()
     token = request.cookies.get("token")
@@ -315,14 +315,14 @@ def get_card_learn_session(session_key):
         return redirect("/")
 
 
-@app.route("/learn-session-finished", methods=["GET"])
-def send_finished_session_page():
+@app.route("/learn-session-finished/<folder_id>", methods=["GET"])
+def send_finished_session_page(folder_id):
     cur, conn = file_managment.open_db()
     token = request.cookies.get("token")
     user_id = token_managment.does_token_exist(cur, token)
 
     if user_id:
-        file = render.render_finished_session(cur, user_id)
+        file = render.render_finished_session(cur, user_id, folder_id)
         conn.close()
         return file
     else:
