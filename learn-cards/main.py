@@ -120,7 +120,7 @@ def send_folder_list_page(folder_id):
         return redirect("/login")
 
 
-@app.route("/edit-card-list", methods=["GET"])
+@app.route("/admin/edit-card-list", methods=["GET"])
 def send_edit_card_list_page():
     cur, conn = file_managment.open_db()
     token = request.cookies.get("token")
@@ -151,7 +151,7 @@ def delete_card(card_id):
         return redirect("/login")
 
 
-@app.route("/edit-user-list", methods=["GET"])
+@app.route("/admin/edit-user-list", methods=["GET"])
 def send_edit_user_list_page():
     cur, conn = file_managment.open_db()
     token = request.cookies.get("token")
@@ -345,7 +345,7 @@ def send_admin_page():
         return redirect("/")
 
 
-@app.route("/learn-data/<target_id>", methods=["GET"])
+@app.route("/admin/learn-data/<target_id>", methods=["GET"])
 def send_learn_data(target_id):
     cur, conn = file_managment.open_db()
     token = request.cookies.get("token")
@@ -353,6 +353,21 @@ def send_learn_data(target_id):
 
     if user_id and admin.is_user_admin(cur, user_id):
         file = render.render_learn_data_table(cur, target_id)
+        conn.close()
+        return file
+    else:
+        conn.close()
+        return redirect("/")
+    
+    
+@app.route("/admin/learn-data/<target_id>", methods=["GET"])
+def send_logs_data(target_id):
+    cur, conn = file_managment.open_db()
+    token = request.cookies.get("token")
+    user_id = token_managment.does_token_exist(cur, token)
+
+    if user_id and admin.is_user_admin(cur, user_id):
+        file = render.render_logs_table(cur, target_id)
         conn.close()
         return file
     else:
