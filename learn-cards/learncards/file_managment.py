@@ -52,6 +52,7 @@ def open_db():
     create_finished_sessions_table(cur)
     create_admin_table(cur)
     create_folders_table(cur)
+    create_logs_table(cur)
 
     return cur, conn
 
@@ -161,6 +162,20 @@ def create_learn_data_table(cur):
         day INTEGER NOT NULL,
         value INTEGER NOT NULL,
         level INTEGER NOT NULL
+        );
+    """
+
+    response = cur.execute(query)
+    response.fetchall()
+
+
+def create_logs_table(cur):
+    query = """
+        CREATE TABLE IF NOT EXISTS logs (
+        log_id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id INTEGER NOT NULL,
+        date INTEGER NOT NULL,
+        action TEXT NOT NULL
         );
     """
 

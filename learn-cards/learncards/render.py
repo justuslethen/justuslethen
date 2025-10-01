@@ -159,6 +159,35 @@ def render_learn_data_table(cur, target_id):
     return render_template_string(file)
 
 
+def render_logs_table(cur, target_id):
+    data = admin.get_logs_target(cur, target_id)
+    
+    path = file_managment.get_file("logs.html")
+    file = file_managment.open_file(path)
+    content = ""
+    
+    for item in data:
+        date = datetime.fromtimestamp(item[3]/1000).strftime('%Y-%m-%d %H:%M:%S')
+        
+        day_dt = datetime.fromtimestamp(item[4]/1000)
+        day = day_dt.strftime('%A')
+        
+        content += f"""
+        <tr>
+            <td>{item[0]}</td>
+            <td>{item[1]}</td>
+            <td>{item[2]}</td>
+            <td>{item[3]}</td>
+            <td>{day}</td>
+            <td>{date}</td>
+        </tr>
+        """
+
+    file = file.replace("<!--dynamic render-->", content)
+    
+    return render_template_string(file)
+
+
 def render_folder_list(cur, folder_id, user_id):
     path = file_managment.get_file("folder_list.html")
     file = file_managment.open_file(path)

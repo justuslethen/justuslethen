@@ -360,7 +360,7 @@ def send_learn_data(target_id):
         return redirect("/")
     
     
-@app.route("/admin/learn-data/<target_id>", methods=["GET"])
+@app.route("/admin/logs/<target_id>", methods=["GET"])
 def send_logs_data(target_id):
     cur, conn = file_managment.open_db()
     token = request.cookies.get("token")
