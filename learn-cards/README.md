@@ -1,4 +1,4 @@
-## Learn Cards V1.2
+## Learn Cards V1.4
 
 [Visit Learn Cards](https://learn-cards.justuslethen.de)  
 
