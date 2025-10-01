@@ -13,7 +13,7 @@ table {
 th, td {
     color: var(--text);
     border: 1px solid var(--gray-2);
-    padding: 0px 14px 0px 14px;
+    padding: 4px 14px 4px 14px;
     width: max-content;
     text-align: right;
 }
