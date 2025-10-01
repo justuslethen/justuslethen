@@ -167,7 +167,8 @@ def render_logs_table(cur, target_id):
     content = ""
     
     for item in data:
-        date = datetime.fromtimestamp(item[3]/1000).strftime('%Y-%m-%d %H:%M:%S')
+        print(item)
+        date = datetime.fromtimestamp(item[4]/1000).strftime('%Y-%m-%d %H:%M:%S')
         
         day_dt = datetime.fromtimestamp(item[4]/1000)
         day = day_dt.strftime('%A')

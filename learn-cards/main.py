@@ -353,6 +353,8 @@ def send_learn_data(target_id):
 
     if user_id and admin.is_user_admin(cur, user_id):
         file = render.render_learn_data_table(cur, target_id)
+        admin.write_log(cur, user_id, "looked at learn-data")
+        conn.commit()
         conn.close()
         return file
     else:
@@ -368,6 +370,8 @@ def send_logs_data(target_id):
 
     if user_id and admin.is_user_admin(cur, user_id):
         file = render.render_logs_table(cur, target_id)
+        admin.write_log(cur, user_id, "looked at logs")
+        conn.commit()
         conn.close()
         return file
     else:
