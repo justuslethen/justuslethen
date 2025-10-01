@@ -97,6 +97,7 @@ def create_folder_page():
         folder_id = data.get("folder_id")
 
         folders.create_new_folder(cur, name, folder_id)
+        admin.write_log(cur, user_id, "created new folder")
         conn.commit()
         conn.close()
         return jsonify({"message": "folder created successfully"})
@@ -113,6 +114,8 @@ def send_folder_list_page(folder_id):
 
     if user_id:
         file = render.render_folder_list(cur, folder_id, user_id)
+        admin.write_log(cur, user_id, "opened folder list")
+        conn.commit()
         conn.close()
         return file
     else:
@@ -128,6 +131,8 @@ def send_edit_card_list_page():
 
     if user_id and admin.is_user_admin(cur, user_id):
         file = render.render_edit_card_list(cur)
+        admin.write_log(cur, user_id, "moved to edit-card-list page")
+        conn.commit()
         conn.close()
         return file
     else:
@@ -143,6 +148,7 @@ def delete_card(card_id):
 
     if user_id and admin.is_user_admin(cur, user_id):
         card_data.delete_card(cur, card_id)
+        admin.write_log(cur, user_id, f"deleted card: {card_id}")
         conn.commit()
         conn.close()
         return redirect("/edit-card-list")
@@ -159,6 +165,8 @@ def send_edit_user_list_page():
 
     if user_id and admin.is_user_admin(cur, user_id):
         file = render.render_edit_user_list(cur)
+        admin.write_log(cur, user_id, "moved to edit-user-list page")
+        conn.commit()
         conn.close()
         return file
     else:
@@ -174,6 +182,7 @@ def delete_user(id_to_delete):
 
     if user_id and admin.is_user_admin(cur, user_id):
         user_data.delete_user(cur, id_to_delete)
+        admin.write_log(cur, user_id, f"deleted user: {id_to_delete}")
         conn.commit()
         conn.close()
         return redirect("/edit-user-list")
@@ -190,6 +199,8 @@ def send_card_view_page(card_id):
 
     if user_id:
         file = render.render_card_view(cur, card_id)
+        admin.write_log(cur, user_id, "opened card view")
+        conn.commit()
         conn.close()
         return file
     else:
@@ -205,6 +216,8 @@ def send_create_folder_page(folder_id):
 
     if user_id:
         path = file_managment.get_file("create_folder.html")
+        admin.write_log(cur, user_id, "moved to create-folder page")
+        conn.commit()
         return send_file(path)
     else:
         conn.close()
@@ -219,6 +232,8 @@ def send_add_cards_list(folder_id):
 
     if user_id and admin.is_user_admin(cur, user_id):
         path = file_managment.get_file("add_cards_list.html")
+        admin.write_log(cur, user_id, "moved to add-cards-list page")
+        conn.commit()
         return send_file(path)
     else:
         conn.close()
@@ -233,6 +248,8 @@ def send_create_card_page(folder_id):
 
     if user_id:
         path = file_managment.get_file("create_card.html")
+        admin.write_log(cur, user_id, "moved to create-card page")
+        conn.commit()
         return send_file(path)
     else:
         conn.close()
@@ -250,6 +267,7 @@ def create_cards_list():
     if user_id and admin.is_user_admin(cur, user_id):
         # returning False means that no error was found in the data
         res = card_data.add_cards_list(cur, user_id, data["split_at"], data["cards_list"], data["folder_id"])
+        admin.write_log(cur, user_id, "added cards via list")
         conn.commit()
         conn.close()
         if res:
@@ -271,6 +289,7 @@ def add_new_card():
     if user_id:
         # returning False means that no error was found in the data
         res = card_data.add_card(cur, user_id, data["card_name"], data["front"], data["back"], data["folder_id"])
+        admin.write_log(cur, user_id, "added card")
         conn.commit()
         conn.close()
         if res:
@@ -291,6 +310,7 @@ def start_learn_session(folder_id):
 
     if user_id:
         key = learn_session.create_new_session(cur, user_id, folder_id)
+        admin.write_log(cur, user_id, "started learn-session")
         conn.commit()
         conn.close()
         return redirect(f"/learn-session/key/{key}")
@@ -323,6 +343,8 @@ def send_finished_session_page(folder_id):
 
     if user_id:
         file = render.render_finished_session(cur, user_id, folder_id)
+        admin.write_log(cur, user_id, "finished learn-session")
+        conn.commit()
         conn.close()
         return file
     else:
