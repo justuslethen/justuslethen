@@ -151,7 +151,7 @@ def delete_card(card_id):
         admin.write_log(cur, user_id, f"deleted card: {card_id}")
         conn.commit()
         conn.close()
-        return redirect("/edit-card-list")
+        return redirect("/admin/edit-card-list")
     else:
         conn.close()
         return redirect("/login")
@@ -262,6 +262,8 @@ def create_cards_list():
     cur, conn = file_managment.open_db()
     token = request.cookies.get("token")
     user_id = token_managment.does_token_exist(cur, token)
+    
+    print("add-card-data")
     
 
     if user_id and admin.is_user_admin(cur, user_id):
